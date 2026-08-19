@@ -1,7 +1,10 @@
+import Login from "./pages/Auth/Login"
 
 const App = () => {
   return (
-    <div>App</div>
+    <div>
+      <Login/>
+    </div>
   )
 }
 
