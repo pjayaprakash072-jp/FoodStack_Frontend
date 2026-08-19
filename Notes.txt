@@ -1,0 +1,3 @@
+AXIOS:
+    -> It is a javaScript library used to make HTTP requests from React Frontend to backen API.
+    
