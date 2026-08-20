@@ -1,13 +1,15 @@
 
 const EmptyState = ({title = "Nothing here yet",
                     text = "create your first record to get started"
-                    ,
+                    ,action,
+
 }) => {
   return (
     <div className="empty">
         <div className="empty-icon">+</div>
         <h3>{title}</h3>
         <p>{text}</p>
+        {action}
     </div>
   )
 }
