@@ -2,7 +2,7 @@
 
 import {Link} from 'react-router-dom'
 import {MapPin , Phone , ArrowRight} from "lucide-react"
-const OutlerCard = ({outlet}) => {
+const OutletCard = ({outlet}) => {
   return (
     <div className="outlet-card">
         <div className="outlet-image">
@@ -27,7 +27,7 @@ const OutlerCard = ({outlet}) => {
                         outlet.name
                     }
                 </h3>
-                <span className={`badge${outlet.status === "inactive"?"gray":""}`}>
+                <span className={`badge ${outlet.status === "inactive" ? "gray" : ""}`}>
                     {
                         outlet.status || "active"
                     }
@@ -48,11 +48,11 @@ const OutlerCard = ({outlet}) => {
                 <span>
                     <Phone size = {14}/>
                     {
-                        outlet.phone || "_"
+                        outlet.phone || "-"
                     }
                 </span>
             </div>
-            <Link className="text-link" to = {`/outlet/${outlet._id}`}>
+            <Link className="text-link" to = {`/outlets/${outlet._id}`}>
             View Outlet <ArrowRight size = {16}/>
             </Link>
         </div>
@@ -60,4 +60,4 @@ const OutlerCard = ({outlet}) => {
   )
 }
 
-export default OutlerCard
+export default OutletCard

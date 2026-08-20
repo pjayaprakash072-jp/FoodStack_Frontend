@@ -13,7 +13,7 @@ const ConfirmDialog = (
   return (
     <Modal open = {open} title = {title} onClose = {onCancel}>
         <p className="muted">{message}</p>
-        <div className="form-action">
+        <div className="form-actions">
             <button className="button secondary" onClick={onCancel}>Cancel</button>
             <button className="button danger" disabled = {busy} onClick={onConfirm}> {busy? "Deleting..." : "Delete"}</button>
         </div>
