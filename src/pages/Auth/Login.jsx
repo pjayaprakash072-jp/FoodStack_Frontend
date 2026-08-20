@@ -60,7 +60,6 @@ const Login = () => {
             });
 
             // Login successful → go to dashboard
-            console.log("Successful");
             navigate("/dashboard");
 
         } catch (error) {

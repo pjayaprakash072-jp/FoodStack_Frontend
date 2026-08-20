@@ -1,4 +1,4 @@
-import {getToken,setToken, clearAuth} from "../utils/auth";
+import {getToken,setToken, clearAuth,getVendor,setVendor} from "../utils/auth";
 
 import {useContext, createContext, useMemo, useState}  from 'react'
 
@@ -9,6 +9,7 @@ const AuthContext = createContext(null);
 
 export function AuthProvider({children}){
     const [token,setAuthtoken] = useState(getToken());
+    const [vendor,setAuthVendor] = useState(getVendor());
 
     const login = async (credentials)=>{
         const result = await vendorService.login(credentials);
@@ -20,12 +21,20 @@ export function AuthProvider({children}){
         setToken(result.token);
 
         setAuthtoken(result.token);
+
+
+        if(result.vendor){
+            setVendor(result.vendor);
+            setAuthVendor(result.vendor);
+        }
+
+
         return result;
     }
 
     const logout = ()=>{
         clearAuth();
-
+        setAuthVendor(null);
         setAuthtoken(null);
 
     }
@@ -33,9 +42,9 @@ export function AuthProvider({children}){
     const value = useMemo(
         ()=>(
             {
-                token, isAuthenticated:Boolean(token), login , logout
+                token, isAuthenticated:Boolean(token), login , logout,vendor, setVendor:vendor
             }
-            ),[token]);
+            ),[token,vendor]);
 
 
     return (

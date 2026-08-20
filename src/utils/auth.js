@@ -13,6 +13,8 @@ export const removeToken = ()=> localStorage.removeItem(TOKEN_KEY);// Removing T
 export const getVendor = ()=>{ // get vendor
 
     try {
+        
+        // console.log(JSON.parse(localStorage.getItem(VENDOR_KEY) || "null"))
         return JSON.parse(localStorage.getItem(VENDOR_KEY) || "null")
     } catch (error) {
         console.log("Error:" , error);
