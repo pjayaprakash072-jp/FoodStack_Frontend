@@ -2,6 +2,9 @@ import { Routes, Route } from "react-router-dom";
 import Login from "../pages/Auth/Login";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import Register from './../pages/Auth/Register';
+import {useAuth} from "../context/AuthContext"
+
+import { getErrorMessage } from "../utils/api";
 
 const AppRoutes = () => {
     return (
