@@ -1,18 +1,18 @@
 
-
-import Loader from "../../components/Common/Loader"
-import StatCard from "../../components/Cards/StatCard" 
-import OutletCard from "../../components/Cards/OutletCard";
-
-
 import { useEffect, useState } from "react";
-import { useAuth } from "../../context/AuthContext";
-import {Store,Tags,Utensils,Activity} from "lucide-react"
-
+import {Store,Tags,Utensils,Activity} from "lucide-react";
 import {Link} from 'react-router-dom'
+
+import StatCard from "../../components/Cards/StatCard";
+import OutletCard from "../../components/Cards/OutletCard";
+import Loader from "../../components/Common/Loader";
+
+
+
 import outletService from '../../services/outletService';
 import categoryService from '../../services/categoryService';
 import menuItemService from '../../services/menuItemService';
+import { useAuth } from "../../context/AuthContext";
 
 const arr = (x) =>
   Array.isArray(x)
@@ -30,19 +30,18 @@ const Dashboard = () => {
             categories:[],
             items:[]
         }
-    )
+    );
 
     const [loading , setLoading] = useState(true);
 
-    useEffect(
-        ()=>{
+    useEffect(()=>{
             (async()=>{
                         try{
-                            const[o,c,m] = await Promise.all(
+                            const[o, c, m] = await Promise.all(
                                 [
                                     vendor ? outletService.byVendor(vendor._id || vendor.id) : outletService.getAll(), categoryService.getAll(), menuItemService.getAll(),
                                 ]
-                            )
+                            );
                             // console.log("outletes" , o);
                             // console.log("categorids",c);
                             // console.log("items",m)
@@ -52,12 +51,12 @@ const Dashboard = () => {
                                     categories:arr(c),
                                     items:arr(m)
                                 }
-                            )
+                            );
                         }finally{
                             setLoading(false)
                         }
             }
-        )
+        )();
         },[vendor]
     )
 
