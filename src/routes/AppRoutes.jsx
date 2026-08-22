@@ -9,6 +9,7 @@ import { useAuth } from "../context/AuthContext";
 import DashboardLayout from "../components/Layout/DashboardLayout"
 import CreateOutlet from "../pages/Outlet/CreateOutlet";
 import OutletList from './../pages/Outlet/OutletList';
+import OutletDetails from './../pages/Outlet/OutletDetails';
 function Private({children}){
     const {isAuthenticated} = useAuth();
     return isAuthenticated? (
@@ -29,6 +30,7 @@ const AppRoutes = () => {
             <Route path="/profile" element={<Private><Profile/></Private>}/>
             <Route path="/outlets" element={<Private><OutletList/></Private>}/>
             <Route path="/outlets/new" element={<Private><CreateOutlet></CreateOutlet></Private>}/>
+            <Route path= "/outlets/:id" element={<Private><OutletDetails></OutletDetails></Private>}/>
             <Route path="*" element ={<Navigate to = "/dashboard" replace/>}/>
         </Routes>
     );
