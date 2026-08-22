@@ -33,42 +33,42 @@
 // export default Login
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { getErrorMessage } from "../../utils/api";
+import { LogIn } from "lucide-react";
 
 const Login = () => {
+    const [form,setForm] = useState({
+        email:"",
+        password:""
+    })
+    const [error, setError] = useState("");
+    const [busy, setBusy] = useState(false);
     const { login } = useAuth();
     const navigate = useNavigate();
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         setError("");
-        setLoading(true);
+        setBusy(true);
 
         try {
             // Login through AuthContext
-            await login({
-                email,
-                password
-            });
-
+            const result = await login(form);
+            console.log("Login Result",result)
             // Login successful → go to dashboard
             navigate("/dashboard");
 
         } catch (error) {
-
+            console.log("Error",error)
             // Login failed
             setError(getErrorMessage(error));
 
         } finally {
-            setLoading(false);
+            setBusy(false);
         }
     };
 
@@ -97,8 +97,8 @@ const Login = () => {
                         <input
                             type="email"
                             placeholder="Email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            value={form.email}
+                            onChange={(e) => setForm({...form,email:e.target.value})}
                             required
                         />
                     </label>
@@ -109,27 +109,27 @@ const Login = () => {
                         <input
                             type="password"
                             placeholder="••••••••"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            value={form.password}
+                            onChange={(e) => setForm({...form,password:e.target.value})}
                             required
                         />
                     </label>
 
-                    {error && (
-                        <p className="error">
-                            {error}
-                        </p>
-                    )}
+                    {error && ( <p className="alert error"> {error} </p> )}
 
                     <button
                         type="submit"
                         className="button primary full"
-                        disabled={loading}
+                        disabled={busy}
                     >
-                        {loading ? "Logging in..." : "Login"}
+                        <LogIn size={18}/>
+                        {busy ? "Logging in..." : "Login"}
                     </button>
 
                 </form>
+                <p className="auth-footer">
+                    New Vendor? <Link to="/register" > Create an Account</Link>
+                </p>
             </div>
         </div>
     );

@@ -44,7 +44,7 @@ export default function Register(){
       <div className="auth-card wide">
         <div className="auth-brand">
           <div className="brand-mark">VM</div>
-          <h1>Create Vendor accoutn</h1>
+          <h1>Create Vendor account</h1>
           <p>start by registering your vendor profile.</p>
         </div>
         {error && <div className='alert error'>{error}</div>}
@@ -71,14 +71,16 @@ export default function Register(){
               Email
               <input type="email"
               name='email'
+              required
               value={form.email}
               onChange={update}
               />
             </label>
             <label >
               Phone
-              <input type="phone"
+              <input type="tel"
               name='phone'
+              required
               value={form.phone}
               onChange={update}
               />
@@ -104,7 +106,7 @@ export default function Register(){
                 <option>suspended</option>
               </select>
             </label>
-            <button className="button primary full grid-span-2"><UserPlus size ={18}/>{ busy ? "Creaging... " : "Create Account"}</button>
+            <button className="button primary full grid-span-2" disabled = {busy}><UserPlus size ={18}/>{ busy ? "Creating... " : "Create Account"}</button>
         </form>
         <p className="auth-footer">
           Already registered? <Link to="/login">Login</Link>

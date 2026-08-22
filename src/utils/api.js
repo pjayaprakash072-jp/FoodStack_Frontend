@@ -2,15 +2,11 @@ import axios from "axios";
 
 import { getToken } from "./auth";
 
-const API_BASE_URL = import.meta.env.API_URI || "http://localhost:5000"
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"
 
 const api = axios.create(
     {
         baseURL: API_BASE_URL,
-        headers:
-        {
-            "Content-Type":"application/json"
-        }
     }
 )
 
@@ -20,8 +16,11 @@ api.interceptors.request.use(
     (config)=>{
         const token = getToken();
 
-        if(token) config.headers.token = `${token}`;
+        if(token) config.headers.token = token;
         return config;
+    },
+    (error)=>{
+        return Promise.reject(error);
     }
 )
 
@@ -29,8 +28,8 @@ api.interceptors.request.use(
 api.interceptors.response.use(
     (response)=> response,
     (error)=>{
-        if(error.response?.status == 401){
-            //Atuh context will handle it .
+        if(error.response?.status === 401){
+            console.log("Unauthorized - token may be expired");
         }
         return Promise.reject(error);
     }

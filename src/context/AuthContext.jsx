@@ -8,7 +8,7 @@ const AuthContext = createContext(null);
 
 
 export function AuthProvider({children}){
-    const [token,setAuthtoken] = useState(getToken());
+    const [token,setAuthToken] = useState(getToken());
     const [vendor,setAuthVendor] = useState(getVendor());
 
     const login = async (credentials)=>{
@@ -20,7 +20,7 @@ export function AuthProvider({children}){
         }
         setToken(result.token);
 
-        setAuthtoken(result.token);
+        setAuthToken(result.token);
 
 
         if(result.vendor){
@@ -35,14 +35,14 @@ export function AuthProvider({children}){
     const logout = ()=>{
         clearAuth();
         setAuthVendor(null);
-        setAuthtoken(null);
+        setAuthToken(null);
 
     }
 
     const value = useMemo(
         ()=>(
             {
-                token, isAuthenticated:Boolean(token), login , logout,vendor, setVendor:vendor
+                token, isAuthenticated:Boolean(token), login , logout,vendor, setVendor:setAuthVendor
             }
             ),[token,vendor]);
 

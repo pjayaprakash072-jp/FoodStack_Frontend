@@ -7,6 +7,6 @@ const categoryService = {
     getOne:async(id)=>unwrap(await api.get(`/menu-category/get/${id}`)),
     getAll:async()=> unwrap(await api.get("/menu-category/getall")),
     update:async(id,payload)=>unwrap(await api.put(`/menu-category/update/${id}`,payload)),
-    remove:async(id)=>unwrap(await api.delete(`/menu-category/${id}`))
+    remove:async(id)=>unwrap(await api.delete(`/menu-category/delete/${id}`))
 }
 export default categoryService

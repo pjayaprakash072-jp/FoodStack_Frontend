@@ -14,7 +14,10 @@ import outletService from '../../services/outletService';
 import categoryService from '../../services/categoryService';
 import menuItemService from '../../services/menuItemService';
 
-const arr = (x)=> Array.isArray(x)? x : x?.items || x?.outlets || x?.categories || x?.menuItems || [] ;
+const arr = (x) =>
+  Array.isArray(x)
+    ? x
+    : x?.items || x?.outlets || x?.categories || x?.menuItems || x?.menuCategories || [];
 
 
 const Dashboard = () => {
@@ -40,6 +43,9 @@ const Dashboard = () => {
                                     vendor ? outletService.byVendor(vendor._id || vendor.id) : outletService.getAll(), categoryService.getAll(), menuItemService.getAll(),
                                 ]
                             )
+                            // console.log("outletes" , o);
+                            // console.log("categorids",c);
+                            // console.log("items",m)
                             setData(
                                 {
                                     outlets:arr(o),
@@ -50,7 +56,8 @@ const Dashboard = () => {
                         }finally{
                             setLoading(false)
                         }
-            })
+            }
+        )
         },[vendor]
     )
 
@@ -61,17 +68,17 @@ const Dashboard = () => {
             <div className="page-heading">
                 <div>
                     <p className="eyebrow">Overview</p>
-                    <h1>Good day,{vendor?.name?.split(" ")[0] || "Vendor"} </h1>
+                    <h1>Good day,{vendor?.name?.split(" ")[0] || "Vendor"}👋 </h1>
 
                     <p>Here is what is happening with your business.</p>
                 </div>
                 <Link className="button primary" to = "/outlets/new"> + Add outlet</Link>
             </div>
-            <div className="status-grid">
+            <div className="stats-grid">
                 <StatCard label="Outlets" value = {data.outlets.length} hint = "your locations" icon={Store}/>
                 <StatCard label="Categories" value = {data.categories.length} hint = "Menu groups" icon={Tags}/>
                 <StatCard label="Menu Items" value = {data.items.length} hint = "Products listed" icon={Utensils}/>
-                <StatCard label="Status" value = {vendor?.status || "active"} hint = "Vendor Accont" icon={Activity}/>
+                <StatCard label="Stats" value = {vendor?.status || "active"} hint = "Vendor Accont" icon={Activity}/>
             </div>
         <section className="section">
             <div className="section-title">

@@ -2,7 +2,7 @@ import api,{unwrap} from "../utils/api"
 
 const menuItemService = {
 
-    create:async(id,payload)=>unwrap(await api.post(`/menu-item/add/${id}`,payload)),
+    create:async(categoryId,payload)=>unwrap(await api.post(`/menu-item/add/${categoryId}`,payload)),
 
     getAll:async()=> unwrap(await api.get("/menu-item/getall")),
 
@@ -14,6 +14,6 @@ const menuItemService = {
 
     update:async(id,payload)=>unwrap(await api.put(`/menu-item/update/${id}`,payload)),
 
-    deleet:async(id)=>unwrap(await api.delete(`/menu-item/delete/${id}`))
+    remove:async(id)=>unwrap(await api.delete(`/menu-item/delete/${id}`))
 }
 export default menuItemService;

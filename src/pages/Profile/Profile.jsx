@@ -34,7 +34,7 @@ export default function Profile(){
         try{
 
             const response = await vendorService.update(vendor._id || vendor.id , form);
-            setVendor(response);
+            setVendor(response.vendor);
 
             setMsg("profile updateded Successfully!");
 
@@ -67,13 +67,13 @@ export default function Profile(){
                     <input type="text" required value={form.name} onChange={(e)=> setForm({...form,name:e.target.value})}/>
                 </label>
                 <label> Email
-                    <input type="text" required value={form.email} disabled />
+                    <input type="email" value={form.email} disabled />
                 </label>
                 <label> Phone
-                    <input type="text" required  value={form.phone} onChange={(e)=>setForm({...form,phone:e.target.value})}/>
+                    <input type="tel" required  value={form.phone} onChange={(e)=>setForm({...form,phone:e.target.value})}/>
                 </label>
                 <label> businessName
-                    <input type="text" required value={form.businessName} onChange={(e)=>setForm({...form,businessName:e.target.value})} />
+                    <input type="text"  value={form.businessName} onChange={(e)=>setForm({...form,businessName:e.target.value})} />
                 </label>
                 <label> status
                     <select value={form.status} onChange={(e)=>setForm({...form ,status:e.target.value})}>
@@ -82,7 +82,7 @@ export default function Profile(){
                         <option>suspended</option>
                     </select>
                 </label>
-                <div className="grid-span-2 form-action">
+                <div className="grid-span-2 form-actions">
                     <button className="button primary" disabled = {busy}>{busy? "Updating...":"Save Changes"}</button>
                 </div>
             </form>
