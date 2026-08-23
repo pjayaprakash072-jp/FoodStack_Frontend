@@ -37,6 +37,7 @@ const AppRoutes = () => {
             <Route path="/outlets/new" element={<Private><CreateOutlet/></Private>}/>
             <Route path= "/outlets/:id" element={<Private><OutletDetails/></Private>}/>
             <Route path= "/categoires/:id" element={<Private><CategoryDetails/></Private>}/>
+            <Route path= "/categoires/:id/edit" element={<Private><CategoryForm/></Private>}/>
             <Route path="*" element ={<Navigate to = "/dashboard" replace/>}/>
         </Routes>
     );

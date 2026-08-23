@@ -47,10 +47,15 @@ const CategoryForm = () => {
                 try {
                     
                     const o = await outletService.byVendor(vendor?.id || vendor?._id);
+
                     setOutlets( Array.isArray(o)? o : o?.items || o?.outlets || [])
+
                     if(id){
+
                         const c = await categoryService.getOne(id);
+
                         setForm ({...form , ...c.menuCategory, outlet:c.menuCategory.outlet?._id || c.menuCategory.outlet || ""})
+                        
                     }else if(params.get("outlet")) setForm((f)=>({...f,outlet:params.get("outlet")}))
                 } catch (error) {
                     setError(getErrorMessage(error))

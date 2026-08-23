@@ -14,6 +14,7 @@ const CategoryDetails = () => {
     const [busy,setBusy] = useState(true);
     const [items,setItems] = useState([]);
     const [del,setDel] = useState(false);
+    const [outletname, setOutletname] = useState("");
     const nav = useNavigate();
 
     useEffect(
@@ -24,6 +25,7 @@ const CategoryDetails = () => {
                         categoryService.getOne(id),
                         menuItemService.byCategory(id)
                     ])
+                    setOutletname(a.menuCategory.outlet.name);
                     setCategory(a.menuCategory);
                     setItems(b.menuItems);
                 }catch(error){
@@ -83,6 +85,10 @@ if(!category){
             <Detail
             label="isActive"
             value={category.isActive ? "Yes" : "No"}
+            />
+            <Detail
+            label="Outlet"
+            value={outletname}
             />
         </div>
         <div className="panel">

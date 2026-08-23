@@ -2,7 +2,7 @@
 
 import CategoryCard from "../../components/Cards/CategoryCard"
 
-import {Link} from "react-router-dom"
+import {Link ,useSearchParams} from "react-router-dom"
 
 import {Plus} from "lucide-react"
 
@@ -13,18 +13,21 @@ import Loader from "../../components/Common/Loader"
 import EmptyState from './../../components/Common/EmptyState';
 
 import categoryService from "../../services/categoryService";
+import outletService from "../../services/outletService";
 
 import { useAuth } from "../../context/AuthContext";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState,useEffect  } from "react";
 
 const arr = (x)=> Array.isArray(x)? x: x?.menuCategories || [];
 
 const CategoryLIst = () => {
 
     const {vendor} = useAuth();
-
+    const [params] = useSearchParams();
+    const outletFilter = params.get("outlet");
     const [categories,setCategories]  = useState([]);
+    const [outlets,setOutlets] = useState([]);
+
 
     const [q,setQ] = useState("");
 
@@ -37,16 +40,20 @@ const CategoryLIst = () => {
             (async ()=>{
                 try{
 
-                    const response = await categoryService.byVendor(vendor?._id);
+                    const [c,o] = await Promise.all([
+                        outletFilter ? await categoryService.byOutlet(outletFilter) : await categoryService.byVendor(vendor?._id), outletService.byVendor(vendor?._id)
 
-                    setCategories(arr(response.menuCategories));
+                    ]) 
+
+                    setCategories(arr(c.menuCategories));
+                    setOutlets(arr(o.outlets));
                 }catch(error){
                     console.log(error);
                 }finally{
                     setBusy(false);
                 }
             })();
-        },[vendor]
+        },[vendor,outletFilter]
     )
   return (
     <>
@@ -82,7 +89,12 @@ const CategoryLIst = () => {
                 <EmptyState
                 title="No categories found"
                 text={q ? "Try a different search" : "Create your first category"}
-                action={<Link className="button primary" to="/category/new">Add Category</Link>}
+                action={
+                    outlets.length == 0?(
+                    <Link className="button primary" to = "/outlets/new" >Create Outlet First</Link>):(
+
+                <Link className="button primary" to="/category/new">Add Category</Link>)
+            }
                 />
             )
     }
