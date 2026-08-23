@@ -125,6 +125,7 @@ const CategoryForm = () => {
                 <input 
                 type="number"
                 required
+                min={0}
                 value={form.displayOrder}
                 onChange={(e)=>{ setForm({...form,displayOrder:Number(e.target.value)})}}
                 />
