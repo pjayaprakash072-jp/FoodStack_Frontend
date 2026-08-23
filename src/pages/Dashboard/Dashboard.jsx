@@ -39,7 +39,7 @@ const Dashboard = () => {
                         try{
                             const[o, c, m] = await Promise.all(
                                 [
-                                    vendor ? outletService.byVendor(vendor._id || vendor.id) : outletService.getAll(), categoryService.getAll(), menuItemService.getAll(),
+                                    vendor ? outletService.byVendor(vendor._id || vendor.id) : outletService.byVendor(vendor?._id), categoryService.byVendor(vendor?._id), menuItemService.byVendor(vendor?._id),
                                 ]
                             );
                             // console.log("outletes" , o);

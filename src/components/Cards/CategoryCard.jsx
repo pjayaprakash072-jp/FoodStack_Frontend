@@ -13,7 +13,7 @@ const CategoryCard = ({menuCategory}) => {
             (
                 <span>
                     {
-                        (menuCategory.name || "O").slice(0,1)
+                        (menuCategory.name || "C").slice(0,1)
                     }
                 </span>
             )

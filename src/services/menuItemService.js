@@ -14,6 +14,8 @@ const menuItemService = {
 
     update:async(id,payload)=>unwrap(await api.put(`/menu-item/update/${id}`,payload)),
 
-    remove:async(id)=>unwrap(await api.delete(`/menu-item/delete/${id}`))
+    remove:async(id)=>unwrap(await api.delete(`/menu-item/delete/${id}`)),
+
+    byVendor:async(vendorId)=>unwrap(await api.get(`/menu-item/vendor/${vendorId}`)),
 }
 export default menuItemService;

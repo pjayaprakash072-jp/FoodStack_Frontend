@@ -37,16 +37,16 @@ const CategoryLIst = () => {
             (async ()=>{
                 try{
 
-                    const response = vendor?._id || vendor?.id ? await categoryService.byVendor(vendor?._id || vendor?.id) : await categoryService.getAll();
+                    const response = await categoryService.byVendor(vendor?._id);
 
-                    setCategories(arr(response));
+                    setCategories(arr(response.menuCategories));
                 }catch(error){
                     console.log(error);
                 }finally{
                     setBusy(false);
                 }
-            })
-        }
+            })();
+        },[vendor]
     )
   return (
     <>
