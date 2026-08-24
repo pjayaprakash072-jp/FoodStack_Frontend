@@ -48,17 +48,17 @@ const CategoryForm = () => {
             (async ()=>{
                 try {
                     
-                    const o = await outletService.byVendor(vendor?.id || vendor?._id);
+                    const o = await outletService.byVendor(vendor?.id || vendor?._id);// showing outletes global like all.
 
                     setOutlets( Array.isArray(o)? o : o?.items || o?.outlets || [])
 
-                    if(id){
+                    if(id){// showing only one outlet of the category. used in editing the caterogy.
 
                         const c = await categoryService.getOne(id);
 
                         setForm ({...form , ...c.menuCategory, outlet:c.menuCategory.outlet?._id || c.menuCategory.outlet || ""})
                         
-                    }else if(params.get("outlet")) setForm((f)=>({...f,outlet:params.get("outlet")}))
+                    }else if(params.get("outlet")) setForm((f)=>({...f,outlet:params.get("outlet")}))// creating category for a particular outlet.
                 } catch (error) {
                     setError(getErrorMessage(error))
                 }

@@ -14,6 +14,7 @@ import CategoryList from './../pages/Category/CategoryList';
 import CategoryDetails from "../pages/Category/CategoryDetails";
 import CategoryForm from "../pages/Category/CategoryForm";
 import MenuItemList from "../pages/MenuItem/MenuItemList";
+import MenuItemForm from "../pages/MenuItem/MenuItemForm";
 function Private({children}){
     const {isAuthenticated} = useAuth();
     return isAuthenticated? (
@@ -40,6 +41,8 @@ const AppRoutes = () => {
             <Route path= "/categories/:id/edit" element={<Private><CategoryForm/></Private>}/>
             <Route path= "/categories/:id" element={<Private><CategoryDetails/></Private>}/>
             <Route path= "/menu-items" element={<Private><MenuItemList/></Private>}/>
+            <Route path= "/menu-item/new" element={<Private><MenuItemForm/></Private>}/>
+            <Route path= "/menu-item/:id/edit" element={<Private><MenuItemForm/></Private>}/>
             <Route path="*" element ={<Navigate to = "/dashboard" replace/>}/>
         </Routes>
     );

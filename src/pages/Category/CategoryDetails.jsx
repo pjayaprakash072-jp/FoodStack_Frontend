@@ -97,6 +97,7 @@ if(!category){
                 {items.length}
             </div>
             <p>Menu Items</p>
+            {/* <link className="button primary" to={`/menu-items?category=${id}`}>Manage Menu Items</link> */}
         </div>
     </div>
             <ConfirmDialog

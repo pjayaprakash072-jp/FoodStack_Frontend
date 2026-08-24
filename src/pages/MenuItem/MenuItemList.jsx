@@ -72,7 +72,7 @@ const MenuItemList = () => {
                                     <td>Price</td>
                                     <td>Stock</td>
                                     <td>Food</td>
-                                    <td>Availability</td>
+                                    <td>Status</td>
                                     <td>Actions</td>
                                 </tr>
                             </thead>
@@ -94,11 +94,11 @@ const MenuItemList = () => {
                                                 {item.foodType}
                                             </td>
                                             <td>
-                                                <span className={`badge ${item.isAvailable === false ? "gram" : ""}`}>{item.isAvailable === false ? "Unavailable" : "Available"}</span>
+                                                <span className={`badge ${item.status === "Inactive" ? "gray" : ""}`}>{item.status}</span>
                                             </td>
                                             <td>
                                                 <div className="button-row">
-                                                    <Link className="icon-button" to= {`/menu-item/${item._id}/edit`}> <Pencil size={18}/></Link>
+                                                    <Link className="icon-button" to= {`/menu-item/${item._id}/edit`}><Pencil size={18}/></Link>
                                                     <button className="icon-button danger-icon" onClick={()=>setDel(item._id)}> <Trash2 size={18}/></button>
                                                 </div>
                                             </td>
