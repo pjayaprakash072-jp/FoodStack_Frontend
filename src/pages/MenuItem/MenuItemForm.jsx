@@ -1,7 +1,3 @@
-
-
-
-
 import { useEffect, useState } from "react"
 import { useNavigate,useParams, useSearchParams } from "react-router-dom"
 import menuItemService from "../../services/menuItemService"
@@ -201,7 +197,7 @@ const MenuItemForm = () => {
           />
         </label>
         <div className="grid-span-2 form-actions">
-          <button className="button secondary" type="button" onClick={()=> nav("/menu-itmes")}> cancel</button>
+          <button className="button secondary" type="button" onClick={()=> nav("/menu-items")}> cancel</button>
           <button type="submit" className="button primary" disabled={busy}>
             {busy ? "Please Wait..." : id?"Update Item" :"Create Item"}
           </button>

@@ -1,8 +1,9 @@
-import { useState } from "react"
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react"
+import { useNavigate,useParams } from "react-router-dom";
 import {useAuth} from "../../context/AuthContext"
 import outletService from "../../services/outletService";
 import { getErrorMessage } from "../../utils/api";
+import Loader from "../../components/Common/Loader"
 
 const intial = {
     name:"",
@@ -24,12 +25,15 @@ const intial = {
 
 }
 const CreateOutlet = () => {
+    const {id} = useParams();
 
     const [form,setForm] = useState(intial);
 
     const [error,setError] = useState("");
 
     const [busy,setBusy] = useState(false);
+
+    const [loading,setLoading] = useState(Boolean(id));
 
     const nav = useNavigate();
 
@@ -44,17 +48,38 @@ const CreateOutlet = () => {
         )
     }
 
+    useEffect(
+        ()=>{
+            (async ()=>{
+                try{
+                    if(id){
+                        const o = await outletService.getOne(id);
+                        setForm({...form,...o.outlet,cuisine:o.outlet.cuisine.join(",")})
+                    }
+                }catch(error){
+                    setError(getErrorMessage(error))
+                }finally{
+                    setLoading(false)
+                }
+            })();
+        },[id]
+    )
+
     const submit = async (e)=>{
         e.preventDefault();
         setBusy(true);
         setError("");
         try {
-            await outletService.create(
-                {
+            const payload ={
                     ...form,
                     cuisine:form.cuisine.split(",").map((x)=>x.trim()).filter(Boolean)
                 }
-            )
+                if(id){
+                    outletService.update(id,payload)
+                }else {
+
+                    await outletService.create(payload)
+                }
             nav("/outlets")
         } catch (error) {
             setError(getErrorMessage(error));
@@ -62,9 +87,12 @@ const CreateOutlet = () => {
             setBusy(false)
         }
     }
+    
+    if(loading) return <Loader/>
   return (
     <FormPage
     title = "Create Outlet"
+    id = {id}
     form = {form}
     setForm={setForm}
     busy = {busy}
@@ -78,7 +106,7 @@ const CreateOutlet = () => {
 
 export default CreateOutlet
 
-export function FormPage({title,form,change,submit,busy,error}){
+export function FormPage({title,form,change,submit,busy,error,id}){
     return(
         <div className="form-page">
             <div className="page-heading">
@@ -211,7 +239,7 @@ export function FormPage({title,form,change,submit,busy,error}){
                     <button type="button" className="button secondary" onClick={()=>history.back()}>
                         Cancel
                     </button>
-                    <button className="button secondary" disabled={busy}>{busy?"Saving...":"Create Outlet"}</button>
+                    <button className="button secondary" disabled={busy}>{busy?"Saving...": id ? "Update Outlet":"Create Outlet"}</button>
                 </div>
             </form>
         </div>

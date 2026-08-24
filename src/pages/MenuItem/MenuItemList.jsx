@@ -2,7 +2,7 @@ import { useState,useEffect } from "react"
 import menuItemService from "../../services/menuItemService"
 import Loader from "../../components/Common/Loader"
 import { getErrorMessage } from "../../utils/api"
-import { Plus,Pencil ,Trash2 } from "lucide-react"
+import { Plus,Pencil ,Trash2 ,ArrowRight} from "lucide-react"
 import { Link } from "react-router-dom"
 import { useAuth } from "../../context/AuthContext"
 import ConfirmDialog from "../../components/Common/ConfirmDialog"
@@ -82,7 +82,7 @@ const MenuItemList = () => {
                                         <tr key={item._id}>
                                             <td>
                                                 <b>{item.name}</b>
-                                                <small>{item.description}</small>
+                                                <Link className="text-link" to={`/menu-item/${item._id}`}>View<ArrowRight size={16}/></Link>
                                             </td>
                                             <td>
                                                 ₹{Number(item.price || 0 ).toFixed(2)}
