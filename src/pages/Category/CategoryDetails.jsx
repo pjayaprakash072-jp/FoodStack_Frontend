@@ -67,16 +67,20 @@ if(!category){
         </div>
     </div>
     {error && <div className='alert error'>{error}</div>}
-    <div className="detials-grid">
+    <div className="details-grid">
         <div className="panel">
             <h3>Information</h3>
             <Detail
-            label="Description"
-            value={category.description || "-"}
+            label="Outlet"
+            value={outletname}
             />
             <Detail
-            label="Outlet"
+            label="Category"
             value={category.name}
+            />
+            <Detail
+            label="Description"
+            value={category.description || "-"}
             />
             <Detail
             label="displayOrder"
@@ -85,10 +89,6 @@ if(!category){
             <Detail
             label="isActive"
             value={category.isActive ? "Yes" : "No"}
-            />
-            <Detail
-            label="Outlet"
-            value={outletname}
             />
         </div>
         <div className="panel">
@@ -102,6 +102,7 @@ if(!category){
             <ConfirmDialog
             open={del}
             setOpen={setDel}
+            onCancel={()=>setDel(false)}
             onConfirm={remove}
             title="Delete Category"
             message="Are you sure you want to delete this category?"
@@ -116,7 +117,7 @@ const Detail = ({label,value})=>{
     return(
         <div className="detail">
             <span>{label}</span>
-            <p>{value}</p>
+            <b>{value}</b>
         </div>
     )
 }

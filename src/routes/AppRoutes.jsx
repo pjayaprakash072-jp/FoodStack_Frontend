@@ -13,6 +13,7 @@ import OutletDetails from './../pages/Outlet/OutletDetails';
 import CategoryList from './../pages/Category/CategoryList';
 import CategoryDetails from "../pages/Category/CategoryDetails";
 import CategoryForm from "../pages/Category/CategoryForm";
+import MenuItemList from "../pages/MenuItem/MenuItemList";
 function Private({children}){
     const {isAuthenticated} = useAuth();
     return isAuthenticated? (
@@ -36,8 +37,9 @@ const AppRoutes = () => {
             <Route path="/category/new" element={<Private><CategoryForm/></Private>}/>
             <Route path="/outlets/new" element={<Private><CreateOutlet/></Private>}/>
             <Route path= "/outlets/:id" element={<Private><OutletDetails/></Private>}/>
-            <Route path= "/categoires/:id" element={<Private><CategoryDetails/></Private>}/>
-            <Route path= "/categoires/:id/edit" element={<Private><CategoryForm/></Private>}/>
+            <Route path= "/categories/:id/edit" element={<Private><CategoryForm/></Private>}/>
+            <Route path= "/categories/:id" element={<Private><CategoryDetails/></Private>}/>
+            <Route path= "/menu-items" element={<Private><MenuItemList/></Private>}/>
             <Route path="*" element ={<Navigate to = "/dashboard" replace/>}/>
         </Routes>
     );

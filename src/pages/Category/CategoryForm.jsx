@@ -14,6 +14,15 @@ import {useAuth} from "../../context/AuthContext"
 import outletService from './../../services/outletService';
 import { getErrorMessage } from "../../utils/api";
 
+const initial = {
+    name:"",
+    description:"",
+    displayOrder:0,
+    isActive: true,
+    image:{url:"",public_id:""},
+    outlet:"",
+}
+
 const CategoryForm = () => {
 
     const {id} = useParams();
@@ -24,14 +33,7 @@ const CategoryForm = () => {
 
     const {vendor} = useAuth();
 
-    const [form,setForm] = useState({
-        name:"",
-        description:"",
-        displayOrder:0,
-        isActive: true,
-        image:{url:"",public_id:""},
-        outlet:"",
-    })
+    const [form,setForm] = useState(initial)
 
     const [outlets,setOutlets] = useState([]);
 

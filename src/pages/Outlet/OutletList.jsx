@@ -36,6 +36,7 @@ const OutletList = () => {
             })();
         },[vendor]
     )
+    
   return (
     <>
         <div className="page-heading">
@@ -50,7 +51,7 @@ const OutletList = () => {
             <SearchBar 
             value = {q}
             onChange={setQ}
-            placeholder="search outlets..."
+            placeholder="search outlets by name,city or area..."
             />
         </div>
         {

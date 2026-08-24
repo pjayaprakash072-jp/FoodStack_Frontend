@@ -31,9 +31,9 @@ const CategoryLIst = () => {
 
     const [q,setQ] = useState("");
 
-    const [busy,setBusy]= useState(false);
+    const [busy,setBusy]= useState(true);
     
-    const filtered = categories.filter((c)=>c.name.toLowerCase().includes(q.toLowerCase()));
+    const filtered = categories.filter((c)=>`${c.name} ${c.description}`.toLowerCase().includes(q.toLowerCase()));
 
     useEffect(
         ()=>{
@@ -70,7 +70,7 @@ const CategoryLIst = () => {
         <SearchBar 
         value={q}
         onChange={setQ}
-        placeholder="search category..."
+        placeholder="search categories by name or description..."
         />
     </div>
     {

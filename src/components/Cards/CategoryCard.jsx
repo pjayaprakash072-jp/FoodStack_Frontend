@@ -26,24 +26,20 @@ const CategoryCard = ({menuCategory}) => {
                         menuCategory.name
                     }
                 </h3>
-                <span className={`badge ${menuCategory.status === "inactive" ? "gray" : ""}`}>
+                <span className={`badge ${menuCategory.isActive ? "" : "gray"}`}>
                     {
-                        menuCategory.status || "active"
+                        menuCategory.isActive ? "Active" : "Inactive"
                     }
                 </span>
             </div>
             <p>
-                {
-                    menuCategory.description || "No description provided."
-                }
+                    <FileText size = {14}/>
+                                    {
+                                            menuCategory.description || "No description provided."
+                                        }
+
             </p>
             <div className="mini-meta">
-                <span>
-                    <FileText size = {14}/>
-                    {
-                        menuCategory.description || "-"
-                    }
-                </span>
                 <span>
                     <ListOrdered size = {14}/>
                     {
@@ -51,7 +47,7 @@ const CategoryCard = ({menuCategory}) => {
                     }
                 </span>
             </div>
-            <Link className="text-link" to = {`/categoires/${menuCategory._id}`}>
+            <Link className="text-link" to = {`/categories/${menuCategory._id}`}>
             View Category <ArrowRight size = {16}/>
             </Link>
         </div>
