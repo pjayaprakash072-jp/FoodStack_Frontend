@@ -18,10 +18,12 @@ const intial = {
     closingTime:"06:00",
     isOpen:true,
     status:"active",
-    image:{
-        url:"",
-        public_id:""
-    }
+    // image:{
+    //     url:"",
+    //     public_id:""
+    // }
+    image:null
+    // uplading the image.
 
 }
 const CreateOutlet = () => {
@@ -40,10 +42,10 @@ const CreateOutlet = () => {
     const {vendor} = useAuth();
 
     const change =(e)=>{
-        const{name,value,type,checked } = e.target;
+        const{name,value,type,checked, files} = e.target;
         setForm({
             ...form,
-            [name]:type === "checkbox"? checked:value
+            [name]:type === "checkbox"? checked: type === "file" ? files[0]:value 
         }
         )
     }
@@ -54,7 +56,7 @@ const CreateOutlet = () => {
                 try{
                     if(id){
                         const o = await outletService.getOne(id);
-                        setForm({...form,...o.outlet,cuisine:o.outlet.cuisine.join(",")})
+                        setForm({...form,...o.outlet,cuisine:o.outlet.cuisine.join(","),image: null})
                     }
                 }catch(error){
                     setError(getErrorMessage(error))
@@ -70,16 +72,36 @@ const CreateOutlet = () => {
         setBusy(true);
         setError("");
         try {
-            const payload ={
-                    ...form,
-                    cuisine:form.cuisine.split(",").map((x)=>x.trim()).filter(Boolean)
-                }
-                if(id){
-                    outletService.update(id,payload)
-                }else {
+            // const payload ={
+            //         ...form,
+            //         cuisine:form.cuisine.split(",").map((x)=>x.trim()).filter(Boolean)
+            //     } // this is way of sending json data.
+            // for images we have to send in formData.
+            const payload = new FormData();
+            payload.append("name", form.name);
+            payload.append("description",form.description)
+            payload.append("phone",form.phone)
+            payload.append("address",form.address)
+            payload.append("city", form.city)
+            payload.append("area", form.area)
+            payload.append("foodType" , form.foodType)
+            payload.append("openingTime",form.openingTime)
+            payload.append("closingTime",form.closingTime)
+            payload.append("isOpen",form.isOpen)
+            payload.append("status", form.status)
+            const cuisines = form.cuisine.split(",").map((x)=>x.trim()).filter(Boolean)
+            cuisines.forEach((x)=>{
+                payload.append("cuisine",x);
+            })
+            if(form.image){
+                payload.append("image",form.image);
+            }
+            if(id){
+                await outletService.update(id,payload)
+            }else {
 
-                    await outletService.create(payload)
-                }
+                await outletService.create(payload)
+            }
             nav("/outlets")
         } catch (error) {
             setError(getErrorMessage(error));
@@ -231,6 +253,15 @@ export function FormPage({title,form,change,submit,busy,error,id}){
                     checked={form.isOpen}
                     onChange={change}
                     />{" "} Currently open
+                </label>
+                <label className="grid-span-2">
+                    Outlet image
+                    <input 
+                    type="file"
+                    name = "image"
+                    accept="image/*"
+                    onChange={change}
+                    />
                 </label>
                 <div 
                 
