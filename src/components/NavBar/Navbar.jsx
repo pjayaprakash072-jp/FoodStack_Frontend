@@ -1,4 +1,4 @@
-
+import {NavLink} from 'react-router-dom'
 import {Menu , LogOut, UserCircle} from "lucide-react"
 
 import {useAuth} from "../../context/AuthContext"
@@ -14,7 +14,11 @@ const Navbar = ({onMenu}) => {
             <span>Manage outlets,categories and menu items</span>
         </div>
         <div className="navbar-user">
+            <NavLink
+            to="/profile"
+            >
             <UserCircle size = {22}/>
+            </NavLink>
             <span>
                 {vendor?.name || vendor?.businessName || 'Vendor'}
             </span>

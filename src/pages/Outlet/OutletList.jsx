@@ -51,7 +51,7 @@ const OutletList = () => {
             <SearchBar 
             value = {q}
             onChange={setQ}
-            placeholder="search outlets by name,city or area..."
+            placeholder="Search Outlets by name,city or area..."
             />
         </div>
         {

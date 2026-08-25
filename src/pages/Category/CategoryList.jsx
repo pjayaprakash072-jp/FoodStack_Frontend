@@ -70,7 +70,7 @@ const CategoryLIst = () => {
         <SearchBar 
         value={q}
         onChange={setQ}
-        placeholder="search categories by name or description..."
+        placeholder="Search Categories by name or description..."
         />
     </div>
     {

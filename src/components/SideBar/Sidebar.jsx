@@ -11,7 +11,10 @@ const links = [
 const Sidebar = ({open , onClose}) => {
   return (
     <aside className={`sidebar ${open ? "sidebar-open" : ""}`}>
-      <div className="brand">
+      <NavLink
+      to ="/dashboard"
+      >
+      <div className="brand" style={{cursor:"pointer"}}>
         <div className="brand-mark">VM</div>
         <div>
           <b>Vendor</b>
@@ -21,6 +24,7 @@ const Sidebar = ({open , onClose}) => {
           <X/>
         </button>
       </div>
+      </NavLink>
       <nav>
         {
           links.map(

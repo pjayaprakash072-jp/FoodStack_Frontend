@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import {Link, useNavigate, useParams} from 'react-router-dom'
 import ConfirmDialog from './../../components/Common/ConfirmDialog';
 import menuItemService from './../../services/menuItemService';
+import { getErrorMessage } from '../../utils/api';
 
 const MenuItemDetails = () => {
   const {id} = useParams();
@@ -12,6 +13,7 @@ const MenuItemDetails = () => {
   const [busy,setBusy] = useState(true)
   const [item , setItem] = useState(null);
   const[del , setDel] = useState(false);
+  const [error,setError] = useState("");
 
   useEffect(
     () => {
@@ -19,7 +21,10 @@ const MenuItemDetails = () => {
         try{
           const res = await menuItemService.getOne(id);
           setItem(res.menuItem);
-        }finally{
+        }catch(err){
+          setError(getErrorMessage(err))
+        }
+        finally{
           setBusy(false);
         }
       })();
@@ -39,9 +44,10 @@ const MenuItemDetails = () => {
         <button className="button danger" onClick={()=>setDel(true)}><Trash2 size={18}/>Delete</button>
       </div>
     </div>
-    <div className="panel">
-      <div className="details-grid">
-        <div>
+    {error && <div className='alert eror'>{error || "Menu Item not  found"}</div>}
+    <div className="details-grid">
+      <div className="panel">
+          <h3>Information</h3>
           <Detail
           l = "Outlet"
           v = {item.outlet.name}
@@ -79,7 +85,15 @@ const MenuItemDetails = () => {
           l = "Status"
           v = {item.status}
           />
-        </div>
+      </div>
+      <div className="panel">
+        {
+          item.image?.url ? (
+            <img src={item.image.url} alt={item.name} style={{borderRadius:"50%", border:"5px solid black" ,marginTop:"50px"}}/>
+          ):(
+            <span>No Image</span>
+          )
+        }
       </div>
     </div>
     <ConfirmDialog

@@ -19,7 +19,7 @@ const initial = {
     description:"",
     displayOrder:0,
     isActive: true,
-    image:{url:"",public_id:""},
+    image:null,
     outlet:"",
 }
 
@@ -56,7 +56,7 @@ const CategoryForm = () => {
 
                         const c = await categoryService.getOne(id);
 
-                        setForm ({...form , ...c.menuCategory, outlet:c.menuCategory.outlet?._id || c.menuCategory.outlet || ""})
+                        setForm ({...form , ...c.menuCategory, outlet:c.menuCategory.outlet?._id || c.menuCategory.outlet || "",image:null})
                         
                     }else if(params.get("outlet")) setForm((f)=>({...f,outlet:params.get("outlet")}))// creating category for a particular outlet.
                 } catch (error) {
@@ -69,14 +69,30 @@ const CategoryForm = () => {
         },[id]
     )
 
+    const change =(e)=>{
+        const {name, value,checked, type, files} = e.target;
+        setForm({
+            ...form,
+            [name]: type === 'checkbox' ? checked : type === "file" ? files[0]:value
+        })
+    }
+
     const submit =async(e)=>{
         e.preventDefault();
         setBusy(true);
         try{
             const {outlet,...payload} = form;
+            const formData = new FormData();
+            formData.append("name",payload.name);
+            formData.append("description",payload.description);
+            formData.append("displayOrder",payload.displayOrder);
+            formData.append("isActive",payload.isActive);
+            if(payload.image){
+                formData.append("image",payload.image)
+            }
             if(id){
-                await categoryService.update(id,payload);
-            }else await categoryService.create(outlet,payload);
+                await categoryService.update(id,formData);
+            }else await categoryService.create(outlet,formData);
             nav("/categories")
         }catch(err){
             setError(getErrorMessage(err))
@@ -98,18 +114,21 @@ const CategoryForm = () => {
             <label>
                 Name
                 <input 
+                type="text"
+                name="name"
                 required
                 value={form.name}
-                onChange={(e)=>{ setForm({...form,name:e.target.value})}}
+                onChange={change}
                 />
             </label>
             <label>
                 Outlet
                 <select
                 required
+                name="outlet"
                 value={form.outlet}
                 disabled = {Boolean(id)}
-                onChange={(e)=>{ setForm({...form,outlet:e.target.value})}}
+                onChange={change}
                 >
             <option value="">Select outet</option>
             {
@@ -121,30 +140,41 @@ const CategoryForm = () => {
             </label>
             <label className="grid-span-2">
                 Description
-                <textarea
+                <input type="text"
+                name="description"
                 
                 value={form.description}
-                onChange={(e)=>{ setForm({...form,description:e.target.value})}}
+                onChange={change}
                 />
             </label>
             <label>
                 Display Order 
                 <input 
                 type="number"
+                name = "displayOrder"
                 required
                 min={0}
                 value={form.displayOrder}
-                onChange={(e)=>{ setForm({...form,displayOrder:Number(e.target.value)})}}
+                onChange={change}
                 />
             </label>
             <label className="check">
                 
                 <input 
                 type="checkbox"
-
+                name="isActive"
                 checked={form.isActive}
-                onChange={(e)=>{ setForm({...form,isActive:e.target.checked})}}
+                onChange={change}
                 />{" "} Active
+            </label>
+            <label className="grid-span-2">
+                Category Image
+                <input
+                type="file"
+                name="image"
+                accept="image/*"
+                onChange={change}
+                />
             </label>
             <div className="grid-span-2 form-actions">
                 <button className="button secondary" type="button" onClick={()=>nav("/categories")}> Cancel</button>

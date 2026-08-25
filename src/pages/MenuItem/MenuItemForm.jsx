@@ -15,7 +15,7 @@ const intial = {
     preparationTime:0,
     isAvailable:true,
     status:"Active",
-    image:{url:"",public_id:""},
+    image:null,
     outlet:"",
     category:""
 }
@@ -26,7 +26,7 @@ const MenuItemForm = () => {
   const [busy,setBusy] = useState(false);
   const [params] = useSearchParams();
   const [loading,setLoading] = useState(false);
-  const [formData,setFormData] = useState(intial);
+  const [form,setForm] = useState(intial);
   const [categories,setCategories] = useState([]);
   const [error,setError] = useState("");
   const nav = useNavigate();
@@ -43,26 +43,48 @@ const MenuItemForm = () => {
           const menuitem = await menuItemService.getOne(id);// editing the item.
         
 
-          setFormData({...formData, ...menuitem.menuItem , category:menuitem.menuItem.category?._id})
-        }else if(params.get("category")) setFormData({...formData,category:params.get("category")})// creating item for a particular category.
+          setForm({
+            ...form, 
+            ...menuitem.menuItem,
+            category:menuitem.menuItem.category?._id || menuitem.menuItem.category || " ",
+            image:null })
+        }else if(params.get("category")) setForm({...form,category:params.get("category")})// creating item for a particular category.
       }catch(error){
         setError(getErrorMessage(error))
       }finally{
         setLoading(false)
       }
       })();
-    },[id,vendor?.id])
+    },[id,vendor?.id]);
+
+    const change = (e)=>{
+        const {name,type, value, checked,files} = e.target;
+
+        setForm(
+                (prev)=>({
+                          ...prev,
+                          [name]: type === "checkbox" ? checked : type === "file" ?files[0]: value
+                        }
+                )
+        )
+    }
 
   const submit = async(e)=>{
     e.preventDefault();
     setBusy(true);
     try{
-      const {category,...payload} = formData;
+      const {category,...payload} = form;
+      const formData = new FormData();
+      Object.entries(payload).forEach(([key,value])=>{
+        if(value !== null && value !== undefined){
+          formData.append(key,value);
+        }
+      });
 
       if(id){
-        await menuItemService.update(id,payload);
+        await menuItemService.update(id,formData);
       }else{
-        await menuItemService.create(category,payload);
+        await menuItemService.create(category,formData);
       }
       nav("/menu-items");
     }catch(error){
@@ -85,26 +107,31 @@ const MenuItemForm = () => {
         <label>
           Name
           <input
+          type="text"
+          name="name"
           required
-          value={formData.name}
-          onChange={(e)=>{ setFormData({...formData,name:e.target.value})}}
+          value={form.name}
+          onChange={change}
           />
         </label>
         <label className="grid-span-2">
           Description
           <input
+          type="text"
+          name="description"
           required
-          value={formData.description}
-          onChange={(e)=>{ setFormData({...formData,description:e.target.value})}}
+          value={form.description}
+          onChange={change}
           />
         </label>
         <label>
           Category
           <select
           required
-          value={formData.category}
+          name="category"
+          value={form.category}
           disabled = {Boolean(id)}
-          onChange={(e)=>{ setFormData({...formData,category:e.target.value})}}
+          onChange={change}
           >
             <option value="">Select Category</option>
             {
@@ -118,20 +145,22 @@ const MenuItemForm = () => {
           Price
           <input
           type="number"
+          name="price"
           min={0}
           required
-          value={formData.price}
-          onChange={(e)=>{ setFormData({...formData,price:Number(e.target.value || 0 )})}}
+          value={form.price}
+          onChange={change}
           />
         </label>
         <label>
           Stock
           <input
           type="number"
+          name="stock"
           min={0}
           required
-          value={formData.stock}
-          onChange={(e)=>{ setFormData({...formData,stock:Number(e.target.value || 0 )})}}
+          value={form.stock}
+          onChange={change}
           />
         </label>
         <label>
@@ -139,18 +168,20 @@ const MenuItemForm = () => {
           <input
           type="number"
           required
+          name="discount"
           min={0}
           max={100}
-          value={formData.discount}
-          onChange={(e)=>{ setFormData({...formData,discount:Number(e.target.value || 0 )})}}
+          value={form.discount}
+          onChange={change}
           />
         </label>
         <label>
           Food Type
           <select
           required
-          value={formData.foodType}
-          onChange={(e)=>{ setFormData({...formData,foodType:e.target.value})}}
+          name="foodType"
+          value={form.foodType}
+          onChange={change}
           >
             <option value="">Select Food Type</option>
             <option value="Veg">Veg</option>
@@ -163,25 +194,27 @@ const MenuItemForm = () => {
           type="number"
           required
           min={0}
-
-          value={formData.preparationTime}
-          onChange={(e)=>{ setFormData({...formData,preparationTime:Number(e.target.value || 0 )})}}
+          name="preparationTime"
+          value={form.preparationTime}
+          onChange={change}
           />
         </label>
         <label className="check">
           Is Available
           <input
           type="checkbox"
-          checked={formData.isAvailable}
-          onChange={(e)=>{ setFormData({...formData,isAvailable:e.target.checked})}}
+          name="isAvailable"
+          checked={form.isAvailable}
+          onChange={change}
           />
         </label>
         <label>
           Status
           <select
           required
-          value={formData.status}
-          onChange={(e)=>{ setFormData({...formData,status:e.target.value})}}
+          name="status"
+          value={form.status}
+          onChange={change}
           >
             <option value="">Select Status</option>
             <option value="Active">Active</option>
@@ -192,8 +225,9 @@ const MenuItemForm = () => {
           Image
           <input
           type="file"
+          name="image"
           accept="image/*"
-          onChange={(e)=>{ setFormData({...formData,image:e.target.files[0]})}}
+          onChange={change}
           />
         </label>
         <div className="grid-span-2 form-actions">

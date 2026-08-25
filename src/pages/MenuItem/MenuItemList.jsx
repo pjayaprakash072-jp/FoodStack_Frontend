@@ -56,7 +56,7 @@ const MenuItemList = () => {
                 <SearchBar
                 value={search}
                 onChange={setSearch}
-                placeholder="Search Menu Items"
+                placeholder="Search Menu Items by name ...."
                 />
                 
             </div>
@@ -69,10 +69,12 @@ const MenuItemList = () => {
                             <thead>
                                 <tr>
                                     <td>Item</td>
+                                    <td>Image</td>
                                     <td>Price</td>
                                     <td>Stock</td>
                                     <td>Food</td>
                                     <td>Status</td>
+                                    <td>Details</td>
                                     <td>Actions</td>
                                 </tr>
                             </thead>
@@ -82,7 +84,15 @@ const MenuItemList = () => {
                                         <tr key={item._id}>
                                             <td>
                                                 <b>{item.name}</b>
-                                                <Link className="text-link" to={`/menu-item/${item._id}`}>View<ArrowRight size={16}/></Link>
+                                            </td>
+                                            <td>
+                                                {
+                                                    item.image?.url ? (
+                                                        <img src={item.image.url} alt={item.name} style={{width :"50px", height:"50px",objectFit:"cover",border:"8px",borderRadius:"50%"}} />
+                                                    ):(
+                                                        <span>No Image</span>
+                                                    )
+                                                }
                                             </td>
                                             <td>
                                                 ₹{Number(item.price || 0 ).toFixed(2)}
@@ -95,6 +105,9 @@ const MenuItemList = () => {
                                             </td>
                                             <td>
                                                 <span className={`badge ${item.status === "Inactive" ? "gray" : ""}`}>{item.status}</span>
+                                            </td>
+                                            <td>
+                                                <Link className="text-link" to={`/menu-item/${item._id}`}><ArrowRight size={16}/></Link>
                                             </td>
                                             <td>
                                                 <div className="button-row">
