@@ -46,6 +46,7 @@ const MenuItemForm = () => {
           setForm({
             ...form, 
             ...menuitem.menuItem,
+            outlet:menuitem.menuItem.outlet?._id  || menuitem.menuItem.outlet || " ",
             category:menuitem.menuItem.category?._id || menuitem.menuItem.category || " ",
             image:null })
         }else if(params.get("category")) setForm({...form,category:params.get("category")})// creating item for a particular category.

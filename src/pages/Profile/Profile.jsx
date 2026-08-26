@@ -2,13 +2,16 @@ import { useState } from "react"
 
 import {useAuth} from "../../context/AuthContext"
 
-
+import {useNavigate} from 'react-router-dom'
 import { getErrorMessage } from "../../utils/api";
 import vendorService from './../../services/vendorService';
+import { Trash2 } from "lucide-react";
+import ConfirmDialog from "../../components/Common/ConfirmDialog";
 
 
 export default function Profile(){
     const {vendor ,setVendor} = useAuth();
+    const nav = useNavigate();
 
     const [form,setForm] = useState(
         {
@@ -17,6 +20,7 @@ export default function Profile(){
             phone: vendor?.phone || "",
             businessName: vendor?.businessName || "",
             status:vendor?.status || "active",
+            profileImg: null
         }
     )
 
@@ -25,6 +29,28 @@ export default function Profile(){
     const [msg,setMsg] = useState("");
 
     const [busy,setBusy] = useState(false);
+    const [del, setDel] = useState(false);
+
+    const change = (e)=>{
+        const{type,value,name,files} = e.target;
+        setForm(
+            {
+                ...form,
+                [name]: type === 'file' ? files[0] : value
+            }
+        )
+    }
+
+    const remove = async()=>{
+        try {
+            await vendorService.remove(vendor._id);
+            nav("/login");
+        } catch (error) {
+            setError(getErrorMessage(error))
+        }finally{
+            setDel(false)
+        }
+    }
 
     const submit = async(e)=>{
         e.preventDefault();
@@ -32,8 +58,15 @@ export default function Profile(){
         setBusy(true);
 
         try{
+            const formData = new FormData();
 
-            const response = await vendorService.update(vendor._id || vendor.id , form);
+            Object.entries(form).forEach(([key,value])=>{
+                if(value != null && value != undefined){
+                    formData.append(key,value)
+                }
+            })
+
+            const response = await vendorService.update(vendor._id || vendor.id , formData);
             setVendor(response.vendor);
 
             setMsg("profile updateded Successfully!");
@@ -54,6 +87,9 @@ export default function Profile(){
                     <h1>Profile</h1>
                     <p>Update your vendor details</p>
                 </div>
+                <div className="button-row">
+                    <button className="button danger" onClick={()=>setDel(true)}><Trash2 size={18}/>Delete</button>
+                </div>
             </div>
 
             {
@@ -64,28 +100,67 @@ export default function Profile(){
             }
             <form className="panel form grid-2" onSubmit={submit}>
                 <label> Name
-                    <input type="text" required value={form.name} onChange={(e)=> setForm({...form,name:e.target.value})}/>
+                    <input 
+                    type="text" 
+                    required 
+                    name="name"
+                    value={form.name} 
+                    onChange={change}/>
                 </label>
                 <label> Email
-                    <input type="email" value={form.email} disabled />
+                    <input 
+                    type="email" 
+                    name="email"
+                    value={form.email} 
+                    disabled />
                 </label>
                 <label> Phone
-                    <input type="tel" required  value={form.phone} onChange={(e)=>setForm({...form,phone:e.target.value})}/>
+                    <input 
+                    type="tel" 
+                    required  
+                    name="phone"
+                    value={form.phone} 
+                    onChange={change}/>
                 </label>
                 <label> businessName
-                    <input type="text"  value={form.businessName} onChange={(e)=>setForm({...form,businessName:e.target.value})} />
+                    <input 
+                    type="text"  
+                    name="businessName"
+                    value={form.businessName} 
+                    onChange={change} />
                 </label>
                 <label> status
-                    <select value={form.status} onChange={(e)=>setForm({...form ,status:e.target.value})}>
+                    <select 
+                    name="status" 
+                    value={form.status} 
+                    onChange={change}
+                    >
                         <option>active</option>
                         <option>inactive</option>
                         <option>suspended</option>
                     </select>
                 </label>
+                <label className="grid-span-2">
+                    Profile Image 
+                    <input 
+                    type="file" 
+                    name="profileImg" 
+                    accept="image/*"
+                    onChange={change}
+                    />
+                </label>
                 <div className="grid-span-2 form-actions">
                     <button className="button primary" disabled = {busy}>{busy? "Updating...":"Save Changes"}</button>
                 </div>
             </form>
+            <ConfirmDialog
+            open={del}
+            setOpen = {setDel}
+            onCancel={()=>setDel(false)}
+            onConfirm={remove}
+            title="Delete Vendor"
+            message="Are you sure you want to delte Account"
+            />
         </>
     )
 }

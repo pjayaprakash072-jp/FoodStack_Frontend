@@ -63,7 +63,7 @@ const Login = () => {
             navigate("/dashboard");
 
         } catch (error) {
-            console.log("Error",error)
+            // console.log("Error",error)
             // Login failed
             setError(getErrorMessage(error));
 
