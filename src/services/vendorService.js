@@ -6,7 +6,9 @@ const vendorService = {
     getAll:async()=> unwrap(await api.get("/vendor/getall")),
     getOne:async(id)=>unwrap(await api.get(`/vendor/get/${id}`)),
     update:async(id,payload)=>unwrap(await api.put(`/vendor/update/${id}`,payload)),
-    remove:async(id)=>unwrap(await api.delete(`/vendor/delete/${id}`))
+    remove:async(id)=>unwrap(await api.delete(`/vendor/delete/${id}`)),
+    sendResetLink:async(email)=> unwrap(await api.post("/vendor/forgot-password",{email})),
+    updatePassword:async(token,password) => unwrap(await api.post(`/vendor/reset-password/${token}`,{password}))
 }
 
 export default vendorService;
