@@ -4,6 +4,7 @@ import {useAuth} from "../../context/AuthContext"
 import outletService from "../../services/outletService";
 import { getErrorMessage } from "../../utils/api";
 import Loader from "../../components/Common/Loader"
+import{toast} from 'sonner'
 
 const intial = {
     name:"",
@@ -102,7 +103,10 @@ const CreateOutlet = () => {
 
                 await outletService.create(payload)
             }
+            const toastMsg = id? "Outlet Updated successfully!" : "Outlet Created successfully!"
+            toast.success(toastMsg)
             nav("/outlets")
+
         } catch (error) {
             setError(getErrorMessage(error));
         }finally{
