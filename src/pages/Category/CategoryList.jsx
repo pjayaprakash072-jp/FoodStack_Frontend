@@ -64,7 +64,7 @@ const CategoryLIst = () => {
     <>
     <div className="page-heading">
         <div>
-            <p className="eyeborow">{ outletFilter ? "Outlet":"Locations"}</p>
+            <p className="eyebrow">{ outletFilter ? "Outlet":"Categories"}</p>
             <h1>{ outletFilter? `${selectedOutlet?.name || "Outlet" } Categories`:"Categories"}</h1>
             <p>{outletFilter ? `Manage categories for ${selectedOutlet?.name}`:"Create and manage every category of your menu"}</p>
 

@@ -43,7 +43,7 @@ const CategoryCard = ({menuCategory}) => {
                 <span>
                     <ListOrdered size = {14}/>
                     {
-                        menuCategory.menuItems.length || "-"
+                        menuCategory.menuItems.length || 0
                     }
                 </span>
             </div>

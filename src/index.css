@@ -238,7 +238,7 @@ a {
 .outlet-card p {
   color: #64748b;
   font-size: 13px;
-  min-height: 38px;
+  /* min-height: 38px; */
 }
 .row-between {
   display: flex;

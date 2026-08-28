@@ -1,7 +1,7 @@
 
 
 import {Link} from 'react-router-dom'
-import {MapPin , Phone , ArrowRight} from "lucide-react"
+import {MapPin , Phone , ArrowRight,ListOrdered} from "lucide-react"
 const OutletCard = ({outlet}) => {
   return (
     <div className="outlet-card">
@@ -39,6 +39,13 @@ const OutletCard = ({outlet}) => {
                 }
             </p>
             <div className="mini-meta">
+                <span>
+
+                <ListOrdered size={14}/>
+                {
+                    outlet?.menuCategories.length || "0"
+                }
+                </span>
                 <span>
                     <MapPin size = {14}/>
                     {
