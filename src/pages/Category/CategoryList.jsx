@@ -4,7 +4,7 @@ import CategoryCard from "../../components/Cards/CategoryCard"
 
 import {Link ,useSearchParams} from "react-router-dom"
 
-import {Plus} from "lucide-react"
+import {Plus,ArrowLeft} from "lucide-react"
 
 import SearchBar from './../../components/Common/SearchBar';
 
@@ -32,11 +32,14 @@ const CategoryLIst = () => {
     const [q,setQ] = useState("");
 
     const [busy,setBusy]= useState(true);
+
+    const selectedOutlet = outlets.find((o)=> o._id === outletFilter)
     
     const filtered = categories.filter((c)=>`${c.name} ${c.description}`.toLowerCase().includes(q.toLowerCase()));
 
     useEffect(
         ()=>{
+            if(!vendor?._id) return;
             (async ()=>{
                 try{
 
@@ -55,16 +58,25 @@ const CategoryLIst = () => {
             })();
         },[vendor,outletFilter]
     )
+
+    const addCategoryUrl = outletFilter ? `/category/new?outlet=${outletFilter}`:"/category/new"
   return (
     <>
     <div className="page-heading">
         <div>
-            <p className="eyeborow">Locations</p>
-            <h1>Categories</h1>
-            <p>Create and manage every category of your meny</p>
+            <p className="eyeborow">{ outletFilter ? "Outlet":"Locations"}</p>
+            <h1>{ outletFilter? `${selectedOutlet?.name || "Outlet" } Categories`:"Categories"}</h1>
+            <p>{outletFilter ? `Manage categories for ${selectedOutlet?.name}`:"Create and manage every category of your menu"}</p>
 
         </div>
-        <Link className="button primary" to="/category/new"><Plus size={19}/>Add Category</Link>
+        <div className="button-row">
+            {
+                outletFilter && (
+                    <Link className="button secondary" to="/categories"> <ArrowLeft size = {18}/> All Categories</Link>
+                )
+            }
+            <Link className="button primary" to={addCategoryUrl}><Plus size={19}/>Add Category</Link>
+        </div>
     </div>
     <div className="toolbar">
         <SearchBar 
@@ -87,13 +99,13 @@ const CategoryLIst = () => {
             </div>
             ):(
                 <EmptyState
-                title="No categories found"
+                title={outletFilter? `No categories for ${selectedOutlet?.name}` :"No categories found"}
                 text={q ? "Try a different search" : "Create your first category"}
                 action={
                     outlets.length == 0?(
                     <Link className="button primary" to = "/outlets/new" >Create Outlet First</Link>):(
 
-                <Link className="button primary" to="/category/new">Add Category</Link>)
+                <Link className="button primary" to={addCategoryUrl}>Add Category</Link>)
             }
                 />
             )

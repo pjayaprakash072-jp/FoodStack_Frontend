@@ -15,6 +15,7 @@ import { getErrorMessage } from "../../utils/api"
 const OutletDetails = () => {
     
     const {id} = useParams();
+    console.log(id);
     
     const [error,setError] = useState("");
     

@@ -1,30 +1,42 @@
 import { useState,useEffect } from "react"
-import menuItemService from "../../services/menuItemService"
+import { Link ,useSearchParams } from "react-router-dom"
 import Loader from "../../components/Common/Loader"
+import SearchBar from "../../components/Common/SearchBar"
+import ConfirmDialog from "../../components/Common/ConfirmDialog"
+import menuItemService from "../../services/menuItemService"
 import { getErrorMessage } from "../../utils/api"
 import { Plus,Pencil ,Trash2 ,ArrowRight} from "lucide-react"
-import { Link } from "react-router-dom"
 import { useAuth } from "../../context/AuthContext"
-import ConfirmDialog from "../../components/Common/ConfirmDialog"
-import SearchBar from "../../components/Common/SearchBar"
 
 const MenuItemList = () => {
     const {vendor} = useAuth();
     const [items,setItems] = useState([]);
+    const [params] = useSearchParams();
+    const categoryFilter = params.get("category")
     const [busy,setBusy] = useState(true);
     const [error,setError] = useState("")
     const [del,setDel] = useState(null);
     const [search,setSearch] = useState("");
 
     useEffect(()=>{
-        (async()=>{
-                    menuItemService.byVendor(vendor?._id)
-        .then((r)=>setItems(r.menuItems))
-        .catch((err)=>setError(getErrorMessage(err)))
-        .finally(()=>setBusy(false))
-    })();
+        (async ()=>{
+            try {
+                const menuitems = categoryFilter ? await menuItemService.byCategory(categoryFilter): await menuItemService.byVendor(vendor?._id)
+                setItems(menuitems.menuItems)
+            } catch (error) {
+                setError(getErrorMessage(error))
+            }finally{
+                setBusy(false);
+            }
+        })();
+    //     (async()=>{
+    //                 menuItemService.byVendor(vendor?._id)
+    //     .then((r)=>setItems(r.menuItems))
+    //     .catch((err)=>setError(getErrorMessage(err)))
+    //     .finally(()=>setBusy(false))
+    // })();
     }
-    ,[vendor?._id])
+    ,[vendor,categoryFilter])
 
     const remove = ()=>{
         setBusy(true)

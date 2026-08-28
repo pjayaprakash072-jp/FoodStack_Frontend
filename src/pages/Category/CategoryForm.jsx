@@ -127,7 +127,7 @@ const CategoryForm = () => {
                 required
                 name="outlet"
                 value={form.outlet}
-                disabled = {Boolean(id)}
+                disabled = {Boolean(id) || Boolean(params.get('outlet'))} 
                 onChange={change}
                 >
             <option value="">Select outet</option>
