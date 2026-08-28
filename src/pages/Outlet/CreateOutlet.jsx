@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate,useParams } from "react-router-dom";
-import {useAuth} from "../../context/AuthContext"
+import {useAuth} from "../../context/useAuth"
 import outletService from "../../services/outletService";
 import { getErrorMessage } from "../../utils/api";
 import Loader from "../../components/Common/Loader"

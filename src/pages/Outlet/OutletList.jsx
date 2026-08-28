@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "../../context/AuthContext"
+import { useAuth } from "../../context/useAuth"
 import {Link} from 'react-router-dom'
 import {Plus} from 'lucide-react'
 import SearchBar from "../../components/Common/SearchBar"

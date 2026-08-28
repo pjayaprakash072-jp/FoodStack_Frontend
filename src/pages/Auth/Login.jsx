@@ -34,9 +34,11 @@
 
 import { useState } from "react";
 import { Link,useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/useAuth";
 import { getErrorMessage } from "../../utils/api";
 import { LogIn } from "lucide-react";
+
+import { GoogleLogin } from "@react-oauth/google";
 
 const Login = () => {
     const [form,setForm] = useState({
@@ -45,7 +47,7 @@ const Login = () => {
     })
     const [error, setError] = useState("");
     const [busy, setBusy] = useState(false);
-    const { login } = useAuth();
+    const { login ,googleLogin } = useAuth();
     const navigate = useNavigate();
 
 
@@ -85,6 +87,21 @@ const Login = () => {
                         Sign in to manage your food business.
                     </p>
                 </div>
+                <GoogleLogin
+                onSuccess={ async (credentialResponse)=>{
+                    // console.log(credentialResponse)
+                    try{
+                        await googleLogin(credentialResponse.credential)
+                        navigate("/dashboard")
+                    }catch(err){
+                        console.error(err);
+                        setError("Google Login failed")
+                    }
+                }}
+                onError={(error)=>{
+                    console.log(error);
+                    setError("Google Login failed")
+                }}/>
 
                 <form
                     className="form"

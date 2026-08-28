@@ -1,7 +1,7 @@
 import {NavLink} from 'react-router-dom'
 import {Menu , LogOut, UserCircle} from "lucide-react"
 
-import {useAuth} from "../../context/AuthContext"
+import {useAuth} from "../../context/useAuth"
 const Navbar = ({onMenu}) => {
     const {vendor,logout} = useAuth();
   return (

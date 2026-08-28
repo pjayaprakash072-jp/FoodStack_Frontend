@@ -12,7 +12,7 @@ import Loader from "../../components/Common/Loader";
 import outletService from '../../services/outletService';
 import categoryService from '../../services/categoryService';
 import menuItemService from '../../services/menuItemService';
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/useAuth";
 
 const arr = (x) =>
   Array.isArray(x)

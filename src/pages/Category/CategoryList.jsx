@@ -15,7 +15,7 @@ import EmptyState from './../../components/Common/EmptyState';
 import categoryService from "../../services/categoryService";
 import outletService from "../../services/outletService";
 
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/useAuth";
 import { useState,useEffect  } from "react";
 
 const arr = (x)=> Array.isArray(x)? x: x?.menuCategories || [];

@@ -10,7 +10,7 @@ import categoryService from './../../services/categoryService';
 
 import Loader from "../../components/Common/Loader"
 
-import {useAuth} from "../../context/AuthContext"
+import {useAuth} from "../../context/useAuth"
 import outletService from './../../services/outletService';
 import { getErrorMessage } from "../../utils/api";
 

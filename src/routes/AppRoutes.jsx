@@ -5,7 +5,7 @@ import Register from './../pages/Auth/Register';
 
 import Profile from "../pages/Profile/Profile";
 
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 import DashboardLayout from "../components/Layout/DashboardLayout"
 import CreateOutlet from "../pages/Outlet/CreateOutlet";
 import OutletList from './../pages/Outlet/OutletList';

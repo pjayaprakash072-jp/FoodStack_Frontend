@@ -1,10 +1,10 @@
 import {getToken,setToken, clearAuth,getVendor,setVendor as saveVendor} from "../utils/auth";
 
-import {useContext, createContext, useMemo, useState}  from 'react'
+import { createContext, useMemo, useState}  from 'react'
 
 import vendorService from "../services/vendorService";
 
-const AuthContext = createContext(null);
+export const AuthContext = createContext(null);
 
 
 export function AuthProvider({children}){
@@ -16,6 +16,20 @@ export function AuthProvider({children}){
         saveVendor(vendorData)
     }
 
+    const googleLogin = async (credential)=>{
+        const result = await vendorService.googleLogin(credential)
+
+        if(!result?.token){
+            throw new Error("Gogle Login failed");
+        }
+
+        setToken(result.token);
+        setAuthToken(result.token);
+        if(result.vendor){
+            updateVendor(result.vendor)
+        }
+        return result;
+    }
     const login = async (credentials)=>{
         const result = await vendorService.login(credentials);
 
@@ -51,7 +65,7 @@ export function AuthProvider({children}){
     const value = useMemo(
         ()=>(
             {
-                token, isAuthenticated:Boolean(token), login , logout,vendor, setVendor:updateVendor
+                token, isAuthenticated:Boolean(token), login , logout,googleLogin,vendor, setVendor:updateVendor
             }
             ),[token,vendor]);
 
@@ -64,4 +78,3 @@ export function AuthProvider({children}){
     
 }
 
-export const useAuth = ()=> useContext(AuthContext)

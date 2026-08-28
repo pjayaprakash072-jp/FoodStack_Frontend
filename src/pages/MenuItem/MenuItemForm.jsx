@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useNavigate,useParams, useSearchParams } from "react-router-dom"
 import menuItemService from "../../services/menuItemService"
 import { getErrorMessage } from "../../utils/api"
-import { useAuth } from "../../context/AuthContext"
+import { useAuth } from "../../context/useAuth"
 import Loader from "../../components/Common/Loader"
 import categoryService from "../../services/categoryService"
 const intial = {

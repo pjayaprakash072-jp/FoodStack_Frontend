@@ -8,7 +8,8 @@ const vendorService = {
     update:async(id,payload)=>unwrap(await api.put(`/vendor/update/${id}`,payload)),
     remove:async(id)=>unwrap(await api.delete(`/vendor/delete/${id}`)),
     sendResetLink:async(email)=> unwrap(await api.post("/vendor/forgot-password",{email})),
-    updatePassword:async(token,password) => unwrap(await api.post(`/vendor/reset-password/${token}`,{password}))
+    updatePassword:async(token,password) => unwrap(await api.post(`/vendor/reset-password/${token}`,{password})),
+    googleLogin:async(credential) => unwrap(await api.post("/vendor/google-login",{credential}))
 }
 
 export default vendorService;
