@@ -1,6 +1,8 @@
 import { useState } from "react"
 import vendorService from "../../services/vendorService";
 import { getErrorMessage } from "../../utils/api";
+import { useNavigate } from 'react-router-dom';
+
 
 const ForgotPassword = () => {
 
@@ -12,6 +14,8 @@ const ForgotPassword = () => {
 
     const [msg,setMsg]  = useState("");
 
+    const nav = useNavigate();
+
 
     const handleSubmit = async(e)=>{
         e.preventDefault();
@@ -19,7 +23,7 @@ const ForgotPassword = () => {
         setLoading(true);
         try {
             const response = await vendorService.sendResetLink(email)
-            setMsg(response.message);
+            setMsg(response.message +" Change password and login");
             setEmail("");
         } catch (error) {
             setError(getErrorMessage(error))
@@ -38,7 +42,13 @@ const ForgotPassword = () => {
                 <p>Enter Registered email to get password update link</p>
             </div>
             {error && <div className="alert error">{error}</div>}
-            {msg && <div className="alert success">{msg}</div>}
+            {msg ? (
+                <>
+                <div className="alert success">{msg}</div>
+                <button className="button primary full" type="button" onClick={()=> nav("/login")}>login</button>
+                </>
+            ):(
+
             <form className="form" onSubmit={handleSubmit}>
                 <label>
                     Email 
@@ -55,6 +65,8 @@ const ForgotPassword = () => {
                 disabled = {loading}
                 >{loading ? "Sending...":"Send reset link"}</button>
             </form>
+            )
+            }
         </div>
     </div>
   )
