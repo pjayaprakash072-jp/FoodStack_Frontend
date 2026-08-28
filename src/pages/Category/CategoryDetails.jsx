@@ -14,7 +14,6 @@ const CategoryDetails = () => {
     const [busy,setBusy] = useState(true);
     const [items,setItems] = useState([]);
     const [del,setDel] = useState(false);
-    const [outletname, setOutletname] = useState("");
     const nav = useNavigate();
 
     useEffect(
@@ -25,7 +24,6 @@ const CategoryDetails = () => {
                         categoryService.getOne(id),
                         menuItemService.byCategory(id)
                     ])
-                    setOutletname(a.menuCategory.outlet.name);
                     setCategory(a.menuCategory);
                     setItems(b.menuItems);
                 }catch(error){
@@ -72,7 +70,7 @@ if(!category){
             <h3>Information</h3>
             <Detail
             label="Outlet"
-            value={outletname}
+            value={category.outlet?.name || "-"}
             />
             <Detail
             label="Category"
@@ -97,7 +95,7 @@ if(!category){
                 {items.length}
             </div>
             <p>Menu Items</p>
-            {/* <link className="button primary" to={`/menu-items?category=${id}`}>Manage Menu Items</link> */}
+            <Link className="button primary" to={`/menu-items?category=${id}`}>Manage Menu Items</Link>
         </div>
     </div>
             <ConfirmDialog

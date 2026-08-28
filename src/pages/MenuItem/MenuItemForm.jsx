@@ -25,7 +25,7 @@ const MenuItemForm = () => {
   const {vendor} = useAuth();
   const [busy,setBusy] = useState(false);
   const [params] = useSearchParams();
-  const [loading,setLoading] = useState(false);
+  const [loading,setLoading] = useState(Boolean(id));
   const [form,setForm] = useState(intial);
   const [categories,setCategories] = useState([]);
   const [error,setError] = useState("");
@@ -46,17 +46,25 @@ const MenuItemForm = () => {
           setForm({
             ...form, 
             ...menuitem.menuItem,
-            outlet:menuitem.menuItem.outlet?._id  || menuitem.menuItem.outlet || " ",
-            category:menuitem.menuItem.category?._id || menuitem.menuItem.category || " ",
+            outlet:menuitem.menuItem.outlet?._id  || menuitem.menuItem.outlet || "",
+            category:menuitem.menuItem.category?._id || menuitem.menuItem.category || "",
             image:null })
-        }else if(params.get("category")) setForm({...form,category:params.get("category")})// creating item for a particular category.
+        }else if(params.get("category")) {
+
+          setForm((prev)=>({
+            ...prev,
+
+            category:params.get("category")
+          })
+          )// creating item for a particular category.
+        }
       }catch(error){
         setError(getErrorMessage(error))
       }finally{
         setLoading(false)
       }
       })();
-    },[id,vendor?.id]);
+    },[id,vendor]);
 
     const change = (e)=>{
         const {name,type, value, checked,files} = e.target;
@@ -84,10 +92,11 @@ const MenuItemForm = () => {
 
       if(id){
         await menuItemService.update(id,formData);
+        nav("/menu-items");
       }else{
         await menuItemService.create(category,formData);
+        nav(`/menu-items?category=${category}`)
       }
-      nav("/menu-items");
     }catch(error){
       setError(getErrorMessage(error));
     }finally{
@@ -131,7 +140,7 @@ const MenuItemForm = () => {
           required
           name="category"
           value={form.category}
-          disabled = {Boolean(id)}
+          disabled = {Boolean(id) || Boolean(params.get("category"))}
           onChange={change}
           >
             <option value="">Select Category</option>

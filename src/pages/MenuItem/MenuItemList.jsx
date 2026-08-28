@@ -5,12 +5,15 @@ import SearchBar from "../../components/Common/SearchBar"
 import ConfirmDialog from "../../components/Common/ConfirmDialog"
 import menuItemService from "../../services/menuItemService"
 import { getErrorMessage } from "../../utils/api"
-import { Plus,Pencil ,Trash2 ,ArrowRight} from "lucide-react"
+import { Plus,Pencil ,Trash2 ,ArrowRight,ArrowLeft} from "lucide-react"
 import { useAuth } from "../../context/AuthContext"
+import categoryService from "../../services/categoryService"
+import EmptyState from "../../components/Common/EmptyState"
 
 const MenuItemList = () => {
     const {vendor} = useAuth();
     const [items,setItems] = useState([]);
+    const [categories,setCategories] = useState([]);
     const [params] = useSearchParams();
     const categoryFilter = params.get("category")
     const [busy,setBusy] = useState(true);
@@ -18,11 +21,22 @@ const MenuItemList = () => {
     const [del,setDel] = useState(null);
     const [search,setSearch] = useState("");
 
+    const selectedCategory = categories.find((c)=>c._id === categoryFilter)
+
     useEffect(()=>{
+        if(!vendor?._id) return;
         (async ()=>{
             try {
-                const menuitems = categoryFilter ? await menuItemService.byCategory(categoryFilter): await menuItemService.byVendor(vendor?._id)
-                setItems(menuitems.menuItems)
+                const [i,c] = await Promise.all(
+                    [
+                        categoryFilter? menuItemService.byCategory(categoryFilter):menuItemService.byVendor(vendor?._id)
+                        ,
+                        categoryService.byVendor(vendor?._id)
+                    ]
+                )
+                // const menuitems = categoryFilter ? await menuItemService.byCategory(categoryFilter): await menuItemService.byVendor(vendor?._id)
+                setItems(i?.menuItems)
+                setCategories(c?.menuCategories)
             } catch (error) {
                 setError(getErrorMessage(error))
             }finally{
@@ -51,17 +65,34 @@ const MenuItemList = () => {
     }
 
     const filtered = items.filter((item)=>item.name.toLowerCase().includes(search.toLowerCase()))
+
+    const addMenuItemUrl = categoryFilter? `/menu-item/new?category=${categoryFilter}` : "/menu-item/new"
   return (
     <>
         <div className="page-heading">
             <div>
                 <p className="eyebrow">Products</p>
-                <h1>Menu Items</h1>
-                <p>Manage Pricing, Stock, availability and preparation time</p>
+                <h1>{categoryFilter? `${selectedCategory?.name || "Category"} Menu Items`:"Menu Items"}</h1>
+                <p>{
+                    categoryFilter? `Manage menu items  for ${selectedCategory?.name || "This Category"} `: "Manage Pricing, Stock, availability and preparation time"}
+                </p>
             </div>
-                <Link to="/menu-item/new" className="button primary">
+            <div className="button-row">
+                {
+                    categoryFilter && (
+                        <Link className="button secondary"  to="/menu-items"><ArrowLeft size={19}/> All menu items</Link>
+                    )
+                }
+                <Link className="button primary"  to ={addMenuItemUrl}><Plus size={18}/> Add Menu Item </Link>
+            </div>
+                {/* <Link 
+                    className="button primary"
+                    to={
+                        categoryFilter? `/menu-item/new?category=${categoryFilter}` : "/menu-item/new"
+                    } 
+                    >
                     <Plus size={18}/> Add Menu Item
-                </Link>
+                </Link> */}
             </div>
             {error && <div className="error">{error}</div>}
             <div className="toolbar">
@@ -75,7 +106,7 @@ const MenuItemList = () => {
             {
                 busy? (
                     <Loader/>
-                ):(
+                ):filtered.length ?(
                     <div className="panel table-wrap">
                         <table>
                             <thead>
@@ -140,11 +171,24 @@ const MenuItemList = () => {
                             )
                         }
                     </div>
+                ):(
+                    <EmptyState
+                    title={
+                        categoryFilter?
+                        `No menu items for ${selectedCategory.name ||"this category"}` :"No menu tems found"
+                    }
+                    text={
+                        search ? "try differnct search" : "Create your first menu item"
+                    }
+                    action={
+                        <Link className="button primary" to={addMenuItemUrl}><Plus size={19}/> Add menu Item</Link>
+                    }
+                    />
                 )
             }
         <ConfirmDialog
         open = {del}
-        onCancel={()=>setDel(false)}
+        onCancel={()=>setDel(null)}
         onConfirm={remove}
         />
     </>

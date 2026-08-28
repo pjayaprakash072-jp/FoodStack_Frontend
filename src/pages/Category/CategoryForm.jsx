@@ -83,17 +83,20 @@ const CategoryForm = () => {
         try{
             const {outlet,...payload} = form;
             const formData = new FormData();
-            formData.append("name",payload.name);
-            formData.append("description",payload.description);
-            formData.append("displayOrder",payload.displayOrder);
-            formData.append("isActive",payload.isActive);
-            if(payload.image){
-                formData.append("image",payload.image)
-            }
+            Object.entries(payload).forEach(([key,value])=>{
+                if(value !== null && value !== undefined){
+                formData.append(key,value);
+                }
+            });
             if(id){
                 await categoryService.update(id,formData);
-            }else await categoryService.create(outlet,formData);
-            nav("/categories")
+                nav("/categories")
+            }else {
+                await categoryService.create(outlet,formData);
+                if(params.get("outlet")) nav(`/categories?outlet=${params.get("outlet")}`);
+                else nav("/categories")
+
+            }
         }catch(err){
             setError(getErrorMessage(err))
         }finally{
