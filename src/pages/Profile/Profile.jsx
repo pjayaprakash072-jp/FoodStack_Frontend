@@ -85,6 +85,9 @@ export default function Profile(){
                 <div>
                     <p className="eyebrow"> Account</p>
                     <h1>Profile</h1>
+                    <div className="outlet-image">
+                        <img src = {vendor?.profileImg?.url} alt ="vendor img"/>
+                    </div>
                     <p>Update your vendor details</p>
                 </div>
                 <div className="button-row">
