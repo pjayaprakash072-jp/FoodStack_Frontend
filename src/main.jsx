@@ -7,7 +7,7 @@ import App from './App.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <Toaster position='bottom-center' richColors closeButton duration={3000} theme='system'/>
+    <Toaster position='bottom-right' richColors closeButton duration={3000} theme='system'/>
     <GoogleOAuthProvider
         clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}
     >

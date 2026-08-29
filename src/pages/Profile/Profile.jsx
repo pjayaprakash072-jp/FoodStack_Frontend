@@ -1,17 +1,21 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import {useAuth} from "../../context/useAuth"
 
-import {useNavigate} from 'react-router-dom'
+import {useNavigate,useSearchParams} from 'react-router-dom'
 import { getErrorMessage } from "../../utils/api";
 import vendorService from './../../services/vendorService';
 import { Trash2 } from "lucide-react";
 import ConfirmDialog from "../../components/Common/ConfirmDialog";
+import {toast} from 'sonner'
 
 
 export default function Profile(){
     const {vendor ,setVendor} = useAuth();
+    const [params] = useSearchParams();
     const nav = useNavigate();
+    const [password, setPassword] = useState("");
+    const [takePassword, setTakePassword] = useState(false);
 
     const [form,setForm] = useState(
         {
@@ -30,6 +34,16 @@ export default function Profile(){
 
     const [busy,setBusy] = useState(false);
     const [del, setDel] = useState(false);
+    useEffect(
+        ()=>{
+            (()=>{
+                const msg = params.get("message");
+                if(msg){
+                    setMsg(msg);
+                }
+            })()
+        },[params]
+    )
 
     const change = (e)=>{
         const{type,value,name,files} = e.target;
@@ -59,7 +73,9 @@ export default function Profile(){
 
         try{
             const formData = new FormData();
-
+            if(takePassword){
+                formData.append("password",password);
+            }
             Object.entries(form).forEach(([key,value])=>{
                 if(value != null && value != undefined){
                     formData.append(key,value)
@@ -68,8 +84,12 @@ export default function Profile(){
 
             const response = await vendorService.update(vendor._id || vendor.id , formData);
             setVendor(response.vendor);
+            toast.success("profile updateded Successfully!")
 
             setMsg("profile updateded Successfully!");
+            setTimeout(()=>{
+                setMsg("");
+            },3000)
 
             
         }catch(err){
@@ -85,13 +105,13 @@ export default function Profile(){
                 <div>
                     <p className="eyebrow"> Account</p>
                     <h1>Profile</h1>
-                    <div className="outlet-image">
-                        <img src = {vendor?.profileImg?.url} alt ="vendor img"/>
-                    </div>
                     <p>Update your vendor details</p>
                 </div>
+                <div className="profile-image">
+                    <img src = {vendor?.profileImg?.url || "default-profile.png"} alt ="vendor img"/>
+                </div>
                 <div className="button-row">
-                    <button className="button danger" onClick={()=>setDel(true)}><Trash2 size={18}/>Delete</button>
+                    <button className="button danger" onClick={()=>setDel(true)}><Trash2 size={18}/>Delete Account</button>
                 </div>
             </div>
 
@@ -143,6 +163,22 @@ export default function Profile(){
                         <option>suspended</option>
                     </select>
                 </label>
+                {
+                    takePassword ? (
+                            <label> Password
+                                <input
+                                name="password" 
+                                value={password}
+                                required
+                                onChange={(e)=>setPassword(e.target.value)}
+                                />
+                            </label>
+
+                    ):(
+                        
+                        <button type="button" style={{width:"30%", height:'50%' , margin:'auto auto'}} onClick={()=>setTakePassword(true)}>Add Password?</button>
+                    )
+                }
                 <label className="grid-span-2">
                     Profile Image 
                     <input 
@@ -153,7 +189,7 @@ export default function Profile(){
                     />
                 </label>
                 <div className="grid-span-2 form-actions">
-                    <button className="button primary" disabled = {busy}>{busy? "Updating...":"Save Changes"}</button>
+                    <button type="submit" className="button primary" disabled = {busy}>{busy? "Updating...":"Save Changes"}</button>
                 </div>
             </form>
             <ConfirmDialog

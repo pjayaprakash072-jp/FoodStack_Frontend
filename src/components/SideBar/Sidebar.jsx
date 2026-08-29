@@ -1,6 +1,8 @@
 
 import {NavLink} from 'react-router-dom'
 import { LayoutDashboard,Store,Tags,Utensils,User,X } from "lucide-react"
+import {useAuth} from '../../context/useAuth'
+import {LogOut} from 'lucide-react'
 const links = [
   {to:"/dashboard" , label: "Dashboard" , icon:LayoutDashboard},
   {to:"/outlets" , label: "Outlets" , icon:Store},
@@ -9,6 +11,7 @@ const links = [
   {to:"/profile" , label: "Profile" , icon:User},
 ]
 const Sidebar = ({open , onClose}) => {
+  const {logout} = useAuth();
   return (
     <aside className={`sidebar ${open ? "sidebar-open" : ""}`}>
       <NavLink
@@ -42,6 +45,7 @@ const Sidebar = ({open , onClose}) => {
           )
         }
       </nav>
+          <button style={{margin:"auto 0 10% 0"}} onClick={logout}><LogOut size = {17}/>Logout</button>
     </aside>
   )
 }

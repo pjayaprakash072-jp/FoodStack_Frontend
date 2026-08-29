@@ -22,11 +22,11 @@ const Navbar = ({onMenu}) => {
             <span>
                 {vendor?.name || vendor?.businessName || 'Vendor'}
             </span>
+        </div>
             <button className="ghost-button" onClick={logout}>
                 <LogOut size = {17}/>
                 Logout
             </button>
-        </div>
     </header>
   )
 }

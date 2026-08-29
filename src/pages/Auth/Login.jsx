@@ -92,7 +92,8 @@ const Login = () => {
                     // console.log(credentialResponse)
                     try{
                         await googleLogin(credentialResponse.credential)
-                        navigate("/dashboard")
+                        const message = "please update phone and password";
+                        navigate(`/profile?message=${message}`)
                     }catch(err){
                         console.error(err);
                         setError("Google Login failed")
