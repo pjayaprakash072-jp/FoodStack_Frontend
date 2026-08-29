@@ -84,6 +84,7 @@ export default function Profile(){
 
             const response = await vendorService.update(vendor._id || vendor.id , formData);
             setVendor(response.vendor);
+            setTakePassword(false);
             toast.success("profile updateded Successfully!")
 
             setMsg("profile updateded Successfully!");
