@@ -107,8 +107,10 @@ const CreateOutlet = () => {
             toast.success(toastMsg)
             nav("/outlets")
 
-        } catch (error) {
-            setError(getErrorMessage(error));
+        } catch (err) {
+            const message= getErrorMessage(err);
+            setError(message);
+            toast.error(message)
         }finally{
             setBusy(false)
         }
