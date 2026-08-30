@@ -5,6 +5,7 @@ import { getErrorMessage } from "../../utils/api"
 import { useAuth } from "../../context/useAuth"
 import Loader from "../../components/Common/Loader"
 import categoryService from "../../services/categoryService"
+import {toast} from 'sonner'
 const intial = {
     name:"",
     description:"",
@@ -89,12 +90,14 @@ const MenuItemForm = () => {
           formData.append(key,value);
         }
       });
-
+            const toastMsg = id? "MenuItem Updated successfully!" : "MenuItem Created successfully!"
       if(id){
         await menuItemService.update(id,formData);
+        toast.success(toastMsg)
         nav("/menu-items");
       }else{
         await menuItemService.create(category,formData);
+        toast.success(toastMsg)
         nav(`/menu-items?category=${category}`)
       }
     }catch(error){

@@ -13,6 +13,7 @@ import Loader from "../../components/Common/Loader"
 import {useAuth} from "../../context/useAuth"
 import outletService from './../../services/outletService';
 import { getErrorMessage } from "../../utils/api";
+import {toast} from 'sonner'
 
 const initial = {
     name:"",
@@ -55,8 +56,18 @@ const CategoryForm = () => {
                     if(id){// showing only one outlet of the category. used in editing the caterogy.
 
                         const c = await categoryService.getOne(id);
+                        const category = c.menuCategory;
 
-                        setForm ({...form , ...c.menuCategory, outlet:c.menuCategory.outlet?._id || c.menuCategory.outlet || "",image:null})
+                        setForm (
+                            {
+                                name:category.name ||"",
+                                description:category.description || "",
+                                displayOrder:category.displayOrder ?? 0,
+                                isActive: category.isActive ?? true,
+                                image:null,
+                                outlet: category.outlet?._id || category.outlet || ""
+                            }
+                        )
                         
                     }else if(params.get("outlet")) setForm((f)=>({...f,outlet:params.get("outlet")}))// creating category for a particular outlet.
                 } catch (error) {
@@ -88,13 +99,22 @@ const CategoryForm = () => {
                 formData.append(key,value);
                 }
             });
+            const toastMsg = id? "Category Updated successfully!" : "Category Created successfully!"
+
             if(id){
                 await categoryService.update(id,formData);
+                toast.success(toastMsg)
                 nav("/categories")
             }else {
                 await categoryService.create(outlet,formData);
-                if(params.get("outlet")) nav(`/categories?outlet=${params.get("outlet")}`);
-                else nav("/categories")
+                if(params.get("outlet")){
+                    toast.success(toastMsg)
+                    nav(`/categories?outlet=${params.get("outlet")}`);
+                } 
+                else{
+                    toast.success(toastMsg)
+                    nav("/categories")
+                } 
 
             }
         }catch(err){
