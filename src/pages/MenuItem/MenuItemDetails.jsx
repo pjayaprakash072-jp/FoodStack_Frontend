@@ -89,7 +89,7 @@ const MenuItemDetails = () => {
       <div className="panel">
         {
           item.image?.url ? (
-            <img src={item.image.url} alt={item.name} style={{borderRadius:"50%", border:"5px solid black" ,marginTop:"50px"}}/>
+            <img src={item.image.url} alt={item.name} style={{borderRadius:"20%",width:"100%",height:"60%", border:"5px solid black" ,marginTop:"30%"}}/>
           ):(
             <span>No Image</span>
           )

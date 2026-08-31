@@ -397,18 +397,18 @@ a {
 .profile-image {
   width: 145px;
   min-width: 145px;
-
+  height:140px;
   background: #e2e8f0;
 
   display: grid;
   place-items: center;
 
-  font-size: 38px;
+  /* font-size: 38px; */
 
-  font-weight: 800;
+  /* font-weight: 800; */
 
   color: #64748b;
-  border-radius:20%;
+  border-radius:10%;
   overflow:hidden;
 }
 
