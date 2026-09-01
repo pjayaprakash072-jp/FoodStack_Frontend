@@ -4,6 +4,7 @@ import {Menu , LogOut, UserCircle} from "lucide-react"
 import {useAuth} from "../../context/useAuth"
 const Navbar = ({onMenu}) => {
     const {vendor,logout} = useAuth();
+    
   return (
     <header className="navbar">
         <button className="icon-button mobile-only" onClick={onMenu}>
