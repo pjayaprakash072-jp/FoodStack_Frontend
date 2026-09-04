@@ -82,7 +82,7 @@ export default function Profile(){
                 }
             })
 
-            const response = await vendorService.update(vendor._id || vendor.id , formData);
+            const response = await vendorService.update(formData);
             setVendor(response.vendor);
             setTakePassword(false);
             setPassword("")
