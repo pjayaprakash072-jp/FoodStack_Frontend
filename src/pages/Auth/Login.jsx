@@ -75,84 +75,92 @@ const Login = () => {
     };
 
     return (
-        <div className="auth-page">
-            <div className="auth-card">
+    //     <div className="auth-page">
+    //         <div className="auth-card">
 
-                <div className="auth-brand">
-                    <div className="brand-mark">VM</div>
+    //             <div className="auth-brand">
+    //                 <div className="brand-mark">VM</div>
 
-                    <h1>Welcome Back</h1>
+    //                 <h1>Welcome Back</h1>
 
-                    <p>
-                        Sign in to manage your food business.
-                    </p>
-                </div>
-                <GoogleLogin
-                onSuccess={ async (credentialResponse)=>{
-                    console.log(credentialResponse)
-                    try{
-                        await googleLogin(credentialResponse.credential)
-                        const message = "please update phone and password";
-                        navigate(`/profile?message=${message}`)
-                    }catch(err){
-                        console.error(err);
-                        setError("Google Login failed")
-                    }
-                }}
-                onError={(error)=>{
-                    console.log(error);
-                    setError("Google Login failed")
-                }}/>
+    //                 <p>
+    //                     Sign in to manage your food business.
+    //                 </p>
+    //             </div>
+    //             <GoogleLogin
+    //             onSuccess={ async (credentialResponse)=>{
+    //                 console.log("GOOGLE SUCCESS");
+    //                 console.log(credentialResponse)
+    //                 try{
+    //                     await googleLogin(credentialResponse.credential)
+    //                     console.log("BACKEND GOOGLE LOGIN SUCCESS");
+    //                     const message = "please update phone and password";
+    //                     navigate(`/profile?message=${message}`)
+    //                 }catch(err){
+    //                     console.error(err);
+    //                     setError("Google Login failed")
+    //                     console.log("BACKEND GOOGLE LOGIN FAILED");
+    //                     console.log(err.response?.data);
+    //                     console.log(err);
+    //                 }
+    //             }}
+    //             onError={(error)=>{
+    //                 console.log(error);
+    //                 setError("Google Login failed")
+    //             }}/>
 
-                <form
-                    className="form"
-                    onSubmit={handleSubmit}
-                >
+    //             <form
+    //                 className="form"
+    //                 onSubmit={handleSubmit}
+    //             >
 
-                    <label>
-                        Email
+    //                 <label>
+    //                     Email
 
-                        <input
-                            type="email"
-                            placeholder="Email"
-                            value={form.email}
-                            onChange={(e) => setForm({...form,email:e.target.value})}
-                            required
-                        />
-                    </label>
+    //                     <input
+    //                         type="email"
+    //                         placeholder="Email"
+    //                         value={form.email}
+    //                         onChange={(e) => setForm({...form,email:e.target.value})}
+    //                         required
+    //                     />
+    //                 </label>
 
-                    <label>
-                        Password
+    //                 <label>
+    //                     Password
 
-                        <input
-                            type="password"
-                            placeholder="••••••••"
-                            value={form.password}
-                            onChange={(e) => setForm({...form,password:e.target.value})}
-                            required
-                        />
-                    </label>
+    //                     <input
+    //                         type="password"
+    //                         placeholder="••••••••"
+    //                         value={form.password}
+    //                         onChange={(e) => setForm({...form,password:e.target.value})}
+    //                         required
+    //                     />
+    //                 </label>
 
-                    {error && ( <p className="alert error"> {error} </p> )}
+    //                 {error && ( <p className="alert error"> {error} </p> )}
 
-                    <button
-                        type="submit"
-                        className="button primary full"
-                        disabled={busy}
-                    >
-                        <LogIn size={18}/>
-                        {busy ? "Logging in..." : "Login"}
-                    </button>
+    //                 <button
+    //                     type="submit"
+    //                     className="button primary full"
+    //                     disabled={busy}
+    //                 >
+    //                     <LogIn size={18}/>
+    //                     {busy ? "Logging in..." : "Login"}
+    //                 </button>
 
-                </form>
-                <p className="auth-footer">
-                    <Link to = "/forgot-password">Forgot Password</Link>
-                </p>
-                <p className="auth-footer">
-                    New Vendor? <Link to="/register" > Create an Account</Link>
-                </p>
-            </div>
-        </div>
+    //             </form>
+    //             <p className="auth-footer">
+    //                 <Link to = "/forgot-password">Forgot Password</Link>
+    //             </p>
+    //             <p className="auth-footer">
+    //                 New Vendor? <Link to="/register" > Create an Account</Link>
+    //             </p>
+    //         </div>
+    //     </div>
+    <div>
+        <h1>Currently un available</h1>
+    </div>
     );
 };
 
