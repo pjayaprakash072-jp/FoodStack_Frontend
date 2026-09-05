@@ -89,7 +89,7 @@ const Login = () => {
                 </div>
                 <GoogleLogin
                 onSuccess={ async (credentialResponse)=>{
-                    // console.log(credentialResponse)
+                    console.log(credentialResponse)
                     try{
                         await googleLogin(credentialResponse.credential)
                         const message = "please update phone and password";
