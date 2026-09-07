@@ -4,7 +4,14 @@ import {Menu , LogOut, UserCircle} from "lucide-react"
 import {useAuth} from "../../context/useAuth"
 const Navbar = ({onMenu}) => {
     const {vendor,logout} = useAuth();
-    
+
+const links = [
+  {to:"/dashboard" , label: "Dashboard"},
+  {to:"/outlets" , label: "Outlets"},
+  {to:"/categories" , label: "Categories"},
+  {to:"/menu-items" , label: "Menu Items"},
+  {to:"/profile" , label: "Profile"},
+]
   return (
     <div className="navbar">
             {
@@ -17,10 +24,18 @@ const Navbar = ({onMenu}) => {
 
 
         <div className="navbar-title">
-            <strong>Vendor Menu Manager</strong>
+            <strong>Vendor</strong>
             <span>Manage outlets,categories and menu items</span>
         </div>
-
+        {vendor && <div className="navbar-links">
+                {
+                    links.map(
+                        ({to,label})=>(
+                            <NavLink className="navbar-link" key={to} to={to}><small>{label}</small></NavLink>
+                        )
+                    )
+                }
+            </div>}
 
         <div className="navbar-user">
             {
@@ -47,7 +62,7 @@ const Navbar = ({onMenu}) => {
             vendor? (
                 <button className="ghost-button" onClick={logout}>
                         <LogOut size = {17}/>
-                        Logout
+                        <span className='md:visible hidden'>Logout</span>
                     </button>
             ):(
                 <button className="button primary"><NavLink to="/register">Register</NavLink></button>

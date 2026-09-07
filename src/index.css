@@ -35,7 +35,6 @@ a{
   text-decoration:none;
 }
 
-
 .brand-mark{
   @apply w-9 h-9
   rounded-xl
@@ -45,7 +44,7 @@ a{
 }
 
 .auth-page{
-  @apply min-h-[calc(100vh-6rem)]
+  @apply min-h-[calc(100vh-4rem)]
   bg-gradient-to-br
   from-red-50
   to-amber-200
@@ -168,8 +167,8 @@ a{
 
 .navbar{
   @apply
-  h-24
-  flex items-center
+  h-16
+  flex items-center gap-4
   border-b-4 border-black
   sticky top-0 left-0 right-0
   z-20
@@ -185,6 +184,13 @@ a{
   @apply flex items-center gap-2
   font-semibold
 }
+.navbar-links{
+  @apply hidden
+  md:flex
+  gap-8
+
+  mr-5
+}
 .ghost-button{
   @apply flex items-center gap-2 
   text-slate-600
@@ -198,4 +204,95 @@ a{
 .sidebar-overlay{
   @apply fixed inset-0 z-10 bg-black/30 
   transition-opacity duration-300
+}
+.nav-link{
+  @apply flex items-center gap-3
+  px-3 py-3
+  rounded-lg
+  font-semibold
+  text-slate-400
+}
+.nav-link:hover,
+.nav-link:active{
+  @apply bg-slate-800 text-white
+}
+.brand{
+  @apply flex items-center gap-3 justify-between
+  text-white
+  px-2.5 py-4
+}
+.brand b{
+  @apply block text-[17px]
+}
+.brand small{
+  @apply block text-slate-400
+}
+/* content */
+
+.content{
+  @apply 
+  p-0
+}
+.page{
+  @apply
+  p-6
+}
+.page-heading{
+  @apply
+  flex
+  justify-between
+  items-end
+  gap-5
+  mb-7
+}
+.page-heading h1{
+  @apply mt-0 mb-1.5
+  text-[30px]
+  tracking-[-o.6px]
+}
+.page-heading p{
+  @apply
+  m-0 text-slate-500
+}
+.eyebrow{
+  @apply text-xs
+  uppercase
+  tracking-[0.12rem]
+  text-slate-500
+  font-extrabold
+}
+.stats-grid{
+  @apply grid grid-cols-1 md:grid-cols-4 gap-4
+}
+.stat-card,
+.panel,
+.outlet-card{
+  @apply bg-white
+  border border-gray-900
+  rounded-2xl
+}
+.stat-card{
+  @apply flex justify-between
+  p-5
+}
+.stat-card p{
+  @apply m-0
+  text-slate-500
+  text-[13px]
+}
+.stat-card h2{
+  @apply 
+  mt-3.75 mb-0.5
+  text-[26px]
+  capitalize;
+}
+.stat-card small{
+  @apply text-slate-400
+}
+.stat-icon{
+  @apply
+  w-11 h-11
+  bg-slate-100
+  rounded-2xl
+  grid place-items-center
 }

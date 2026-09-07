@@ -63,7 +63,7 @@ const Dashboard = () => {
 
     if(loading) return <Loader/>
     return (
-        <>
+        <div className="page">
             <div className="page-heading">
                 <div>
                     <p className="eyebrow">Overview</p>
@@ -111,7 +111,7 @@ const Dashboard = () => {
                 )
             }
         </section>
-        </>
+        </div>
     );
 };
 

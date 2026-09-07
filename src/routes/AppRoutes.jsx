@@ -48,8 +48,8 @@ const AppRoutes = () => {
             <Route path= "/menu-item/new" element={<Private><MenuItemForm/></Private>}/>
             <Route path= "/menu-item/:id" element={<Private><MenuItemDetails/></Private>}/>
             <Route path= "/menu-item/:id/edit" element={<Private><MenuItemForm/></Private>}/>
-            <Route path="/reset-password/:token" element={<ResetPassword/>}/>
-            <Route path="/forgot-password" element={<ForgotPassword/>}/>
+            <Route path="/reset-password/:token" element={<DashboardLayout><ResetPassword/></DashboardLayout>}/>
+            <Route path="/forgot-password" element={<DashboardLayout><ForgotPassword/></DashboardLayout>}/>
             <Route path="*" element ={<Navigate to = "/dashboard" replace/>}/>
         </Routes>
     );

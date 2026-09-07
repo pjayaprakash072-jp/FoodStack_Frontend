@@ -20,7 +20,7 @@ const Sidebar = ({open , onClose}) => {
             to ="/dashboard"
             >
             <div className="brand" style={{cursor:"pointer"}}>
-              <div className="brand-mark">VM</div>
+              <img src='/FS1.svg' width="30" height="30"/>
               <div>
                 <b>Vendor</b>
                 <small>Management</small>
