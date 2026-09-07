@@ -13,40 +13,43 @@ const links = [
 const Sidebar = ({open , onClose}) => {
   const {logout} = useAuth();
   return (
-    <aside className={`sidebar ${open ? "sidebar-open" : ""}`}>
-      <NavLink
-      to ="/dashboard"
-      >
-      <div className="brand" style={{cursor:"pointer"}}>
-        <div className="brand-mark">VM</div>
-        <div>
-          <b>Vendor</b>
-          <small>Management</small>
-        </div>
-        <button className="icon-button mobile-only" onClick={onClose}>
-          <X/>
-        </button>
-      </div>
-      </NavLink>
-      <nav>
-        {
-          links.map(
-            ({to,label,icon:Icon})=>(
-              <NavLink 
-                key= {to}
-                to = {to}
-                className = {({isActive})=> isActive ? "nav-link active":"nav-link"}
-                onClick = {onClose}
-                >
-                  <Icon size={19}/>
-                  <span>{label}</span>
-                </NavLink>
-          )
-          )
-        }
-      </nav>
-          <button style={{margin:"auto 0 10% 0"}} onClick={logout}><LogOut size = {17}/>Logout</button>
-    </aside>
+    <>
+          <div className={`sidebar-overlay ${open? "visible":"invisible"}`} onClick={onClose}/>
+          <div className={`sidebar ${open ? "translate-x-0":"-translate-x-full"}`}>
+            <NavLink
+            to ="/dashboard"
+            >
+            <div className="brand" style={{cursor:"pointer"}}>
+              <div className="brand-mark">VM</div>
+              <div>
+                <b>Vendor</b>
+                <small>Management</small>
+              </div>
+              <button onClick={onClose}>
+                <X/>
+              </button>
+            </div>
+            </NavLink>
+            <nav>
+              {
+                links.map(
+                  ({to,label,icon:Icon})=>(
+                    <NavLink 
+                      key= {to}
+                      to = {to}
+                      className = {({isActive})=> isActive ? "nav-link active":"nav-link"}
+                      onClick = {onClose}
+                      >
+                        <Icon size={19}/>
+                        <span>{label}</span>
+                      </NavLink>
+                )
+              )
+              }
+            </nav>
+                <button  onClick={logout}><LogOut size = {17}/>Logout</button>
+          </div>
+        </>
   )
 }
 

@@ -6,29 +6,55 @@ const Navbar = ({onMenu}) => {
     const {vendor,logout} = useAuth();
     
   return (
-    <header className="navbar">
-        <button className="icon-button mobile-only" onClick={onMenu}>
-            <Menu size = {21}/>
-        </button>
+    <div className="navbar">
+            {
+                vendor?(
+                    <button className="icon-button" onClick={onMenu}><Menu size = {21}/></button>
+                ):( 
+                    <img src='/FS1.svg' width="45" height="45"/>
+                )
+            }
+
+
         <div className="navbar-title">
             <strong>Vendor Menu Manager</strong>
             <span>Manage outlets,categories and menu items</span>
         </div>
+
+
         <div className="navbar-user">
-            <NavLink
-            to="/profile"
-            >
-            <UserCircle size = {22}/>
-            </NavLink>
-            <span>
-                {vendor?.name || vendor?.businessName || 'Vendor'}
-            </span>
+            {
+                vendor?(
+                    <>
+                            <NavLink
+                            to="/profile"
+                            >
+                            <UserCircle size = {22}/>
+                            </NavLink>
+                            <span>
+                                {vendor?.name || vendor?.businessName || 'Vendor'}
+                            </span>
+                    </>
+
+                ):(
+                    <button className="button primary"><NavLink to="/login">Login</NavLink></button>
+                )
+            }
         </div>
-            <button className="ghost-button" onClick={logout}>
-                <LogOut size = {17}/>
-                Logout
-            </button>
-    </header>
+
+        
+        {
+            vendor? (
+                <button className="ghost-button" onClick={logout}>
+                        <LogOut size = {17}/>
+                        Logout
+                    </button>
+            ):(
+                <button className="button primary"><NavLink to="/register">Register</NavLink></button>
+
+            )
+        }
+    </div>
   )
 }
 
