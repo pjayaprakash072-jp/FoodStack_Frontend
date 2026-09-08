@@ -79,7 +79,7 @@ const OutletDetails = () => {
         )
     }
   return (
-    <>
+    <div className="page">
     <div className="page-heading">
         <div>
             <p className="eyebrow">Outler details</p>
@@ -146,7 +146,7 @@ const OutletDetails = () => {
     onCancel={()=>setDel(false)}
     onConfirm={remove}
 />
-    </>
+    </div>
   )
 }
 

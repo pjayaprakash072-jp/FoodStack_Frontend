@@ -68,7 +68,7 @@ const MenuItemList = () => {
 
     const addMenuItemUrl = categoryFilter? `/menu-item/new?category=${categoryFilter}` : "/menu-item/new"
   return (
-    <>
+    <div className="page">
         <div className="page-heading">
             <div>
                 <p className="eyebrow">Products</p>
@@ -191,7 +191,7 @@ const MenuItemList = () => {
         onCancel={()=>setDel(null)}
         onConfirm={remove}
         />
-    </>
+    </div>
   )
 }
 

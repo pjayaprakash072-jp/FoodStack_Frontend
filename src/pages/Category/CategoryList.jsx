@@ -61,7 +61,7 @@ const CategoryLIst = () => {
 
     const addCategoryUrl = outletFilter ? `/category/new?outlet=${outletFilter}`:"/category/new"
   return (
-    <>
+    <div className="page">
     <div className="page-heading">
         <div>
             <p className="eyebrow">{ outletFilter ? "Outlet":"Categories"}</p>
@@ -110,7 +110,7 @@ const CategoryLIst = () => {
                 />
             )
     }
-     </>
+     </div>
   )
 }
 

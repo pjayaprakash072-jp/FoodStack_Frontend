@@ -38,7 +38,7 @@ const OutletList = () => {
     )
     
   return (
-    <>
+    <div className="page">
         <div className="page-heading">
             <div>
                 <p className="eyebrow">Locations</p>
@@ -71,7 +71,7 @@ const OutletList = () => {
                 text = {q ?"Try a different search" : "Create your first outlet"} action = {<Link className="button primary" to = "/outlets/new" > Add Outlet</Link>}/>
             )
         }
-    </>
+    </div>
   )
 }
 

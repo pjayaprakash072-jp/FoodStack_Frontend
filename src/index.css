@@ -296,3 +296,62 @@ a{
   rounded-2xl
   grid place-items-center
 }
+.section{
+  @apply mt-7.5
+}
+.section-title{
+  @apply flex justify-between items-center 
+  mb-3.5
+}
+.section-title h2{
+  @apply m-0;
+}
+
+.section-title p{
+  @apply my-1.5
+  text-slate-500
+}
+.card-grid{
+  @apply grid grid-cols-3 gap-4
+}
+.outlet-card{
+  @apply overflow-hidden flex
+}
+.outlet-image{
+  @apply w-36.25
+  min-w-36.25
+  bg-slate-200
+  grid place-items-center
+  text-[38px]
+  font-extrabold
+  text-slate-500
+}
+.outlet-image img{
+  @apply w-full h-full object-cover
+}
+.outlet-card-body{
+  @apply p-4.5 flex-1
+}
+.outlet-card h3{
+  @apply m-0 text-lg 
+}
+.outlet-card p{
+  @apply text-slate-500 text-[13px]
+}
+.row-between{
+  @apply flex
+  justify-between
+  gap-4.5
+}
+.mini-meta{
+  @apply flex
+  flex-wrap
+  gap-3
+  text-slate-500
+  text-xs
+}
+.mini-meta span{
+  @apply flex
+  items-center
+  gap-1
+}

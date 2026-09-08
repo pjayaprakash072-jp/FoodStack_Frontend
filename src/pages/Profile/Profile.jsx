@@ -102,7 +102,7 @@ export default function Profile(){
 
     }
     return(
-        <>
+        <div className="page">
             <div className="page-heading">
                 <div>
                     <p className="eyebrow"> Account</p>
@@ -202,6 +202,6 @@ export default function Profile(){
             title="Delete Vendor"
             message="Are you sure you want to delte Account"
             />
-        </>
+        </div>
     )
 }

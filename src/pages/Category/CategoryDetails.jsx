@@ -52,7 +52,7 @@ if(!category){
     return <div className='alert error'>{error || "Category not found"}</div>
 }
   return (
-    <>
+    <div className="page">
     <div className="page-heading">
         <div>
             <p className="eyebrow">Category Details</p>
@@ -106,7 +106,7 @@ if(!category){
             title="Delete Category"
             message="Are you sure you want to delete this category?"
             />
-    </>
+    </div>
   )
 }
 

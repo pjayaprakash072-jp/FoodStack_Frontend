@@ -108,149 +108,151 @@ const MenuItemForm = () => {
   }
   if(loading) return <Loader/>
   return (
-    <div className="form-page">
-      <div className="page-heading">
-        <div>
-            <p className="eyebrow">Menu</p>
-            <h1>{id?"Edit Menu Item" : "Create Menu Item"}</h1>
-        </div>
-      </div>
-      {error && <div className="alert error" >{error}</div>}
-      <form className="panel form grid-2" onSubmit={submit}>
-        <label>
-          Name
-          <input
-          type="text"
-          name="name"
-          required
-          value={form.name}
-          onChange={change}
-          />
-        </label>
-        <label className="grid-span-2">
-          Description
-          <input
-          type="text"
-          name="description"
-          required
-          value={form.description}
-          onChange={change}
-          />
-        </label>
-        <label>
-          Category
-          <select
-          required
-          name="category"
-          value={form.category}
-          disabled = {Boolean(id) || Boolean(params.get("category"))}
-          onChange={change}
-          >
-            <option value="">Select Category</option>
-            {
-              categories.map((x)=>(
-                <option key={x._id} value={x._id}>{x.name}</option>
-              ))
-            }
-          </select>
-        </label>
-        <label>
-          Price
-          <input
-          type="number"
-          name="price"
-          min={0}
-          required
-          value={form.price}
-          onChange={change}
-          />
-        </label>
-        <label>
-          Stock
-          <input
-          type="number"
-          name="stock"
-          min={0}
-          required
-          value={form.stock}
-          onChange={change}
-          />
-        </label>
-        <label>
-          Discount
-          <input
-          type="number"
-          required
-          name="discount"
-          min={0}
-          max={100}
-          value={form.discount}
-          onChange={change}
-          />
-        </label>
-        <label>
-          Food Type
-          <select
-          required
-          name="foodType"
-          value={form.foodType}
-          onChange={change}
-          >
-            <option value="">Select Food Type</option>
-            <option value="Veg">Veg</option>
-            <option value="Non-Veg">Non-Veg</option>
-          </select>
-        </label>
-        <label>
-          Preparation Time
-          <input
-          type="number"
-          required
-          min={0}
-          name="preparationTime"
-          value={form.preparationTime}
-          onChange={change}
-          />
-        </label>
-        <label className="check">
-          Is Available
-          <input
-          type="checkbox"
-          name="isAvailable"
-          checked={form.isAvailable}
-          onChange={change}
-          />
-        </label>
-        <label>
-          Status
-          <select
-          required
-          name="status"
-          value={form.status}
-          onChange={change}
-          >
-            <option value="">Select Status</option>
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
-          </select>
-        </label>
-        <label>
-          Image
-          <input
-          type="file"
-          name="image"
-          accept="image/*"
-          onChange={change}
-          />
-        </label>
-        <div className="grid-span-2 form-actions">
-          <button className="button secondary" type="button" onClick={()=> nav("/menu-items")}> cancel</button>
-          <button type="submit" className="button primary" disabled={busy}>
-            {busy ? "Please Wait..." : id?"Update Item" :"Create Item"}
-          </button>
-        </div>
-      </form>
-    </div>
+    <div className="page">
+          <div className="form-page">
+            <div className="page-heading">
+              <div>
+                  <p className="eyebrow">Menu</p>
+                  <h1>{id?"Edit Menu Item" : "Create Menu Item"}</h1>
+              </div>
+            </div>
+            {error && <div className="alert error" >{error}</div>}
+            <form className="panel form grid-2" onSubmit={submit}>
+              <label>
+                Name
+                <input
+                type="text"
+                name="name"
+                required
+                value={form.name}
+                onChange={change}
+                />
+              </label>
+              <label className="grid-span-2">
+                Description
+                <input
+                type="text"
+                name="description"
+                required
+                value={form.description}
+                onChange={change}
+                />
+              </label>
+              <label>
+                Category
+                <select
+                required
+                name="category"
+                value={form.category}
+                disabled = {Boolean(id) || Boolean(params.get("category"))}
+                onChange={change}
+                >
+                  <option value="">Select Category</option>
+                  {
+                    categories.map((x)=>(
+                      <option key={x._id} value={x._id}>{x.name}</option>
+                    ))
+                  }
+                </select>
+              </label>
+              <label>
+                Price
+                <input
+                type="number"
+                name="price"
+                min={0}
+                required
+                value={form.price}
+                onChange={change}
+                />
+              </label>
+              <label>
+                Stock
+                <input
+                type="number"
+                name="stock"
+                min={0}
+                required
+                value={form.stock}
+                onChange={change}
+                />
+              </label>
+              <label>
+                Discount
+                <input
+                type="number"
+                required
+                name="discount"
+                min={0}
+                max={100}
+                value={form.discount}
+                onChange={change}
+                />
+              </label>
+              <label>
+                Food Type
+                <select
+                required
+                name="foodType"
+                value={form.foodType}
+                onChange={change}
+                >
+                  <option value="">Select Food Type</option>
+                  <option value="Veg">Veg</option>
+                  <option value="Non-Veg">Non-Veg</option>
+                </select>
+              </label>
+              <label>
+                Preparation Time
+                <input
+                type="number"
+                required
+                min={0}
+                name="preparationTime"
+                value={form.preparationTime}
+                onChange={change}
+                />
+              </label>
+              <label className="check">
+                Is Available
+                <input
+                type="checkbox"
+                name="isAvailable"
+                checked={form.isAvailable}
+                onChange={change}
+                />
+              </label>
+              <label>
+                Status
+                <select
+                required
+                name="status"
+                value={form.status}
+                onChange={change}
+                >
+                  <option value="">Select Status</option>
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                </select>
+              </label>
+              <label>
+                Image
+                <input
+                type="file"
+                name="image"
+                accept="image/*"
+                onChange={change}
+                />
+              </label>
+              <div className="grid-span-2 form-actions">
+                <button className="button secondary" type="button" onClick={()=> nav("/menu-items")}> cancel</button>
+                <button type="submit" className="button primary" disabled={busy}>
+                  {busy ? "Please Wait..." : id?"Update Item" :"Create Item"}
+                </button>
+              </div>
+            </form>
+          </div>
+          </div>
   )
 }
 

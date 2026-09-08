@@ -32,7 +32,7 @@ const MenuItemDetails = () => {
 
   if(busy) return<Loader/>
   return (
-    <>
+    <div className="page">
     <div className="page-heading">
       <div>
         <p className="eyebrow">Menu Item</p>
@@ -106,7 +106,7 @@ const MenuItemDetails = () => {
       }
     }
 />
-    </>
+    </div>
   )
 }
 
