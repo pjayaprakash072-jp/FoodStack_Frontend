@@ -103,7 +103,7 @@ export default function Profile(){
     }
     return(
         <div className="page">
-            <div className="page-heading">
+            <div className="page-heading profile">
                 <div>
                     <p className="eyebrow"> Account</p>
                     <h1>Profile</h1>
@@ -111,9 +111,6 @@ export default function Profile(){
                 </div>
                 <div className="profile-image">
                     <img src = {vendor?.profileImg?.url || "default-profile.png"} alt ="vendor img"/>
-                </div>
-                <div className="button-row">
-                    <button className="button danger" onClick={()=>setDel(true)}><Trash2 size={18}/>Delete Account</button>
                 </div>
             </div>
 
@@ -192,6 +189,7 @@ export default function Profile(){
                 </label>
                 <div className="grid-span-2 form-actions">
                     <button type="submit" className="button primary" disabled = {busy}>{busy? "Updating...":"Save Changes"}</button>
+                    <button type="button" className="button danger" onClick={()=>setDel(true)}><Trash2 size={18}/>Delete Account</button>
                 </div>
             </form>
             <ConfirmDialog

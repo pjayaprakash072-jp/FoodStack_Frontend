@@ -47,7 +47,7 @@ const CategoryCard = ({menuCategory}) => {
                     }
                 </span>
             </div>
-            <Link className="text-link" to = {`/categories/${menuCategory._id}`}>
+            <Link className="view-arrow" to = {`/categories/${menuCategory._id}`}>
             View Category <ArrowRight size = {16}/>
             </Link>
         </div>

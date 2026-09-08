@@ -31,7 +31,13 @@ const links = [
                 {
                     links.map(
                         ({to,label})=>(
-                            <NavLink className="navbar-link" key={to} to={to}><small>{label}</small></NavLink>
+                            <NavLink 
+                            className={({isActive})=> isActive? "navbar-link active"  : "navbar-link"}
+                            key={to} 
+                            to={to}
+                            >
+                                <small>{label}</small>
+                            </NavLink>
                         )
                     )
                 }

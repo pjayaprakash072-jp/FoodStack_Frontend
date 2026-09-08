@@ -59,7 +59,7 @@ const OutletCard = ({outlet}) => {
                     }
                 </span>
             </div>
-            <Link className="text-link" to = {`/outlets/${outlet._id}`}>
+            <Link className="view-arrow" to = {`/outlets/${outlet._id}`}>
             View Outlet <ArrowRight size = {16}/>
             </Link>
         </div>

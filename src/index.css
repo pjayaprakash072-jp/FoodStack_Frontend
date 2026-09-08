@@ -29,7 +29,9 @@ body{
 button,select,input,textarea{
   font:inherit;
 }
-
+button{
+  cursor:pointer;
+}
 a{
   color:inherit;
   text-decoration:none;
@@ -60,11 +62,11 @@ a{
   border border-slate-200
   rounded-2xl
   w-full
-  max-w-[470px]
+  max-w-117.5
   p-8
 }
 .auth-card.wide{
-  @apply max-w-[700px]
+  @apply max-w-175
 }
 .auth-brand{
   @apply 
@@ -126,6 +128,11 @@ a{
 .form input[type="checkbox"]{
   @apply w-4
 }
+.form-actions{
+  @apply flex
+  justify-between
+  gap-2.5
+}
 .grid-2{
   @apply grid grid-cols-2
 }
@@ -167,7 +174,7 @@ a{
 
 .navbar{
   @apply
-  h-16
+  h-16 bg-white
   flex items-center gap-4
   border-b-4 border-black
   sticky top-0 left-0 right-0
@@ -185,14 +192,27 @@ a{
   font-semibold
 }
 .navbar-links{
-  @apply hidden
+  @apply hidden 
   md:flex
-  gap-8
-
+  gap-8 
   mr-5
+
 }
+.navbar-link{
+  @apply box-border
+  px-3 py-2
+  rounded-xl
+  border-b-3 
+  border-transparent hover:border-black
+}
+.navbar-link.active{
+  @apply bg-black
+  text-white
+}
+
 .ghost-button{
   @apply flex items-center gap-2 
+  border-0
   text-slate-600
   bg-transparent
 }
@@ -202,7 +222,7 @@ a{
   transform transition-transform duration-300 ease-in-out
 }
 .sidebar-overlay{
-  @apply fixed inset-0 z-10 bg-black/30 
+  @apply fixed inset-0 z-10 bg-slate-900/50
   transition-opacity duration-300
 }
 .nav-link{
@@ -244,6 +264,12 @@ a{
   items-end
   gap-5
   mb-7
+}
+.page-heading.profile{
+  @apply flex
+  justify-start 
+  gap-6
+  mb-2
 }
 .page-heading h1{
   @apply mt-0 mb-1.5
@@ -312,21 +338,29 @@ a{
   text-slate-500
 }
 .card-grid{
-  @apply grid grid-cols-3 gap-4
+  @apply grid grid-cols-1 md:grid-cols-3 gap-4
 }
 .outlet-card{
-  @apply overflow-hidden flex
+  @apply overflow-hidden flex flex-col md:flex-row
 }
 .outlet-image{
-  @apply w-36.25
-  min-w-36.25
+  @apply w-full
+  md:w-36.25
+  md:min-w-36.25
   bg-slate-200
   grid place-items-center
   text-[38px]
   font-extrabold
   text-slate-500
 }
-.outlet-image img{
+.profile-image{
+  @apply
+  w-36.5
+  rounded-full
+  overflow-hidden
+  bg-red-500
+}
+.outlet-image img,.profile-image img {
   @apply w-full h-full object-cover
 }
 .outlet-card-body{
@@ -351,7 +385,195 @@ a{
   text-xs
 }
 .mini-meta span{
-  @apply flex
+  @apply flex 
   items-center
   gap-1
+}
+
+.badge{
+  @apply inline-flex
+  px-2.25 py-1
+  bg-green-100
+  rounded-full
+  text-green-800
+  text-[11px]
+  capitalize;
+}
+.badge.gray{
+  @apply bg-slate-100
+  text-slate-500
+}
+
+.icon-button{
+  @apply border-0
+  bg-slate-50
+  rounded-[9px]
+  p-2
+  inline-grid
+  place-items-center
+  text-slate-600
+}
+.view-arrow{
+  @apply inline-flex
+  items-center
+  gap-2.25
+  text-slate-700
+  font-bold
+  text-[13px]
+}
+
+/* Search */
+
+.toolbar{
+  @apply mb-4
+}
+.search{
+  @apply bg-white
+  border border-slate-200
+  rounded-xl
+  flex items-center
+  gap-2
+  px-3
+  max-w-105
+  text-slate-400
+}
+.search input{
+  @apply border-0
+  outline-none
+  py-3
+  w-full
+  bg-transparent
+}
+.panel{
+  @apply p-5
+}
+/* Details-grid */
+.details-grid{
+  @apply grid grid-cols-[2fr_1fr] gap-5
+}
+.detail{
+  @apply flex
+  justify-between
+  border-b
+  gap-3.75
+  py-3.25
+  border-slate-100
+}
+.detail span{
+  @apply text-slate-500
+}
+.big-number{
+  @apply text-4xl
+  font-extrabold
+  mt-2.5
+}
+/* Modal */
+
+.modal-backdrop{
+  @apply fixed inset-0
+  bg-slate-900/50
+  grid
+  place-items-center
+  p-5
+  z-60
+}
+.modal{
+  @apply bg-white
+  rounded-2xl
+  w-full
+  max-w-125
+  p-5
+}
+.modal-header{
+  @apply flex justify-between items-center
+}
+.modal-header h3{
+  @apply m-0;
+}
+/* LOADER */
+.loader-wrap{
+  @apply min-h-65
+  grid
+  place-items-center
+  content-center
+  gap-2.5
+  text-slate-500
+}
+.spinner{
+  @apply w-7 h-7
+  border-[3px]
+  border-slate-200
+  border-t-slate-900
+  rounded-full
+  animate-spin
+}
+
+.alert{
+  @apply rounded-[10px]
+  px-3.5 py-3
+  mb-4
+  text-[13px]
+}
+.alert.error{
+  @apply bg-red-100
+  text-red-800
+}
+.alert.success{
+  @apply bg-green-100
+  text-green-800
+}
+/* EMPTY STATE */
+.empty{
+  @apply text-center
+  bg-white
+  border border-dashed
+  border-slate-900
+  rounded-2xl
+  px-5 py-13.75
+}
+.empty-icon{
+  @apply bg-slate-100
+  rounded-full
+  w-11.25
+  h-11.25
+  grid
+  place-items-center
+  mx-auto
+  text-[25px]
+  text-slate-500
+}
+.empty h3{
+  @apply mt-3.25 mb-1
+}
+.empty p{
+  @apply text-slate-500
+  mt-0 mb-4.5
+}
+
+/* TABLE */
+.table-wrap{
+  @apply overflow-auto
+}
+table{
+  @apply border-collapse
+  w-full 
+  min-w-180
+}
+th,td{
+  @apply text-left
+  px-3
+  py-3.25
+  border-b border-slate-100
+  text-[14px]
+}
+th{
+  @apply text-slate-500
+  text-[11px]
+  uppercase
+  tracking-[0.06rem]
+}
+.table-empty{
+  @apply text-center
+  p-8.75
+  text-slate-400
 }

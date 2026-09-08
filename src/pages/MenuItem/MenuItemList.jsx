@@ -111,14 +111,14 @@ const MenuItemList = () => {
                         <table>
                             <thead>
                                 <tr>
-                                    <td>Item</td>
-                                    <td>Image</td>
-                                    <td>Price</td>
-                                    <td>Stock</td>
-                                    <td>Food</td>
-                                    <td>Status</td>
-                                    <td>Details</td>
-                                    <td>Actions</td>
+                                    <th>Item</th>
+                                    <th>Image</th>
+                                    <th>Price</th>
+                                    <th>Stock</th>
+                                    <th>Food</th>
+                                    <th>Status</th>
+                                    <th>Details</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -150,7 +150,7 @@ const MenuItemList = () => {
                                                 <span className={`badge ${item.status === "Inactive" ? "gray" : ""}`}>{item.status}</span>
                                             </td>
                                             <td>
-                                                <Link className="text-link" to={`/menu-item/${item._id}`}><ArrowRight size={16}/></Link>
+                                                <Link className="view-arrow" to={`/menu-item/${item._id}`}><ArrowRight size={16}/></Link>
                                             </td>
                                             <td>
                                                 <div className="button-row">
