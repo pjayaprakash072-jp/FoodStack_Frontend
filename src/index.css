@@ -47,7 +47,7 @@ a{
 
 .auth-page{
   @apply min-h-[calc(100vh-4rem)]
-  w-screen
+  w-full
   bg-gradient-to-br
   from-red-50
   to-amber-200
@@ -260,7 +260,7 @@ a{
 /* content */
 
 .content{
-  @apply w-full
+  @apply w-screen
   p-0
 }
 .page{
