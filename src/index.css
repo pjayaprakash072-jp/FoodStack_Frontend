@@ -24,7 +24,7 @@
   box-sizing:border-box
 }
 body{
-  margin:0;
+  margin:0; width:100%;
 }
 button,select,input,textarea{
   font:inherit;
@@ -47,6 +47,7 @@ a{
 
 .auth-page{
   @apply min-h-[calc(100vh-4rem)]
+  w-screen
   bg-gradient-to-br
   from-red-50
   to-amber-200
@@ -85,7 +86,7 @@ a{
   text-slate-500
 }
 .auth-footer{
-  @apply
+  @apply mt-1.5
   text-center
   text-slate-500
   text-[13px]
@@ -102,6 +103,9 @@ a{
   grid gap-2
   font-bold
   text-slate-700
+}
+.forgot-pass{
+  @apply flex justify-between
 }
 .form input,
 .form textarea,
@@ -174,18 +178,17 @@ a{
 
 .navbar{
   @apply
-  h-16 bg-white
-  flex items-center gap-4
+  w-full
+  h-16 
+  bg-white
+  flex items-center gap-2
   border-b-4 border-black
   sticky top-0 left-0 right-0
   z-20
-  px-5
+  px-3
 }
 .navbar-title{
   @apply flex-1 flex flex-col items-center justify-center
-}
-.navbar-title span{
-  @apply text-xs text-slate-400
 }
 .navbar-user{
   @apply flex items-center gap-2
@@ -200,10 +203,17 @@ a{
 }
 .navbar-link{
   @apply box-border
+  relative
   px-3 py-2
   rounded-xl
-  border-b-3 
-  border-transparent hover:border-black
+}
+.navbar-link::after{
+  content:"";
+  @apply absolute bottom-0 left-0 h-0.5 w-0 bg-black rounded-full;
+  @apply transition-[width] duration-700 ease-in-out ;
+}
+.navbar-link:hover::after{
+  @apply w-full
 }
 .navbar-link.active{
   @apply bg-black
@@ -250,7 +260,7 @@ a{
 /* content */
 
 .content{
-  @apply 
+  @apply w-full
   p-0
 }
 .page{

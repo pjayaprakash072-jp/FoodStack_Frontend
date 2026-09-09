@@ -25,7 +25,6 @@ const links = [
 
         <div className="navbar-title">
             <strong>Vendor</strong>
-            <span>Manage outlets,categories and menu items</span>
         </div>
         {vendor && <div className="navbar-links">
                 {

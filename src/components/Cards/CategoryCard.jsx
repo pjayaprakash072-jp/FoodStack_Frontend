@@ -1,6 +1,6 @@
 
 import {Link} from 'react-router-dom'
-import {FileText , ListOrdered , ArrowRight} from "lucide-react"
+import {ListOrdered , ArrowRight} from "lucide-react"
 const CategoryCard = ({menuCategory}) => {
   return (
     <div className="outlet-card">
@@ -33,7 +33,7 @@ const CategoryCard = ({menuCategory}) => {
                 </span>
             </div>
             <p>
-                    <FileText size = {14}/>
+                    
                                     {
                                             menuCategory.description || "No description provided."
                                         }

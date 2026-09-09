@@ -127,8 +127,12 @@ const Login = () => {
                     </label>
 
                     <label>
-                        Password
-
+                        <div className="forgot-pass">
+                        <p>Password</p>
+                        <p>
+                            <Link to = "/forgot-password">Forgot Password</Link>
+                        </p>
+                        </div>
                         <input
                             type="password"
                             placeholder="••••••••"
@@ -150,9 +154,7 @@ const Login = () => {
                     </button>
 
                 </form>
-                <p className="auth-footer">
-                    <Link to = "/forgot-password">Forgot Password</Link>
-                </p>
+
                 <p className="auth-footer">
                     New Vendor? <Link to="/register" > Create an Account</Link>
                 </p>

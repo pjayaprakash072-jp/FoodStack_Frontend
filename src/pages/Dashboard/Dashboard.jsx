@@ -69,7 +69,7 @@ const Dashboard = () => {
                     <p className="eyebrow">Overview</p>
                     <h1>Good day,{vendor?.name?.split(" ")[0] || "Vendor"}👋 </h1>
 
-                    <p>Here is what is happening with your business.</p>
+                    <p>Manage outlets,categories and menu items</p>
                 </div>
                 <Link className="button primary" to = "/outlets/new"> + Add outlet</Link>
             </div>
