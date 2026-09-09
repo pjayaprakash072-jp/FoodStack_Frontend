@@ -277,10 +277,18 @@ a{
   mb-7
 }
 .page-heading.profile{
-  @apply flex
-  justify-start 
+  @apply box-border
+  flex flex-wrap
+  justify-center md:justify-between 
   gap-6
   mb-2
+}
+.profile.btns{
+  @apply box-border
+  flex 
+  flex-wrap 
+  justify-center 
+  md:flex-col gap-0.5
 }
 .page-heading h1{
   @apply mt-0 mb-1.5
