@@ -59,6 +59,7 @@ a{
 }
 .auth-card{
   @apply
+  min-w-0
   bg-white
   border border-slate-200
   rounded-2xl
