@@ -266,6 +266,7 @@ export function FormPage({title,form,change,submit,busy,error,id}){
                     type="file"
                     name = "image"
                     accept="image/*"
+                    capture="environment"
                     onChange={change}
                     />
                 </label>

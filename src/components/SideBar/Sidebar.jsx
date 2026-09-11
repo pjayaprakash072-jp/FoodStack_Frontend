@@ -47,7 +47,7 @@ const Sidebar = ({open , onClose}) => {
               )
               }
             </nav>
-                <button  onClick={logout}><LogOut size = {17}/>Logout</button>
+                <button className='button logout'  onClick={logout}><LogOut size = {17}/>Logout</button>
           </div>
         </>
   )
