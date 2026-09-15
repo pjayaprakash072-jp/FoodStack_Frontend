@@ -117,7 +117,7 @@ export default function Profile() {
             type="button"
             onClick={() => {setTakePassword(!takePassword); setShowForm(false)}}
           >
-            Add Password?
+            Update Password
           </button>
               <button
                 type="button"

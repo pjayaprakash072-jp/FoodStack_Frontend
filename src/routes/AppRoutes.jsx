@@ -16,8 +16,8 @@ import CategoryForm from "../pages/Category/CategoryForm";
 import MenuItemList from "../pages/MenuItem/MenuItemList";
 import MenuItemForm from "../pages/MenuItem/MenuItemForm";
 import MenuItemDetails from "../pages/MenuItem/MenuItemDetails";
-import ForgotPassword from "../pages/UpdatePassword/ForgotPassword";
-import ResetPassword from "../pages/UpdatePassword/ResetPassword";
+import ForgotPassword from "../pages/Auth/ForgotPassword";
+import ResetPassword from "../pages/Auth/ResetPassword";
 function Private({children}){
     const {isAuthenticated} = useAuth();
     return isAuthenticated? (
