@@ -3,23 +3,34 @@ import {Link , useNavigate} from 'react-router-dom'
 import vendorService from './../../services/vendorService';
 import { getErrorMessage } from '../../utils/api';
 import {UserPlus} from 'lucide-react'
-
+const intial = {
+  name:"",
+  email:"",
+  password:"",
+  phone:"",
+  businessName:"",
+  status:"active"
+}
 export default function Register(){
-  const [form,setForm] = useState({
-    name:"",
-    email:"",
-    password:"",
-    phone:"",
-    businessName:"",
-    status:"active"
-  })
+
+  const [form,setForm] = useState(intial);
   const [error,setError] = useState("")
 
   const [busy,setBusy] = useState(false)
 
   const navigate = useNavigate();
 
-  const update = (e)=> setForm({...form,[e.target.name]:e.target.value})
+  // const change = (e)=> setForm({...form,[e.target.name]:e.target.value})
+  const change = (e)=>{
+    const {name,value} = e.target;
+    setForm(
+      (prev)=>(
+        {
+          ...prev,[name]:value
+        }
+      )
+    )
+  }
 
   const submit = async (e)=>{
     e.preventDefault();
@@ -28,7 +39,6 @@ export default function Register(){
     setBusy(true);
     try{
       await vendorService.register(form);
-    
       navigate("/login",{state:{registered:true}})
 
     }catch(err){
@@ -55,7 +65,7 @@ export default function Register(){
                 name='name'
                 required
                 value={form.name}
-                onChange={update}
+                onChange={change}
               />
             </label>
             <label >
@@ -63,7 +73,7 @@ export default function Register(){
               <input type="text"
               name='businessName'
               value={form.businessName}
-              onChange={update}
+              onChange={change}
 
               />
             </label>
@@ -73,7 +83,7 @@ export default function Register(){
               name='email'
               required
               value={form.email}
-              onChange={update}
+              onChange={change}
               />
             </label>
             <label >
@@ -82,7 +92,7 @@ export default function Register(){
               name='phone'
               required
               value={form.phone}
-              onChange={update}
+              onChange={change}
               />
             </label>
             <label >
@@ -92,14 +102,14 @@ export default function Register(){
               required
               minLength="6"
               value={form.password}
-              onChange={update}
+              onChange={change}
               />
             </label>
             <label>
               Status 
               <select name="status"
               value={form.status}
-              onChange={update}
+              onChange={change}
               >
                 <option>active</option>
                 <option>inactive</option>

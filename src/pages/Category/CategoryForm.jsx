@@ -125,7 +125,7 @@ const CategoryForm = () => {
     }
     if(loading) return <Loader/>; 
   return (
-    <div className="form-page">
+    <div className="page">
         <div className="page-heading">
             <div>
                 <p className="eyebrow">Category</p>

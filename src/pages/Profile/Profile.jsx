@@ -80,8 +80,6 @@ export default function Profile() {
       setTakePassword(false);
       setPassword("");
       toast.success("profile updateded Successfully!");
-
-      // setMsg("profile updateded Successfully!");
       setTimeout(() => {
         setMsg("");
       }, 3000);

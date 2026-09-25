@@ -28,7 +28,7 @@ const OutletList = () => {
         ()=>{
             (async ()=>{
                 try{
-                    const response = vendor?._id || vendor?.id ? await outletService.byVendor(vendor?._id || vendor?.id) : await outletService.getAll();
+                    const response = await outletService.byVendor(vendor?._id);
                     setOutlets(arr(response))
                 }finally{
                     setBusy(false);

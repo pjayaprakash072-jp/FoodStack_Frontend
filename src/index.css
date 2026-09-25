@@ -24,7 +24,7 @@
   box-sizing:border-box
 }
 body{
-  margin:0; width:100%;
+  @appy m-0 w-full
 }
 button,select,input,textarea{
   font:inherit;
@@ -48,12 +48,10 @@ a{
 .auth-page{
   @apply min-h-[calc(100vh-4rem)]
   w-full
-  bg-gradient-to-br
+  bg-linear-to-br
   from-red-50
   to-amber-200
   grid
-  /* justify-center
-  items-center */
   place-items-center
   p-6
 }
@@ -263,15 +261,16 @@ a{
 .brand small{
   @apply block text-slate-400
 }
-/* content */
 
-.content{
+.main{
   @apply w-screen
   p-0
 }
 .page{
   @apply
+  md:px-50
   p-6
+  md:pt-5
 }
 .page-heading{
   @apply
@@ -369,6 +368,7 @@ a{
 }
 .outlet-image{
   @apply w-full
+  h-42.5 md:h-auto
   md:w-36.25
   md:min-w-36.25
   bg-slate-200

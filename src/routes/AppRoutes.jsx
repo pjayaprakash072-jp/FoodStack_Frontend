@@ -18,6 +18,7 @@ import MenuItemForm from "../pages/MenuItem/MenuItemForm";
 import MenuItemDetails from "../pages/MenuItem/MenuItemDetails";
 import ForgotPassword from "../pages/Auth/ForgotPassword";
 import ResetPassword from "../pages/Auth/ResetPassword";
+import Orders from './../pages/Orders/Orders';
 function Private({children}){
     const {isAuthenticated} = useAuth();
     return isAuthenticated? (
@@ -50,6 +51,7 @@ const AppRoutes = () => {
             <Route path= "/menu-item/:id/edit" element={<Private><MenuItemForm/></Private>}/>
             <Route path="/reset-password/:token" element={<DashboardLayout><ResetPassword/></DashboardLayout>}/>
             <Route path="/forgot-password" element={<DashboardLayout><ForgotPassword/></DashboardLayout>}/>
+            <Route path="/orders" element={<DashboardLayout><Orders/></DashboardLayout>}/>
             <Route path="*" element ={<Navigate to = "/dashboard" replace/>}/>
         </Routes>
     );

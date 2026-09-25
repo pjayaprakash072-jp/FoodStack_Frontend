@@ -1,6 +1,6 @@
 
 import {NavLink} from 'react-router-dom'
-import { LayoutDashboard,Store,Tags,Utensils,User,X } from "lucide-react"
+import { LayoutDashboard,Store,Tags,Utensils,User,X ,ListOrdered} from "lucide-react"
 import {useAuth} from '../../context/useAuth'
 import {LogOut} from 'lucide-react'
 const links = [
@@ -8,6 +8,7 @@ const links = [
   {to:"/outlets" , label: "Outlets" , icon:Store},
   {to:"/categories" , label: "Categories" , icon:Tags},
   {to:"/menu-items" , label: "Menu Items" , icon:Utensils},
+  {to:"/orders",label:"Orders",icon:ListOrdered},
   {to:"/profile" , label: "Profile" , icon:User},
 ]
 const Sidebar = ({open , onClose}) => {

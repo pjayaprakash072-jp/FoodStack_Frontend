@@ -30,6 +30,8 @@ const OutletDetails = () => {
     const [del,setDel] = useState(false);
 
     const nav  = useNavigate();
+
+    const [showDetails,setShowDetails] = useState(false);
     
     useEffect(
         ()=>{
@@ -80,72 +82,77 @@ const OutletDetails = () => {
     }
   return (
     <div className="page">
-    <div className="page-heading">
-        <div>
-            <p className="eyebrow">Outler details</p>
-            <h1>{outlet.name}</h1>
-            <p>{outlet.area} , {outlet.city}</p>
-        </div>
-        <div className="button-row">
-            <Link className="button secondary" to = {`/outlets/${id}/edit`}><Pencil size = {17}/>Edit</Link>
-            <button className="button danger" onClick={()=>setDel(true)}><Trash2 size = {17}/> Delete</button>
-        </div>
-    </div>
-    {error && <div className="alert error">{error}</div>}
-
-    <div className="details-grid">
-        <div className="panel">
-            <h3>Information</h3>
-            <Detail 
-            label = "Description"
-            value = {outlet.description || "-"} 
-            />
-            <Detail 
-            label = "Phone"
-            value = {outlet.phone} 
-            />
-            <Detail 
-            label = "Address"
-            value = {outlet.address} 
-            />
-            <Detail 
-            label = "Cuisine"
-            value = {(outlet.cuisine || []).join(", ") || "-"} 
-            />
-            <Detail 
-            label = "Food Type"
-            value = {outlet.foodType} 
-            />
-            <Detail 
-            label = "Hours"
-            value = {`${outlet.openingTime} - ${outlet.closingTime}`} 
-            />
-            <Detail 
-            label = "Status"
-            value = {outlet.status} 
-            />
-        </div>
-
-        <div className="panel">
-            <h2>Menu Summary</h2>
-            <div className="big-number">
-                {cats.length}
+        <div className="page-heading">
+            <div>
+                <p className="eyebrow">Outler details</p>
+                <h1>{outlet.name}</h1>
+                <p>{outlet.area} , {outlet.city}</p>
             </div>
-            <p>Categoirs</p>
-            <div className="big-number">
-                {items.length}
+            <div className="button-row">
+                <button className="button primary" onClick={()=>setShowDetails(!showDetails)}>{showDetails?"close":"Details"}</button>
+                <Link className="button secondary" to = {`/outlets/${id}/edit`}><Pencil size = {17}/>Edit</Link>
+                <button className="button danger" onClick={()=>setDel(true)}><Trash2 size = {17}/> Delete</button>
             </div>
-            <p>Menu Items</p>
-
-            <Link className="button primary" to={`/categories?outlet=${id}`}>Manage categories</Link>
         </div>
-    </div>
+        {error && <div className="alert error">{error}</div>}
 
-    <ConfirmDialog 
-    open = {del}
-    onCancel={()=>setDel(false)}
-    onConfirm={remove}
-/>
+        {showDetails &&(
+
+            <div className="details-grid">
+                <div className="panel">
+                    <h3>Information</h3>
+                    <Detail 
+                    label = "Description"
+                    value = {outlet.description || "-"} 
+                    />
+                    <Detail 
+                    label = "Phone"
+                    value = {outlet.phone} 
+                    />
+                    <Detail 
+                    label = "Address"
+                    value = {outlet.address} 
+                    />
+                    <Detail 
+                    label = "Cuisine"
+                    value = {(outlet.cuisine || []).join(", ") || "-"} 
+                    />
+                    <Detail 
+                    label = "Food Type"
+                    value = {outlet.foodType} 
+                    />
+                    <Detail 
+                    label = "Hours"
+                    value = {`${outlet.openingTime} - ${outlet.closingTime}`} 
+                    />
+                    <Detail 
+                    label = "Status"
+                    value = {outlet.status} 
+                    />
+                </div>
+
+                <div className="panel">
+                    <h2>Menu Summary</h2>
+                    <div className="big-number">
+                        {cats.length}
+                    </div>
+                    <p>Categoirs</p>
+                    <div className="big-number">
+                        {items.length}
+                    </div>
+                    <p>Menu Items</p>
+
+                    <Link className="button primary" to={`/categories?outlet=${id}`}>Manage categories</Link>
+                </div>
+            </div>
+        )
+        }
+
+            <ConfirmDialog 
+            open = {del}
+            onCancel={()=>setDel(false)}
+            onConfirm={remove}
+            />
     </div>
   )
 }

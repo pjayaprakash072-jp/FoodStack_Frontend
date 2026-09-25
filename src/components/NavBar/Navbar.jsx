@@ -11,6 +11,7 @@ const links = [
   {to:"/categories" , label: "Categories"},
   {to:"/menu-items" , label: "Menu Items"},
   {to:"/profile" , label: "Profile"},
+  {to:"/orders",label:"Orders"}
 ]
   return (
     <div className="navbar">

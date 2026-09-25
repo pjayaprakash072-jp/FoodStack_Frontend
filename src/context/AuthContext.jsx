@@ -32,10 +32,6 @@ export function AuthProvider({children}){
     }
     const login = async (credentials)=>{
         const result = await vendorService.login(credentials);
-
-        // console.log("Login Response" , result);
-        // if(!result?.token){
-        // }
         if(result?.token){
             
             setToken(result.token);
