@@ -1,13 +1,24 @@
 import { useEffect, useState } from "react"
 import { useNavigate,useParams } from "react-router-dom";
-// import {useAuth} from "../../context/useAuth"
 import outletService from "../../services/outletService";
 import { getErrorMessage } from "../../utils/api";
 import Loader from "../../components/Common/Loader"
 import{toast} from 'sonner'
 import useLocation from "../../context/useLocation";
-import LocationPicker from './../../components/LocationPicker/LocationPicker';
+import FormPage from './OutletForm'
+import LocationPage from "./LocationPage";
 
+const intial = {
+    outletName:"",
+    description:"",
+    cuisine:"",
+    foodType:"both",
+    openingTime:"09:00",
+    closingTime:"06:00",
+    isOpen:true,
+    status:"active",
+    image:null
+}
 const initialLocation = {
     latitude:null,
     longitude:null,
@@ -17,36 +28,32 @@ const initialLocation = {
     state:"",
     pincode:""
 }
-
-const intial = {
+const intialManager = {
     name:"",
-    description:"",
-    phone:"",
-    address:"",
-    city:"",
-    area:"",
-    cuisine:"",
-    foodType:"both",
-    openingTime:"09:00",
-    closingTime:"06:00",
-    isOpen:true,
-    status:"active",
-    image:null
-
+    email:"",
+    password:"",
+    phone:""
 }
+
 const CreateOutlet = () => {
     const {id} = useParams();
     const {useCurrentLocation} = useLocation();
+    const nav = useNavigate();
     
+    const [form,setForm] = useState(intial);
+
+    const [locationForm,setLocationForm] = useState(initialLocation)
+
+    const [managerForm,setManagerForm] = useState(intialManager);
+
+    const [showManagerForm,setShowManagerForm] = useState(false);
+
     const [showMap,setShowMap] = useState(false);
 
     const [showForm,setShowForm] = useState(true);
 
     const [showLocationForm, setShowLocationForm] = useState(false);
 
-    const [form,setForm] = useState(intial);
-
-    const [locationForm,setLocationForm] = useState(initialLocation)
 
 
     const [error,setError] = useState("");
@@ -57,9 +64,6 @@ const CreateOutlet = () => {
 
     const [locationLoading,setLocationLoading] = useState(false);
 
-    const nav = useNavigate();
-
-    // const {vendor} = useAuth();
 
     const change =(e)=>{
         const{name,value,type,checked, files} = e.target;
@@ -79,6 +83,16 @@ const CreateOutlet = () => {
             )
         )
     }
+    const managerchange = (e)=>{
+        const {name,value} = e.target;
+        setManagerForm(
+            (prev)=>(
+                {
+                    ...prev,[name]:value
+                }
+            )
+        )
+    }
 
     useEffect(
         ()=>{
@@ -86,7 +100,7 @@ const CreateOutlet = () => {
                 try{
                     if(id){
                         const o = await outletService.getOne(id);
-                        setForm({...form,...o.outlet,cuisine:o.outlet.cuisine.join(","),image: null})
+                        setForm({...form,...o.outlet,cuisine:o.outlet.cuisine.join(","),image: null,outletName:o.outlet.name})
                     }
                 }catch(error){
                     setError(getErrorMessage(error))
@@ -152,10 +166,23 @@ const CreateOutlet = () => {
         await applyLocation(location);
     }
 
-    const submit = (e)=>{
+    const outletNext = (e)=>{
         e.preventDefault();
         setShowForm(false);
         setShowLocationForm(true);
+        setShowManagerForm(false);
+    }
+    const locationNext = (e)=>{
+        e.preventDefault();
+        setShowForm(false);
+        setShowLocationForm(false);
+        setShowManagerForm(true);
+    }
+    const locationBack = (e)=>{
+        e.preventDefault();
+        setShowForm(true);
+        setShowLocationForm(false);
+        setShowManagerForm(false);
     }
     const sendData = async (e)=>{
         e.preventDefault();
@@ -167,16 +194,22 @@ const CreateOutlet = () => {
             //         cuisine:form.cuisine.split(",").map((x)=>x.trim()).filter(Boolean)
             //     } // this is way of sending json data.
             // for images we have to send in formData.
-            const address = [locationForm.latitude, locationForm.longitude,locationForm.addressLine1,locationForm.addressLine2].filter(Boolean).join(", ")
-            const area = [locationForm.pincode].filter(Boolean).join("");
             const city = [locationForm.city, locationForm.state].filter(Boolean).join("");
             const payload = new FormData();
-            payload.append("name", form.name);
+            if(!id){
+                payload.append("latitude",locationForm.latitude)
+                payload.append("longitude",locationForm.longitude)
+                payload.append("pincode",locationForm.pincode);
+                payload.append("address",locationForm.addressLine1)
+                payload.append("area", locationForm.addressLine2)
+                payload.append("city", city)
+                payload.append("name",managerForm.name)
+                payload.append("email",managerForm.email)
+                payload.append("phone",managerForm.phone)
+                payload.append("password",managerForm.password)
+            }
+            payload.append("outletName", form.outletName);
             payload.append("description",form.description)
-            payload.append("phone",form.phone)
-            payload.append("address",address)
-            payload.append("city", city)
-            payload.append("area", area)
             payload.append("foodType" , form.foodType)
             payload.append("openingTime",form.openingTime)
             payload.append("closingTime",form.closingTime)
@@ -186,6 +219,7 @@ const CreateOutlet = () => {
             cuisines.forEach((x)=>{
                 payload.append("cuisine",x);
             })
+            console.log(payload)
             if(form.image){
                 payload.append("image",form.image);
             }
@@ -218,8 +252,6 @@ const CreateOutlet = () => {
                     <h1>Create Outlet</h1>
                     <p>Enter the details used by your outlet and menu.</p>
                 </div>
-                {/* <button className="button primary" onClick={()=>setShowForm(!showForm)}>showform</button> */}
-                {/* <button className="button primary" onClick={()=>setShowLocationForm(!showLocationForm)}>Select on map</button> */}
             </div>
         { error && <div className="alert error">{error}</div>}
         { showForm &&
@@ -229,22 +261,38 @@ const CreateOutlet = () => {
                 form = {form}
                 busy = {busy}
                 error = {error}
-                submit={submit}
+                outletNext={outletNext}
                 change={change}
+                sendData={sendData}
                 />
             )
         }
-        <LocationPage 
-        locationForm = {locationForm}
-        locationChange={locationChange}
-        showMap={showMap}
-        setShowMap={setShowMap}
-        handleMapLocation={handleMapLocation}
-        handleUseCurrentLocation={handleUseCurrentLocation}
-        locationLoading={locationLoading}
-        showLocationForm={showLocationForm}
-        sendData={sendData}
-        />
+        {
+            showLocationForm && (
+                <LocationPage 
+                id = {id}
+                locationForm = {locationForm}
+                locationChange={locationChange}
+                showMap={showMap}
+                setShowMap={setShowMap}
+                handleMapLocation={handleMapLocation}
+                handleUseCurrentLocation={handleUseCurrentLocation}
+                locationLoading={locationLoading}
+                locationNext={locationNext}
+                locationBack={locationBack}
+                />
+            )
+        }
+        {
+            showManagerForm && (
+                <ManagerPage
+                managerForm = {managerForm}
+                sendData = {sendData}
+                managerchange={managerchange}
+                outletNext={outletNext}
+                />
+            )
+        }
     </div>
     </>
   )
@@ -252,193 +300,58 @@ const CreateOutlet = () => {
 
 export default CreateOutlet
 
-export function FormPage({form,change,submit,busy,id}){
-    return(       
-            <form className="panel form grid-2" onSubmit={submit}>
-                <label>
-                    Outlet Name 
-                    <input type="text" 
-                    name="name"
-                    required
-                    value={form.name}
-                    onChange={change}
-                    />
-                </label>
-                <label>
-                    Phone
-                    <input type="tel" 
-                    required
-                    name="phone"
-                    value={form.phone}
-                    onChange={change}
-                    />
-                </label>
-                <label className="grid-span-2">
-                    Description
-                    <input type="text" 
-                    name="description"
-                    value={form.description}
-                    onChange={change}
-                    />
-                </label>
-                <label>
-                    Cuisine <span className="hint">(comma seperated)</span>
-                    <input
-                    name="cuisine"
-                    value={form.cuisine}
-                    onChange={change}
-                    />
-                </label>
-                <label>
-                    Food Type
-                    <select 
-                    name="foodType"
-                    value={form.foodType}
-                    onChange={change}
-                    
-                    >
-                        <option value="veg">veg</option>
-                        <option value="non-veg">non-veg</option>
-                        <option value="both">both</option>
 
-                    </select>
-                </label>
-                <label>
-                    Opening Time 
-                    <input 
-                    type="time"
-                    required
-                    name="openingTime"
-                    value={form.openingTime}
-                    onChange={change}
-                    />
-                </label>
-                <label>
-                    Closing Time
-                    <input
-                    type="time"
-                    required
-                    name="closingTime"
-                    value={form.closingTime}
-                    onChange={change}
-                    />
-                </label>
-                <label>
-                    Status
-                    <select 
-                    name="status"
-                    value={form.status}
-                    onChange={change}
-                    
-                    >
-                        <option value="active">active</option>
-                        <option value="inactive">inactive</option>
-                    </select>
-                </label>
-                <label className="check">
-                    <input type="checkbox"
-                    name="isOpen"
-                    checked={form.isOpen}
-                    onChange={change}
-                    />{" "} Currently open
-                </label>
-                <label className="grid-span-2">
-                    Outlet image
-                    <input 
-                    type="file"
-                    name = "image"
-                    accept="image/*"
-                    capture="environment"
-                    onChange={change}
-                    />
-                </label>
-                <div className="grid-span-2 form-actions">
-                    <button type="button" className="button secondary" onClick={()=>history.back()}>Cancel</button>
-                    <button className="button secondary" type="submit"  disabled={busy}>{busy?"Saving...": id ? "Update Outlet":"Create Outlet"}</button>
-                </div>
-            </form>
-    )
-}
 
-export function LocationPage({locationForm,locationChange,showMap,setShowMap,handleMapLocation,handleUseCurrentLocation,locationLoading,showLocationForm,sendData}){
+export function ManagerPage({managerForm,managerchange,sendData,outletNext}){
     return (
         <>
-            <h1>Location</h1>
-            {showLocationForm &&
-                (
-                    <>
-                    <form className="panel form grid-2" onSubmit={sendData}>
-                            <label>
-                                AddressLine1
-                                <input type="text" 
-                                name="addressLine1"
-                                required
-                                value={locationForm.addressLine1}
-                                onChange={locationChange}
-                                placeholder="House no, street, area"
-                                />
-                            </label>
-                            <label>
-                                AddressLine 2
-                                <input type="text" 
-                                name="addressLine2"
-                                required
-                                value={locationForm.addressLine2}
-                                onChange={locationChange}
-                                placeholder="Apartment, landmark, etc."
-                                />
-                            </label>
-                            <label>
-                                City
-                                <input type="text" 
-                                name="city"
-                                required
-                                value={locationForm.city}
-                                onChange={locationChange}
-                                placeholder="Enter City"
-                                />
-                            </label>
-                            <label>
-                                State
-                                <input type="text" 
-                                name="state"
-                                required
-                                value={locationForm.state}
-                                onChange={locationChange}
-                                placeholder="Enter State"
-                                />
-                            </label>
-                            <label>
-                                Pincode 
-                                <input type="text" 
-                                name="pincode"
-                                required
-                                value={locationForm.pincode}
-                                onChange={locationChange}
-                                placeholder="Enter Pincode."
-                                />
-                            </label>
-                            <div className="grid-span-2 form-actions">
-                                <button className="button primary" type="button" disabled={locationLoading} onClick={handleUseCurrentLocation}>Use Current Location</button>
-                                <button className="button primary" type="button" disabled={locationLoading} onClick={()=>setShowMap(!showMap)}>Select on map</button>
-                                <button className="button secondary" type="submit">Create Outlet</button>
-                                <button className="button secondary" type="button"  onClick={()=>history.back()}>Cancel</button>
-                            </div>
-                    </form>
-                    {
-                        showMap && (
-                            <LocationPicker
-                            initialLocation={
-                                locationForm.latitude !== null && locationForm.longitude !== null ?  {latitude:locationForm.latitude,longitude:locationForm.longitude}:null
-                            }
-                            onSelect={handleMapLocation}
-                            onClose ={()=>setShowMap(false)}
-                            />
-                        )
-                    }
-                </>
-                )
-            }
+            <h1>Manager</h1>
+            <form className="panel form grid-2" onSubmit={sendData}>
+                    <label>
+                        name
+                        <input type="text" 
+                        name="name"
+                        required
+                        value={managerForm.name}
+                        onChange={managerchange}
+                        placeholder="Manager Name"
+                        />
+                    </label>
+                    <label>
+                        Email
+                        <input type="email" 
+                        name="email"
+                        required
+                        value={managerForm.email}
+                        onChange={managerchange}
+                        placeholder="Manager Email"
+                        />
+                    </label>
+                    <label>
+                        Phone
+                        <input type="tel" 
+                        name="phone"
+                        required
+                        value={managerForm.phone}
+                        onChange={managerchange}
+                        placeholder="contact Numver"
+                        />
+                    </label>
+                    <label>
+                        Password
+                        <input type="password" 
+                        name="password"
+                        required
+                        value={managerForm.password}
+                        onChange={managerchange}
+                        placeholder="password"
+                        />
+                    </label>
+                    <div className="grid-span-2 form-actions">
+                        <button className="button secondary" type="button" onClick={outletNext} >Back</button>
+                        <button className="button secondary" type="submit">Create Outlet</button>
+                    </div>
+            </form>
         </>
     )
 }
