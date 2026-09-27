@@ -17,14 +17,17 @@ import outletService from "../../services/outletService";
 
 import { useAuth } from "../../context/useAuth";
 import { useState,useEffect  } from "react";
+import useManagerContext from "../../context/useManagerContext";
 
 const arr = (x)=> Array.isArray(x)? x: x?.menuCategories || [];
 
 const CategoryLIst = () => {
 
-    const {vendor} = useAuth();
+    const {vendor,isAuthenticated} = useAuth();
+    const {manager} = useManagerContext();
     const [params] = useSearchParams();
     const outletFilter = params.get("outlet");
+    const managerOutletFilter = params.get("moutlet");
     const [categories,setCategories]  = useState([]);
     const [outlets,setOutlets] = useState([]);
 
@@ -33,33 +36,45 @@ const CategoryLIst = () => {
 
     const [busy,setBusy]= useState(true);
 
-    const selectedOutlet = outlets.find((o)=> o._id === outletFilter)
+    const selectedOutlet = isAuthenticated ? outlets.find((o)=> o._id === outletFilter) : manager.outlet;
     
     const filtered = categories.filter((c)=>`${c.name} ${c.description}`.toLowerCase().includes(q.toLowerCase()));
 
     useEffect(
         ()=>{
-            if(!vendor?._id) return;
             (async ()=>{
-                try{
+                if(isAuthenticated){
+                    if(!vendor?._id) return;
 
-                    const [c,o] = await Promise.all([
-                        outletFilter ? await categoryService.byOutlet(outletFilter) : await categoryService.byVendor(vendor?._id), outletService.byVendor(vendor?._id)
-
-                    ]) 
-
-                    setCategories(arr(c.menuCategories));
-                    setOutlets(arr(o.outlets));
-                }catch(error){
-                    console.log(error);
-                }finally{
-                    setBusy(false);
+                    try{
+                        
+                        const [c,o] = await Promise.all([
+                            outletFilter ? await categoryService.byOutlet(outletFilter) : await categoryService.byVendor(vendor?._id), outletService.byVendor(vendor?._id)
+                            
+                        ]) 
+                        
+                        setCategories(arr(c.menuCategories));
+                        setOutlets(arr(o.outlets));
+                    }catch(error){
+                        console.log(error);
+                    }finally{
+                        setBusy(false);
+                    }
+                }else{
+                    try {
+                        const c = await categoryService.byOutlet(managerOutletFilter);
+                        setCategories(c.menuCategories)
+                    } catch (error) {
+                        console.log(error);
+                    }finally{
+                        setBusy(false)
+                    }
                 }
             })();
-        },[vendor,outletFilter]
+        },[vendor,outletFilter,managerOutletFilter]
     )
 
-    const addCategoryUrl = outletFilter ? `/category/new?outlet=${outletFilter}`:"/category/new"
+    const addCategoryUrl = outletFilter ? `/category/new?outlet=${isAuthenticated ? outletFilter:managerOutletFilter}`:"/category/new"
   return (
     <div className="page">
     <div className="page-heading">

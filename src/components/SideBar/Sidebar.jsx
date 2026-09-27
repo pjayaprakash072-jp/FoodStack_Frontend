@@ -3,7 +3,8 @@ import {NavLink} from 'react-router-dom'
 import { LayoutDashboard,Store,Tags,Utensils,User,X ,ListOrdered} from "lucide-react"
 import {useAuth} from '../../context/useAuth'
 import {LogOut} from 'lucide-react'
-const links = [
+import useManagerContext from './../../context/useManagerContext';
+const vendorLinks = [
   {to:"/dashboard" , label: "Dashboard" , icon:LayoutDashboard},
   {to:"/outlets" , label: "Outlets" , icon:Store},
   {to:"/categories" , label: "Categories" , icon:Tags},
@@ -12,6 +13,15 @@ const links = [
   {to:"/profile" , label: "Profile" , icon:User},
 ]
 const Sidebar = ({open , onClose}) => {
+  const {manager} = useManagerContext();
+  const {isAuthenticated} = useAuth();
+  const ManagerLinks = [
+    {to:`/outlets/${manager?.outlet?._id}` , label: "Dashboard" , icon:LayoutDashboard},
+    {to:`/categories?moutlet=${manager?.outlet?._id}`, label: "Categories" , icon:Tags},
+    {to:`/menu-items?outlet=${manager?.outlet?._id}` , label: "Menu Items" , icon:Utensils},
+    {to:"/orders",label:"Orders",icon:ListOrdered},
+  ]
+  const links = isAuthenticated ? vendorLinks : ManagerLinks;
   const {logout} = useAuth();
   return (
     <>

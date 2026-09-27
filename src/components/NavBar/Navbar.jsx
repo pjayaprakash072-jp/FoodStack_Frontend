@@ -1,22 +1,32 @@
 import {NavLink} from 'react-router-dom'
 import {Menu , LogOut, UserCircle} from "lucide-react"
 
-import {useAuth} from "../../context/useAuth"
-const Navbar = ({onMenu}) => {
-    const {vendor,logout} = useAuth();
-
-const links = [
-  {to:"/dashboard" , label: "Dashboard"},
-  {to:"/outlets" , label: "Outlets"},
-  {to:"/categories" , label: "Categories"},
-  {to:"/menu-items" , label: "Menu Items"},
-  {to:"/profile" , label: "Profile"},
-  {to:"/orders",label:"Orders"}
+const Vendorlinks = [
+{to:"/dashboard" , label: "Dashboard"},
+{to:"/outlets" , label: "Outlets"},
+{to:"/categories" , label: "Categories"},
+{to:"/menu-items" , label: "Menu Items"},
+{to:"/profile" , label: "Profile"},
+{to:"/orders",label:"Orders"}
 ]
-  return (
+import {useAuth} from "../../context/useAuth"
+import useManagerContext from '../../context/useManagerContext'
+const Navbar = ({onMenu}) => {
+    const {vendor,logout,isAuthenticated} = useAuth();
+  const {isManagerAuthenticated,manager,Managerlogout,managerLogin} = useManagerContext();
+
+  const ManagerLinks = [
+    {to:`/outlets/${manager?.outlet?._id}` , label: "Dashboard"},
+    {to:`/categories?outlet=${manager?.outlet?._id}`, label: "Categories"},
+    {to:`/menu-items?outlet=${manager?.outlet?._id}` , label: "Menu Items"},
+    {to:"/orders",label:"Orders"}
+  ]
+  const links = isAuthenticated? Vendorlinks:ManagerLinks;
+  const accessBoth = isAuthenticated || isManagerAuthenticated;
+return (
     <div className="navbar">
             {
-                vendor?(
+                accessBoth?(
                     <button className="icon-button" onClick={onMenu}><Menu size = {21}/></button>
                 ):( 
                     <img src='/FS1.svg' width="45" height="45"/>
@@ -27,7 +37,7 @@ const links = [
         <div className="navbar-title">
             <strong>Vendor</strong>
         </div>
-        {vendor && <div className="navbar-links">
+        {accessBoth&& <div className="navbar-links">
                 {
                     links.map(
                         ({to,label})=>(
@@ -45,7 +55,7 @@ const links = [
 
         <div className="navbar-user">
             {
-                vendor?(
+                accessBoth?(
                     <>
                             <NavLink
                             to="/profile"
@@ -53,7 +63,7 @@ const links = [
                             <UserCircle size = {22}/>
                             </NavLink>
                             <span>
-                                {vendor?.name || vendor?.businessName || 'Vendor'}
+                                {vendor?.name || vendor?.businessName || manager.name ||'Vendor'}
                             </span>
                     </>
 
@@ -65,13 +75,13 @@ const links = [
 
         
         {
-            vendor? (
-                <button className="ghost-button" onClick={logout}>
+            accessBoth? (
+                <button className="ghost-button" onClick={isAuthenticated ? logout :Managerlogout}>
                         <LogOut size = {17}/>
                         <span className='md:visible hidden'>Logout</span>
                     </button>
             ):(
-                <button className="button primary"><NavLink to="/register">Register</NavLink></button>
+                !managerLogin &&  <button className="button primary"><NavLink to="/register">Register</NavLink></button>
 
             )
         }

@@ -10,17 +10,19 @@ import { useAuth } from "../../context/useAuth"
 import categoryService from "../../services/categoryService"
 import EmptyState from "../../components/Common/EmptyState"
 
+
 const MenuItemList = () => {
     const {vendor} = useAuth();
     const [items,setItems] = useState([]);
     const [categories,setCategories] = useState([]);
     const [params] = useSearchParams();
     const categoryFilter = params.get("category")
+    const outletFilter = params.get("outlet")
     const [busy,setBusy] = useState(true);
     const [error,setError] = useState("")
     const [del,setDel] = useState(null);
     const [search,setSearch] = useState("");
-
+    
     const selectedCategory = categories.find((c)=>c._id === categoryFilter)
 
     useEffect(()=>{
@@ -29,12 +31,11 @@ const MenuItemList = () => {
             try {
                 const [i,c] = await Promise.all(
                     [
-                        categoryFilter? menuItemService.byCategory(categoryFilter):menuItemService.byVendor(vendor?._id)
+                    outletFilter ? menuItemService.byOutlet(outletFilter) : categoryFilter? menuItemService.byCategory(categoryFilter):menuItemService.byVendor(vendor?._id)
                         ,
-                        categoryService.byVendor(vendor?._id)
+                    outletFilter? categoryService.byOutlet(outletFilter) : categoryService.byVendor(vendor?._id)
                     ]
                 )
-                // const menuitems = categoryFilter ? await menuItemService.byCategory(categoryFilter): await menuItemService.byVendor(vendor?._id)
                 setItems(i?.menuItems)
                 setCategories(c?.menuCategories)
             } catch (error) {
@@ -43,14 +44,8 @@ const MenuItemList = () => {
                 setBusy(false);
             }
         })();
-    //     (async()=>{
-    //                 menuItemService.byVendor(vendor?._id)
-    //     .then((r)=>setItems(r.menuItems))
-    //     .catch((err)=>setError(getErrorMessage(err)))
-    //     .finally(()=>setBusy(false))
-    // })();
     }
-    ,[vendor,categoryFilter])
+    ,[vendor,categoryFilter,outletFilter])
 
     const remove = ()=>{
         setBusy(true)

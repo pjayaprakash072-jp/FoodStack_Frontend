@@ -20,8 +20,7 @@ const Login = () => {
     const [error, setError] = useState("");
     const [busy, setBusy] = useState(false);
     const { login:vendorLogin ,googleLogin } = useAuth();
-    const { login:loginManager  } = useManagerContext();
-    const [managerLogin,setManagerLogin] = useState(true);
+    const { login:loginManager ,managerLogin,setManagerLogin } = useManagerContext();
     const navigate = useNavigate();
 
 

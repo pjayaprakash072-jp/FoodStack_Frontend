@@ -26,7 +26,7 @@ import { toast } from "sonner";
 
 function VendorPrivate(){
     const {isAuthenticated} = useAuth();
-    const {isManagerAuthenticated,manager} = useManagerContext();
+    const {isManagerAuthenticated} = useManagerContext();
     useEffect(
         ()=>{
             if(!isAuthenticated && isManagerAuthenticated){
@@ -41,9 +41,9 @@ function VendorPrivate(){
         </DashboardLayout>
         )
     }
-    if(isManagerAuthenticated){
-        return <Navigate to={`/outlets/${manager.Outlet?._id}`} replace/>
-    }
+    // if(isManagerAuthenticated){
+    //     return <Navigate to={`/outlets/${manager.Outlet?._id}`} replace/>
+    // }
     return <Navigate to="/login" replace/>
 }
 

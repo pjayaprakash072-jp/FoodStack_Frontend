@@ -8,6 +8,8 @@ export const ManagerAuthProvider =({children})=>{
 
     const [token, setAuthToken] = useState(getManagerToken());
     const [manager,setAuthManager] = useState(getManager());
+    const [managerLogin,setManagerLogin] = useState(true);
+
 
     const updateManager = (managerData)=>{
         setAuthManager(managerData);
@@ -26,7 +28,7 @@ export const ManagerAuthProvider =({children})=>{
         }
         return response
     }
-    const logout = ()=>{
+    const Managerlogout = ()=>{
         clearManagerAuth();
         setAuthManager(null);
         setAuthToken(null);
@@ -37,11 +39,13 @@ export const ManagerAuthProvider =({children})=>{
                 token,
                 isManagerAuthenticated:Boolean(token),
                 login,
-                logout,
+                Managerlogout,
                 manager,
-                updateManager
+                updateManager,
+                managerLogin,
+                setManagerLogin
             }
-        ),[token,manager]
+        ),[token,manager,managerLogin]
     )
     return (
         <ManagerContext.Provider
