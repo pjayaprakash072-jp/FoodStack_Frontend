@@ -26,7 +26,7 @@ const MenuItemList = () => {
     const selectedCategory = categories.find((c)=>c._id === categoryFilter)
 
     useEffect(()=>{
-        if(!vendor?._id) return;
+        // if(!vendor?._id) return;
         (async ()=>{
             try {
                 const [i,c] = await Promise.all(

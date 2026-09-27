@@ -6,17 +6,20 @@ import categoryService from "../../services/categoryService"
 
 import Loader from "../../components/Common/Loader"
 import ConfirmDialog from './../../components/Common/ConfirmDialog';
-import { Pencil,Trash2 } from "lucide-react"
+import { Activity, Pencil,Tags,Trash2 } from "lucide-react"
 
 import { getErrorMessage } from "../../utils/api"
+import StatCard from "../../components/Cards/StatCard"
+import { useAuth } from "../../context/useAuth"
+import useManagerContext from "../../context/useManagerContext"
 
 
 
 const OutletDetails = () => {
     
     const {id} = useParams();
-    console.log(id);
-    
+    const {isAuthenticated} = useAuth();    
+    const {manager} = useManagerContext();
     const [error,setError] = useState("");
     
     const [outlet,setOutlet] = useState(null);
@@ -28,6 +31,8 @@ const OutletDetails = () => {
     const [cats ,setCats] = useState([]);
 
     const [del,setDel] = useState(false);
+
+    const [showMain,setShowMain] = useState(true);
 
     const nav  = useNavigate();
 
@@ -95,6 +100,15 @@ const OutletDetails = () => {
             </div>
         </div>
         {error && <div className="alert error">{error}</div>}
+        {
+            showMain && (
+                <div className="stats-grid">
+                    <StatCard label="Categories" value={cats.length || 0} hint ="Menu groups" icon={Tags}/>
+                    <StatCard label="MunuItems" value={items.length || 0} hint ="Products Listed" icon={Tags}/>
+                    <StatCard label="Stats" value = {outlet?.status || " "} hint = "Restaurant Status" icon={Activity}/>
+                </div>
+            )
+        }
 
         {showDetails &&(
 
@@ -142,7 +156,7 @@ const OutletDetails = () => {
                     </div>
                     <p>Menu Items</p>
 
-                    <Link className="button primary" to={`/categories?outlet=${id}`}>Manage categories</Link>
+                    <Link className="button primary" to={isAuthenticated ? `/categories?outlet=${id}`:`/categories?moutlet=${manager?.outlet?._id}`}>Manage categories</Link>
                 </div>
             </div>
         )

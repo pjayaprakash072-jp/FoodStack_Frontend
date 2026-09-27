@@ -17,7 +17,7 @@ const Navbar = ({onMenu}) => {
 
   const ManagerLinks = [
     {to:`/outlets/${manager?.outlet?._id}` , label: "Dashboard"},
-    {to:`/categories?outlet=${manager?.outlet?._id}`, label: "Categories"},
+    {to:`/categories?moutlet=${manager?.outlet?._id}`, label: "Categories"},
     {to:`/menu-items?outlet=${manager?.outlet?._id}` , label: "Menu Items"},
     {to:"/orders",label:"Orders"}
   ]

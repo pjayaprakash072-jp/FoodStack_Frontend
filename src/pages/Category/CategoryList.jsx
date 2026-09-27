@@ -30,13 +30,14 @@ const CategoryLIst = () => {
     const managerOutletFilter = params.get("moutlet");
     const [categories,setCategories]  = useState([]);
     const [outlets,setOutlets] = useState([]);
-
+    
+    const selectedOutletId = isAuthenticated ? outletFilter : managerOutletFilter;
 
     const [q,setQ] = useState("");
 
     const [busy,setBusy]= useState(true);
 
-    const selectedOutlet = isAuthenticated ? outlets.find((o)=> o._id === outletFilter) : manager.outlet;
+    const selectedOutlet = isAuthenticated ? outlets.find((o)=> o._id === outletFilter) : manager?.outlet;
     
     const filtered = categories.filter((c)=>`${c.name} ${c.description}`.toLowerCase().includes(q.toLowerCase()));
 
@@ -49,7 +50,7 @@ const CategoryLIst = () => {
                     try{
                         
                         const [c,o] = await Promise.all([
-                            outletFilter ? await categoryService.byOutlet(outletFilter) : await categoryService.byVendor(vendor?._id), outletService.byVendor(vendor?._id)
+                            outletFilter ? categoryService.byOutlet(outletFilter) :categoryService.byVendor(vendor?._id), outletService.byVendor(vendor?._id)
                             
                         ]) 
                         
@@ -63,7 +64,7 @@ const CategoryLIst = () => {
                 }else{
                     try {
                         const c = await categoryService.byOutlet(managerOutletFilter);
-                        setCategories(c.menuCategories)
+                        setCategories(arr(c.menuCategories))
                     } catch (error) {
                         console.log(error);
                     }finally{
@@ -71,22 +72,22 @@ const CategoryLIst = () => {
                     }
                 }
             })();
-        },[vendor,outletFilter,managerOutletFilter]
+        },[vendor,outletFilter,managerOutletFilter,isAuthenticated]
     )
 
-    const addCategoryUrl = outletFilter ? `/category/new?outlet=${isAuthenticated ? outletFilter:managerOutletFilter}`:"/category/new"
+    const addCategoryUrl = selectedOutletId ? `/category/new?outlet=${selectedOutletId}`:"/category/new"
   return (
     <div className="page">
     <div className="page-heading">
         <div>
-            <p className="eyebrow">{ outletFilter ? "Outlet":"Categories"}</p>
-            <h1>{ outletFilter? `${selectedOutlet?.name || "Outlet" } Categories`:"Categories"}</h1>
-            <p>{outletFilter ? `Manage categories for ${selectedOutlet?.name}`:"Create and manage every category of your menu"}</p>
+            <p className="eyebrow">{ selectedOutletId ? "Outlet":"Categories"}</p>
+            <h1>{ selectedOutletId? `${selectedOutlet?.name || "Outlet" } Categories`:"Categories"}</h1>
+            <p>{selectedOutletId ? `Manage categories for ${selectedOutlet?.name}`:"Create and manage every category of your menu"}</p>
 
         </div>
         <div className="button-row">
             {
-                outletFilter && (
+                outletFilter&& (
                     <Link className="button secondary" to="/categories"> <ArrowLeft size = {18}/> All Categories</Link>
                 )
             }
@@ -114,10 +115,10 @@ const CategoryLIst = () => {
             </div>
             ):(
                 <EmptyState
-                title={outletFilter? `No categories for ${selectedOutlet?.name}` :"No categories found"}
+                title={selectedOutletId? `No categories for ${selectedOutlet?.name}` :"No categories found"}
                 text={q ? "Try a different search" : "Create your first category"}
                 action={
-                    outlets.length == 0?(
+                    isAuthenticated && outlets.length === 0?(
                     <Link className="button primary" to = "/outlets/new" >Create Outlet First</Link>):(
 
                 <Link className="button primary" to={addCategoryUrl}>Add Category</Link>)

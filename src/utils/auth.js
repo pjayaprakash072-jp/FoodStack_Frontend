@@ -40,18 +40,18 @@ const MANAGER_TOKEN ="manager_token"
 
 const MANAGER_KEY="manager_user"
 
-export const getManagerToken = ()=> localStorage.getItem(MANAGER_TOKEN) 
+export const getManagerToken = ()=> sessionStorage.getItem(MANAGER_TOKEN) 
 
-export const setManagerToken = (token) => localStorage.setItem(MANAGER_TOKEN,token) 
+export const setManagerToken = (token) => sessionStorage.setItem(MANAGER_TOKEN,token) 
 
-export const removeManagerToken = ()=> localStorage.removeItem(MANAGER_TOKEN);
+export const removeManagerToken = ()=> sessionStorage.removeItem(MANAGER_TOKEN);
 
 
 export const getManager = ()=>{ 
 
     try {
         
-        return JSON.parse(localStorage.getItem(MANAGER_KEY) || "null")
+        return JSON.parse(sessionStorage.getItem(MANAGER_KEY) || "null")
     } catch {
         console.log("No data is getting from the local storage.");
         return null;
@@ -59,10 +59,10 @@ export const getManager = ()=>{
 }
 
 export const setManager = (manager)=>{
-    localStorage.setItem(MANAGER_KEY,JSON.stringify(manager)) 
+    sessionStorage.setItem(MANAGER_KEY,JSON.stringify(manager)) 
 }
 
-export const removeManager = ()=> localStorage.removeItem(MANAGER_KEY) 
+export const removeManager = ()=> sessionStorage.removeItem(MANAGER_KEY) 
 
 export const  clearManagerAuth = ()=>{
     removeManagerToken();
