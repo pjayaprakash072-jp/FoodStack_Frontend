@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, Outlet } from "react-router-dom";
 import Login from "../pages/Auth/Login";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import Register from './../pages/Auth/Register';
@@ -19,39 +19,93 @@ import MenuItemDetails from "../pages/MenuItem/MenuItemDetails";
 import ForgotPassword from "../pages/Auth/ForgotPassword";
 import ResetPassword from "../pages/Auth/ResetPassword";
 import Orders from './../pages/Orders/Orders';
-function Private({children}){
+import Track from './../pages/Orders/Track'
+import useManagerContext from "../context/useManagerContext";
+import { useEffect } from "react";
+import { toast } from "sonner";
+
+function VendorPrivate(){
     const {isAuthenticated} = useAuth();
-    return isAuthenticated? (
+    const {isManagerAuthenticated,manager} = useManagerContext();
+    useEffect(
+        ()=>{
+            if(!isAuthenticated && isManagerAuthenticated){
+                toast.error("Only vendors can access this page.")
+            }
+        }
+    )
+    if(isAuthenticated){
+        return (
         <DashboardLayout>
-            {children}
+            <Outlet/>
+        </DashboardLayout>
+        )
+    }
+    if(isManagerAuthenticated){
+        return <Navigate to={`/outlets/${manager.Outlet?._id}`} replace/>
+    }
+    return <Navigate to="/login" replace/>
+}
+
+function ManagerPrivate(){
+    const {isManagerAuthenticated} = useManagerContext();
+    return isManagerAuthenticated? (
+        <DashboardLayout>
+                <Outlet/>
         </DashboardLayout>
     ):(
-        <Navigate to ="/login"/>
+        <Navigate to="/login" replace/>
     )
 }
+
+function VendorOrManager(){
+    const {isAuthenticated} = useAuth();
+    const {isManagerAuthenticated} = useManagerContext();
+    const access = isAuthenticated || isManagerAuthenticated;
+    return access?(
+        <DashboardLayout>
+            <Outlet/>
+        </DashboardLayout>
+    ):(
+        <Navigate to="/login" replace/>
+    )
+}
+function Public(){
+    return <DashboardLayout><Outlet/></DashboardLayout>
+}
+
 const AppRoutes = () => {
     return (
         <Routes>
-            <Route path="/login" element={<DashboardLayout><Login /></DashboardLayout>} />
-            <Route path="/register" element={<DashboardLayout><Register/></DashboardLayout>}/>
-            <Route path="/" element = {<Navigate to = "/dashboard" replace/>}/>
-            <Route path="/dashboard" element = {<Private><Dashboard/></Private>}/>
-            <Route path="/profile" element={<Private><Profile/></Private>}/>
-            <Route path="/outlets" element={<Private><OutletList/></Private>}/>
-            <Route path="/categories" element={<Private><CategoryList/></Private>}/>
-            <Route path="/category/new" element={<Private><CategoryForm/></Private>}/>
-            <Route path="/outlets/new" element={<Private><CreateOutlet/></Private>}/>
-            <Route path= "/outlets/:id" element={<Private><OutletDetails/></Private>}/>
-            <Route path= "/outlets/:id/edit" element={<Private><CreateOutlet/></Private>}/>
-            <Route path= "/categories/:id/edit" element={<Private><CategoryForm/></Private>}/>
-            <Route path= "/categories/:id" element={<Private><CategoryDetails/></Private>}/>
-            <Route path= "/menu-items" element={<Private><MenuItemList/></Private>}/>
-            <Route path= "/menu-item/new" element={<Private><MenuItemForm/></Private>}/>
-            <Route path= "/menu-item/:id" element={<Private><MenuItemDetails/></Private>}/>
-            <Route path= "/menu-item/:id/edit" element={<Private><MenuItemForm/></Private>}/>
-            <Route path="/reset-password/:token" element={<DashboardLayout><ResetPassword/></DashboardLayout>}/>
-            <Route path="/forgot-password" element={<DashboardLayout><ForgotPassword/></DashboardLayout>}/>
-            <Route path="/orders" element={<DashboardLayout><Orders/></DashboardLayout>}/>
+            <Route element={<Public/>}>
+                <Route path="/login" element={<Login />}/>
+                <Route path="/register" element={<Register/>}/>
+                <Route path="/reset-password/:token" element={<ResetPassword/>}/>
+                <Route path="/forgot-password" element={<ForgotPassword/>}/>
+                <Route path="/" element = {<Navigate to = "/dashboard" replace/>}/>
+            </Route>
+            <Route element={<VendorPrivate/>}>
+                <Route path="/profile" element={<Profile/>}/>
+                <Route path="/outlets" element={<OutletList/>}/>
+                <Route path="/dashboard" element = {<Dashboard/>}/>
+                <Route path="/outlets/new" element={<CreateOutlet/>}/>
+            </Route>
+            <Route element={<ManagerPrivate/>}>
+                <Route element={<Track/>}/>
+            </Route>
+            <Route element={<VendorOrManager/>}>
+                <Route path="/categories" element={<CategoryList/>}/>
+                <Route path="/category/new" element={<CategoryForm/>}/>
+                <Route path= "/outlets/:id" element={<OutletDetails/>}/>
+                <Route path= "/outlets/:id/edit" element={<CreateOutlet/>}/>
+                <Route path= "/categories/:id/edit" element={<CategoryForm/>}/>
+                <Route path= "/categories/:id" element={<CategoryDetails/>}/>
+                <Route path= "/menu-items" element={<MenuItemList/>}/>
+                <Route path= "/menu-item/new" element={<MenuItemForm/>}/>
+                <Route path= "/menu-item/:id" element={<MenuItemDetails/>}/>
+                <Route path= "/menu-item/:id/edit" element={<MenuItemForm/>}/>
+                <Route path="/orders" element={<Orders/>}/>
+            </Route>
             <Route path="*" element ={<Navigate to = "/dashboard" replace/>}/>
         </Routes>
     );

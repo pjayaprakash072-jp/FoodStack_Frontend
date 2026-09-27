@@ -55,7 +55,6 @@ export function AuthProvider({children}){
         clearAuth();
         setAuthVendor(null);
         setAuthToken(null);
-
     }
 
     const value = useMemo(

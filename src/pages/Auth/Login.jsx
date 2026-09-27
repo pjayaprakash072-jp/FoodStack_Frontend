@@ -4,15 +4,24 @@ import { useAuth } from "../../context/useAuth";
 import { getErrorMessage } from "../../utils/api";
 import { LogIn } from "lucide-react";
 import { GoogleLogin } from "@react-oauth/google";
+import useManagerContext from "../../context/useManagerContext";
 
 const Login = () => {
     const [form,setForm] = useState({
         email:"",
         password:""
     })
+    const [managerForm,setManagerForm] = useState(
+        {
+            phone:"",
+            password:""
+        }
+    )
     const [error, setError] = useState("");
     const [busy, setBusy] = useState(false);
-    const { login ,googleLogin } = useAuth();
+    const { login:vendorLogin ,googleLogin } = useAuth();
+    const { login:loginManager  } = useManagerContext();
+    const [managerLogin,setManagerLogin] = useState(true);
     const navigate = useNavigate();
 
 
@@ -23,10 +32,16 @@ const Login = () => {
         setBusy(true);
 
         try {
-
-            const result = await login(form);
-            console.log("Login Result",result)
-            navigate("/dashboard");
+            let result;
+            if(managerLogin){
+                result = await loginManager(managerForm);
+                console.log("manager Login Result:",result);
+                navigate(`/outlets/${result.manager.outlet?._id}`)
+            }else{
+                result = await vendorLogin(form);
+                console.log("Login Result",result)
+                navigate("/dashboard");
+            }
 
         } catch (error) {
             setError(getErrorMessage(error));
@@ -34,6 +49,7 @@ const Login = () => {
             setBusy(false);
         }
     };
+
 
     return (
         <div className="auth-page">
@@ -48,60 +64,99 @@ const Login = () => {
                         Sign in to manage your food business.
                     </p>
                 </div>
-                <GoogleLogin
-                onSuccess={ async (credentialResponse)=>{
-                    console.log("GOOGLE SUCCESS");
-                    console.log(credentialResponse)
-                    try{
-                        await googleLogin(credentialResponse.credential)
-                        console.log("BACKEND GOOGLE LOGIN SUCCESS");
-                        const message = "please update phone and password";
-                        navigate(`/profile?message=${message}`)
-                    }catch(err){
-                        console.error(err);
-                        setError("Google Login failed")
-                        console.log("BACKEND GOOGLE LOGIN FAILED");
-                        console.log(err.response?.data);
-                        console.log(err);
-                    }
-                }}
-                onError={(error)=>{
-                    console.log(error);
-                    setError("Google Login failed")
-                }}/>
+                <div className="forgot-pass mb-3">
+                <button className={"button secondary"} onClick={()=>{setManagerLogin(true)}}>Manager</button>
+                <button className={"button secondary"} onClick={()=>{setManagerLogin(false)}}>Vendor</button>
+                </div>
+                {
+                    !managerLogin && (
+                        <GoogleLogin
+                        onSuccess={ async (credentialResponse)=>{
+                            console.log("GOOGLE SUCCESS");
+                            console.log(credentialResponse)
+                            try{
+                                await googleLogin(credentialResponse.credential)
+                                console.log("BACKEND GOOGLE LOGIN SUCCESS");
+                                const message = "please update phone and password";
+                                navigate(`/profile?message=${message}`)
+                            }catch(err){
+                                console.error(err);
+                                setError("Google Login failed")
+                                console.log("BACKEND GOOGLE LOGIN FAILED");
+                                console.log(err.response?.data);
+                                console.log(err);
+                            }
+                        }}
+                        onError={(error)=>{
+                            console.log(error);
+                            setError("Google Login failed")
+                        }}/>
+                    )
+                }
 
                 <form
                     className="form"
                     onSubmit={handleSubmit}
                 >
 
-                    <label>
-                        Email
+                    {
+                        managerLogin ? (
+                            <>
+                                <label>
+                                    phone
 
-                        <input
-                            type="email"
-                            placeholder="Email"
-                            value={form.email}
-                            onChange={(e) => setForm({...form,email:e.target.value})}
-                            required
-                        />
-                    </label>
+                                    <input
+                                        type="tel"
+                                        placeholder="Enter phone"
+                                        value={managerForm.phone}
+                                        required
+                                        onChange={(e) => setManagerForm({...managerForm,phone:e.target.value})}
+                                    />
+                                </label>
 
-                    <label>
-                        <div className="forgot-pass">
-                        <p>Password</p>
-                        <p>
-                            <Link to = "/forgot-password">Forgot Password</Link>
-                        </p>
-                        </div>
-                        <input
-                            type="password"
-                            placeholder="••••••••"
-                            value={form.password}
-                            onChange={(e) => setForm({...form,password:e.target.value})}
-                            required
-                        />
-                    </label>
+                                <label>
+                                    <p>Password</p>
+                                    <input
+                                        type="password"
+                                        placeholder="••••••••"
+                                        value={managerForm.password}
+                                        onChange={(e) => setManagerForm({...managerForm,password:e.target.value})}
+                                        required
+                                    />
+                                </label>
+                            </>
+                        ):(
+                            <>
+                                <label>
+                                    Email
+
+                                    <input
+                                        type="email"
+                                        placeholder="Email"
+                                        value={form.email}
+                                        onChange={(e) => setForm({...form,email:e.target.value})}
+                                        required
+                                    />
+                                </label>
+
+                                <label>
+                                    <div className="forgot-pass">
+                                    <p>Password</p>
+                                    <p>
+                                        <Link to = "/forgot-password">Forgot Password</Link>
+                                    </p>
+                                    </div>
+                                    <input
+                                        type="password"
+                                        placeholder="••••••••"
+                                        value={form.password}
+                                        onChange={(e) => setForm({...form,password:e.target.value})}
+                                        required
+                                    />
+                                </label>
+                            </>
+                        )
+                    }
 
                     {error && ( <p className="alert error"> {error} </p> )}
 
@@ -115,10 +170,13 @@ const Login = () => {
                     </button>
 
                 </form>
-
-                <p className="auth-footer">
-                    New Vendor? <Link to="/register" > Create an Account</Link>
-                </p>
+                {
+                    !managerLogin && (
+                        <p className="auth-footer">
+                            New Vendor? <Link to="/register" > Create an Account</Link>
+                        </p>
+                    )
+                }
             </div>
         </div>
     );

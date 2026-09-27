@@ -42,9 +42,6 @@ const Dashboard = () => {
                                     vendor ? outletService.byVendor(vendor._id || vendor.id) : outletService.byVendor(vendor?._id), categoryService.byVendor(vendor?._id), menuItemService.byVendor(vendor?._id),
                                 ]
                             );
-                            // console.log("outletes" , o);
-                            // console.log("categorids",c);
-                            // console.log("items",m)
                             setData(
                                 {
                                     outlets:arr(o),
