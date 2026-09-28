@@ -10,16 +10,16 @@ import { Activity, Pencil,Tags,Trash2 } from "lucide-react"
 
 import { getErrorMessage } from "../../utils/api"
 import StatCard from "../../components/Cards/StatCard"
-import { useAuth } from "../../context/useAuth"
-import useManagerContext from "../../context/useManagerContext"
+// import { useAuth } from "../../context/useAuth"
+// import useManagerContext from "../../context/useManagerContext"
 
 
 
 const OutletDetails = () => {
     
     const {id} = useParams();
-    const {isAuthenticated} = useAuth();    
-    const {manager} = useManagerContext();
+    // const {isAuthenticated} = useAuth();    
+    // const {manager} = useManagerContext();
     const [error,setError] = useState("");
     
     const [outlet,setOutlet] = useState(null);
@@ -156,7 +156,7 @@ const OutletDetails = () => {
                     </div>
                     <p>Menu Items</p>
 
-                    <Link className="button primary" to={isAuthenticated ? `/categories?outlet=${id}`:`/categories?moutlet=${manager?.outlet?._id}`}>Manage categories</Link>
+                    <Link className="button primary" to={`/categories?outlet=${id}`}>Manage categories</Link>
                 </div>
             </div>
         )

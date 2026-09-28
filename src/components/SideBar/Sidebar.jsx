@@ -17,7 +17,7 @@ const Sidebar = ({open , onClose}) => {
   const {isAuthenticated} = useAuth();
   const ManagerLinks = [
     {to:`/outlets/${manager?.outlet?._id}` , label: "Dashboard" , icon:LayoutDashboard},
-    {to:`/categories?moutlet=${manager?.outlet?._id}`, label: "Categories" , icon:Tags},
+    {to:`/categories?outlet=${manager?.outlet?._id}`, label: "Categories" , icon:Tags},
     {to:`/menu-items?outlet=${manager?.outlet?._id}` , label: "Menu Items" , icon:Utensils},
     {to:"/orders",label:"Orders",icon:ListOrdered},
   ]
@@ -31,7 +31,7 @@ const Sidebar = ({open , onClose}) => {
             to ="/dashboard"
             >
             <div className="brand" style={{cursor:"pointer"}}>
-              <img src='/FS1.svg' width="30" height="30"/>
+              <img src='/FS1.png' width="30" height="30"/>
               <div>
                 <b>Vendor</b>
                 <small>Management</small>

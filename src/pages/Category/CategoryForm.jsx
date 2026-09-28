@@ -14,6 +14,8 @@ import {useAuth} from "../../context/useAuth"
 import outletService from './../../services/outletService';
 import { getErrorMessage } from "../../utils/api";
 import {toast} from 'sonner'
+import useManagerContext from "../../context/useManagerContext";
+import managerService from "../../services/managerService";
 
 const initial = {
     name:"",
@@ -32,7 +34,10 @@ const CategoryForm = () => {
 
     const nav = useNavigate();
 
-    const {vendor} = useAuth();
+    const {vendor,isAuthenticated} = useAuth();
+    const {isManagerAuthenticated} = useManagerContext();
+    const isManager = isManagerAuthenticated && !isAuthenticated;
+    const isVendor = isAuthenticated && !isManagerAuthenticated;
 
     const [form,setForm] = useState(initial)
 
@@ -48,14 +53,15 @@ const CategoryForm = () => {
         ()=>{
             (async ()=>{
                 try {
-                    
-                    const o = await outletService.byVendor(vendor?.id || vendor?._id);// showing outletes global like all.
-
-                    setOutlets( Array.isArray(o)? o : o?.items || o?.outlets || [])
+                    if(isVendor){
+                        const o = await outletService.byVendor(vendor?.id || vendor?._id);// showing outletes global like all.
+    
+                        setOutlets( Array.isArray(o)? o : o?.items || o?.outlets || [])
+                    }
 
                     if(id){// showing only one outlet of the category. used in editing the caterogy.
-
-                        const c = await categoryService.getOne(id);
+                        const c =  isManager ? await managerService.getCategoryById(id):await categoryService.getOne(id);
+                        console.log(c);
                         const category = c.menuCategory;
 
                         setForm (
@@ -77,7 +83,7 @@ const CategoryForm = () => {
                     setLoading(false)
                 }
             })();
-        },[id]
+        },[id,isVendor,isManager]
     )
 
     const change =(e)=>{
@@ -89,6 +95,7 @@ const CategoryForm = () => {
     }
 
     const submit =async(e)=>{
+        console.log(form);
         e.preventDefault();
         setBusy(true);
         try{
@@ -102,18 +109,18 @@ const CategoryForm = () => {
             const toastMsg = id? "Category Updated successfully!" : "Category Created successfully!"
 
             if(id){
-                await categoryService.update(id,formData);
+                isManager ? await managerService.updateCategory(id,formData): await categoryService.update(id,formData);
                 toast.success(toastMsg)
-                nav("/categories")
+                nav(isManager ? `/categories?outlet=${outlet}`:"/categories")
             }else {
-                await categoryService.create(outlet,formData);
+                isManager ? await managerService.createCategory(formData): await categoryService.create(outlet,formData);
                 if(params.get("outlet")){
                     toast.success(toastMsg)
                     nav(`/categories?outlet=${params.get("outlet")}`);
                 } 
                 else{
                     toast.success(toastMsg)
-                    nav("/categories")
+                    nav(isManager ? `/outlets/${outlet}`:"/categories");
                 } 
 
             }
@@ -144,23 +151,26 @@ const CategoryForm = () => {
                 onChange={change}
                 />
             </label>
-            <label>
-                Outlet
-                <select
-                required
-                name="outlet"
-                value={form.outlet}
-                disabled = {Boolean(id) || Boolean(params.get('outlet'))} 
-                onChange={change}
-                >
-            <option value="">Select outet</option>
             {
-                outlets.map((o)=>(
-                    <option key={o._id} value={o._id}>{o.name}</option>
-                ))
+                isVendor && 
+                    <label>
+                        Outlet
+                        <select
+                        required
+                        name="outlet"
+                        value={form.outlet}
+                        disabled = {Boolean(id) || Boolean(params.get('outlet'))}
+                        onChange={change}
+                        >
+                    <option value="">Select outet</option>
+                    {
+                        outlets.map((o)=>(
+                            <option key={o._id} value={o._id}>{o.name}</option>
+                        ))
+                    }
+                    </select>
+                    </label>
             }
-            </select>
-            </label>
             <label className="grid-span-2">
                 Description
                 <input type="text"

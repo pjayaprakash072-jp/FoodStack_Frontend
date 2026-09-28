@@ -1,5 +1,5 @@
 
-const  FormPage = ({form,change,outletNext,busy,id,sendData})=>{
+const  FormPage = ({form,change,outletNext,busy,id,sendData,isManagerAuthenticated})=>{
     return(       
             <form className="panel form grid-2" onSubmit={id ?sendData :outletNext}>
                 <label>
@@ -7,6 +7,7 @@ const  FormPage = ({form,change,outletNext,busy,id,sendData})=>{
                     <input type="text" 
                     name="outletName"
                     required
+                    disabled={isManagerAuthenticated}
                     value={form.outletName}
                     onChange={change}
                     />

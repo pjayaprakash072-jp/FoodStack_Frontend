@@ -18,20 +18,20 @@ import outletService from "../../services/outletService";
 import { useAuth } from "../../context/useAuth";
 import { useState,useEffect  } from "react";
 import useManagerContext from "../../context/useManagerContext";
+import managerService from "../../services/managerService";
 
 const arr = (x)=> Array.isArray(x)? x: x?.menuCategories || [];
 
 const CategoryLIst = () => {
 
     const {vendor,isAuthenticated} = useAuth();
-    const {manager} = useManagerContext();
+    const {manager,isManagerAuthenticated} = useManagerContext();
     const [params] = useSearchParams();
     const outletFilter = params.get("outlet");
-    const managerOutletFilter = params.get("moutlet");
     const [categories,setCategories]  = useState([]);
     const [outlets,setOutlets] = useState([]);
     
-    const selectedOutletId = isAuthenticated ? outletFilter : managerOutletFilter;
+    const selectedOutletId = outletFilter ;
 
     const [q,setQ] = useState("");
 
@@ -63,7 +63,8 @@ const CategoryLIst = () => {
                     }
                 }else{
                     try {
-                        const c = await categoryService.byOutlet(managerOutletFilter);
+                        const c = await managerService.getAllCategories(outletFilter);
+                        // console.log("Manager categories", c)
                         setCategories(arr(c.menuCategories))
                     } catch (error) {
                         console.log(error);
@@ -72,7 +73,7 @@ const CategoryLIst = () => {
                     }
                 }
             })();
-        },[vendor,outletFilter,managerOutletFilter,isAuthenticated]
+        },[vendor,outletFilter,isAuthenticated,isManagerAuthenticated]
     )
 
     const addCategoryUrl = selectedOutletId ? `/category/new?outlet=${selectedOutletId}`:"/category/new"
@@ -87,7 +88,7 @@ const CategoryLIst = () => {
         </div>
         <div className="button-row">
             {
-                outletFilter&& (
+                outletFilter && !isManagerAuthenticated &&(
                     <Link className="button secondary" to="/categories"> <ArrowLeft size = {18}/> All Categories</Link>
                 )
             }

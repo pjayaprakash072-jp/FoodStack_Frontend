@@ -7,6 +7,9 @@ import{toast} from 'sonner'
 import useLocation from "../../context/useLocation";
 import FormPage from './OutletForm'
 import LocationPage from "./LocationPage";
+import useManagerContext from './../../context/useManagerContext';
+import managerService from "../../services/managerService";
+import { useAuth } from './../../context/useAuth';
 
 const intial = {
     outletName:"",
@@ -37,6 +40,8 @@ const intialManager = {
 
 const CreateOutlet = () => {
     const {id} = useParams();
+    const {isManagerAuthenticated} = useManagerContext();
+    const {isAuthenticated} = useAuth();
     const {useCurrentLocation} = useLocation();
     const nav = useNavigate();
     
@@ -53,8 +58,6 @@ const CreateOutlet = () => {
     const [showForm,setShowForm] = useState(true);
 
     const [showLocationForm, setShowLocationForm] = useState(false);
-
-
 
     const [error,setError] = useState("");
 
@@ -114,7 +117,7 @@ const CreateOutlet = () => {
     const getAddressFromCorodinates = async(latitude,longitude)=>{
     const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`)
         if(!response.ok){
-            throw new Error("Unable to find addres for this location")
+            throw new Error("Unable to find address for this location")
         }
         const data = await response.json();
         return data;
@@ -223,15 +226,23 @@ const CreateOutlet = () => {
             if(form.image){
                 payload.append("image",form.image);
             }
-            if(id){
+            if(id && isAuthenticated){
                 await outletService.update(id,payload)
-            }else {
+            }else if(isManagerAuthenticated){
+                await managerService.updateOutlet(form)
+            }
+            else {
 
                 await outletService.create(payload)
             }
             const toastMsg = id? "Outlet Updated successfully!" : "Outlet Created successfully!"
             toast.success(toastMsg)
-            nav("/outlets")
+            if(isAuthenticated){
+                nav("/outlets")
+            }
+            if(isManagerAuthenticated){
+                nav(`/outlets/${id}`)
+            }
 
         } catch (err) {
             const message= getErrorMessage(err);
@@ -264,6 +275,7 @@ const CreateOutlet = () => {
                 outletNext={outletNext}
                 change={change}
                 sendData={sendData}
+                isManagerAuthenticated={isManagerAuthenticated}
                 />
             )
         }

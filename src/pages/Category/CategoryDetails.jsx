@@ -6,9 +6,14 @@ import Loader from '../../components/Common/Loader';
 import ConfirmDialog from '../../components/Common/ConfirmDialog';
 import { Pencil, Trash2 } from 'lucide-react';
 import { getErrorMessage } from '../../utils/api';
+import useManagerContext from '../../context/useManagerContext';
+import managerService from '../../services/managerService';
+import { useAuth } from '../../context/useAuth';
 
 const CategoryDetails = () => {
     const {id} = useParams();
+    const {isManagerAuthenticated} = useManagerContext();
+    const {isAuthenticated} = useAuth();
     const [error,setError] = useState("");
     const [category,setCategory] = useState(null);
     const [busy,setBusy] = useState(true);
@@ -20,12 +25,22 @@ const CategoryDetails = () => {
         ()=>{
             (async ()=>{
                 try{
-                    const [a,b] = await Promise.all([
-                        categoryService.getOne(id),
-                        menuItemService.byCategory(id)
-                    ])
-                    setCategory(a.menuCategory);
-                    setItems(b.menuItems);
+                    if(isManagerAuthenticated){
+                        const [a,b] = await Promise.all([
+                            managerService.getCategoryById(id),
+                            managerService.getItemsByCategory(id)
+                        ])
+                        setCategory(a.menuCategory);
+                        setItems(b.menuItems);
+                    }
+                    if(isAuthenticated){
+                        const [a,b] = await Promise.all([
+                            categoryService.getOne(id),
+                            menuItemService.byCategory(id)
+                        ])
+                        setCategory(a.menuCategory);
+                        setItems(b.menuItems);
+                    }
                 }catch(error){
                     setError(getErrorMessage(error))
                 }
@@ -33,13 +48,19 @@ const CategoryDetails = () => {
                     setBusy(false);
                 }
             })();
-        },[id]
+        },[id,isManagerAuthenticated,isAuthenticated]
     )
 
     const remove = async()=>{
         try{
-            await categoryService.remove(id);
-            nav("/categories")
+            if(isAuthenticated){
+                await categoryService.remove(id);
+                nav("/categories")   
+            }
+            if(isManagerAuthenticated){
+                await managerService.deleteCategory(id);
+                nav(`/categories?outlet=${category?.outlet?._id}`)
+            }
         }catch(error){
             setError(getErrorMessage(error))
         }finally{
