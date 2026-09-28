@@ -11,8 +11,8 @@ const managerService = {
     getAllItems:async()=>unwrap(await api.get("/manager/items/outlet")),
     getItemsByCategory:async(categoryId)=>unwrap( await api.get(`/manager/items/category/${categoryId}`)),
     getItemById:async(menuItemId)=>unwrap(await api.get(`/manager/items/get/${menuItemId}`)),
-    createItem:async(payload,categoryId)=>unwrap(await api.post(`/manager/items/add/${categoryId}`,payload)),
-    updateItem:async(payload,menuItemId)=>unwrap(await api.put(`/manager/items/update/${menuItemId}`,payload)),
+    createItem:async(categoryId,payload)=>unwrap(await api.post(`/manager/items/add/${categoryId}`,payload)),
+    updateItem:async(menuItemId,payload)=>unwrap(await api.put(`/manager/items/update/${menuItemId}`,payload)),
     deleteItem:async(menuItemId)=>unwrap(await api.delete(`/manager/items/delete/${menuItemId}`))
 }
 export default managerService

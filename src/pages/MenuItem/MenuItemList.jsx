@@ -9,10 +9,13 @@ import { Plus,Pencil ,Trash2 ,ArrowRight,ArrowLeft} from "lucide-react"
 import { useAuth } from "../../context/useAuth"
 import categoryService from "../../services/categoryService"
 import EmptyState from "../../components/Common/EmptyState"
+import useManagerContext from "../../context/useManagerContext"
+import managerService from "../../services/managerService"
 
 
 const MenuItemList = () => {
-    const {vendor} = useAuth();
+    const {vendor,isAuthenticated} = useAuth();
+    const {isManagerAuthenticated} = useManagerContext();
     const [items,setItems] = useState([]);
     const [categories,setCategories] = useState([]);
     const [params] = useSearchParams();
@@ -22,22 +25,36 @@ const MenuItemList = () => {
     const [error,setError] = useState("")
     const [del,setDel] = useState(null);
     const [search,setSearch] = useState("");
+    const isManager = isManagerAuthenticated && ! isAuthenticated;
+    const isVendor =isAuthenticated && !isManagerAuthenticated;
     
-    const selectedCategory = categories.find((c)=>c._id === categoryFilter)
+    const selectedCategory = (isManagerAuthenticated && categoryFilter) ? categories : categories.find((c)=>c._id === categoryFilter)
 
     useEffect(()=>{
         // if(!vendor?._id) return;
         (async ()=>{
             try {
-                const [i,c] = await Promise.all(
-                    [
-                    outletFilter ? menuItemService.byOutlet(outletFilter) : categoryFilter? menuItemService.byCategory(categoryFilter):menuItemService.byVendor(vendor?._id)
-                        ,
-                    outletFilter? categoryService.byOutlet(outletFilter) : categoryService.byVendor(vendor?._id)
-                    ]
-                )
-                setItems(i?.menuItems)
-                setCategories(c?.menuCategories)
+                if(isVendor){
+                    const [i,c] = await Promise.all(
+                        [
+                        outletFilter ? menuItemService.byOutlet(outletFilter) : categoryFilter? menuItemService.byCategory(categoryFilter):menuItemService.byVendor(vendor?._id)
+                            ,
+                        outletFilter? categoryService.byOutlet(outletFilter) : categoryService.byVendor(vendor?._id)
+                        ]
+                    )
+                    setItems(i?.menuItems)
+                    setCategories(c?.menuCategories)
+                }
+                if(isManager ){
+                    const [i,c] = await Promise.all(
+                        [
+                            categoryFilter ? managerService.getItemsByCategory(categoryFilter) : managerService.getAllItems(),
+                            categoryFilter ? managerService.getCategoryById(categoryFilter) : managerService.getAllCategories()
+                        ]
+                    )
+                    setItems(i?.menuItems);
+                    setCategories(c?.menuCategories || c?.menuCategory)
+                }
             } catch (error) {
                 setError(getErrorMessage(error))
             }finally{
@@ -45,18 +62,24 @@ const MenuItemList = () => {
             }
         })();
     }
-    ,[vendor,categoryFilter,outletFilter])
+    ,[vendor,categoryFilter,outletFilter,isAuthenticated,isManagerAuthenticated])
 
-    const remove = ()=>{
-        setBusy(true)
-        menuItemService.remove(del).then(()=>{
-            setItems(items.filter((item)=>item._id !== del))
-        }).catch((err)=>{
-            setError(getErrorMessage(err))
-        }).finally(()=>{
-            setBusy(false)
-            setDel(null)
-        })
+    const remove = async()=>{
+        setBusy(true);
+        try{
+            if(isVendor){
+                await menuItemService.remove(del);
+            }
+            if(isManager){
+                await managerService.deleteItem(del);
+            }
+            setItems(items.filter((item)=> item._id !== del));   
+        }catch(error){
+            setError(getErrorMessage(error));
+        }finally{
+            setBusy(false);
+            setDel(null);
+        }
     }
 
     const filtered = items.filter((item)=>item.name.toLowerCase().includes(search.toLowerCase()))

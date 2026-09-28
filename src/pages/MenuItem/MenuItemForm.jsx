@@ -6,6 +6,8 @@ import { useAuth } from "../../context/useAuth"
 import Loader from "../../components/Common/Loader"
 import categoryService from "../../services/categoryService"
 import {toast} from 'sonner'
+import managerService from "../../services/managerService"
+import useManagerContext from "../../context/useManagerContext"
 const intial = {
     name:"",
     description:"",
@@ -23,10 +25,12 @@ const intial = {
 const MenuItemForm = () => {
 
   const {id} = useParams();
-  const {vendor} = useAuth();
+  const {vendor,isAuthenticated} = useAuth();
+  const {manager} = useManagerContext();
   const [busy,setBusy] = useState(false);
   const [params] = useSearchParams();
   const [loading,setLoading] = useState(Boolean(id));
+  const categoryFilter = params.get("category")
   const [form,setForm] = useState(intial);
   const [categories,setCategories] = useState([]);
   const [error,setError] = useState("");
@@ -37,25 +41,24 @@ const MenuItemForm = () => {
   useEffect(()=>{
     (async ()=>{
       try{ // createing item from global.
-        const c = await  categoryService.byVendor(vendor?.id || vendor?._id);
+        const c = isAuthenticated ? await  categoryService.byVendor(vendor?.id || vendor?._id): await managerService.getAllCategories();
       
         setCategories(Array.isArray(c)? c :c?.menuCategories || [])
         if(id){
           const menuitem = await menuItemService.getOne(id);// editing the item.
         
-
           setForm({
             ...form, 
             ...menuitem.menuItem,
             outlet:menuitem.menuItem.outlet?._id  || menuitem.menuItem.outlet || "",
             category:menuitem.menuItem.category?._id || menuitem.menuItem.category || "",
             image:null })
-        }else if(params.get("category")) {
+        }else if(categoryFilter) {
 
           setForm((prev)=>({
             ...prev,
 
-            category:params.get("category")
+            category:categoryFilter
           })
           )// creating item for a particular category.
         }
@@ -65,7 +68,7 @@ const MenuItemForm = () => {
         setLoading(false)
       }
       })();
-    },[id,vendor]);
+    },[id,vendor,isAuthenticated,params]);
 
     const change = (e)=>{
         const {name,type, value, checked,files} = e.target;
@@ -83,6 +86,7 @@ const MenuItemForm = () => {
     e.preventDefault();
     setBusy(true);
     try{
+      // console.log(form);
       const {category,...payload} = form;
       const formData = new FormData();
       Object.entries(payload).forEach(([key,value])=>{
@@ -90,15 +94,26 @@ const MenuItemForm = () => {
           formData.append(key,value);
         }
       });
-            const toastMsg = id? "MenuItem Updated successfully!" : "MenuItem Created successfully!"
-      if(id){
-        await menuItemService.update(id,formData);
+      const toastMsg = id? "MenuItem Updated successfully!" : "MenuItem Created successfully!"
+
+      if(isAuthenticated){
+        if(id){
+          await menuItemService.update(id,formData);
+          toast.success(toastMsg)
+          nav("/menu-items");
+        }else{
+          await menuItemService.create(category,formData);
+          toast.success(toastMsg)
+          nav( categoryFilter ?`/menu-items?category=${categoryFilter}`: "/menu-items")
+        }
+      }else {
+        if(id){
+          await managerService.updateItem(id,formData);
+        }else{
+          await managerService.createItem(category,formData);
+        }
         toast.success(toastMsg)
-        nav("/menu-items");
-      }else{
-        await menuItemService.create(category,formData);
-        toast.success(toastMsg)
-        nav(`/menu-items?category=${category}`)
+        nav(categoryFilter ?`/menu-items?category=${categoryFilter}`:`/menu-items?outlet=${manager?.outlet?._id}` )
       }
     }catch(error){
       setError(getErrorMessage(error));
@@ -144,7 +159,7 @@ const MenuItemForm = () => {
                 required
                 name="category"
                 value={form.category}
-                disabled = {Boolean(id) || Boolean(params.get("category"))}
+                disabled = {Boolean(id) || Boolean(categoryFilter)}
                 onChange={change}
                 >
                   <option value="">Select Category</option>

@@ -28,7 +28,8 @@ const Sidebar = ({open , onClose}) => {
           <div className={`sidebar-overlay ${open? "visible":"invisible"}`} onClick={onClose}/>
           <div className={`sidebar ${open ? "translate-x-0":"-translate-x-full"}`}>
             <NavLink
-            to ="/dashboard"
+            to ={isAuthenticated ?"/dashboard" :`/outlets/${manager?.outlet?._id}` }
+            onClick = {onClose}
             >
             <div className="brand" style={{cursor:"pointer"}}>
               <img src='/FS1.png' width="30" height="30"/>

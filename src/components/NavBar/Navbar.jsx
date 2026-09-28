@@ -35,7 +35,7 @@ return (
 
 
         <div className="navbar-title">
-            <strong>Vendor</strong>
+            <strong>{ isManagerAuthenticated ? manager?.outlet?.name :"Vendor"}</strong>
         </div>
         {accessBoth&& <div className="navbar-links">
                 {
