@@ -23,6 +23,7 @@ import Track from './../pages/Orders/Track'
 import useManagerContext from "../context/useManagerContext";
 import { useEffect } from "react";
 import { toast } from "sonner";
+import OrderDetails from "../pages/Orders/OrderDetails";
 
 function VendorPrivate(){
     const {isAuthenticated} = useAuth();
@@ -105,6 +106,7 @@ const AppRoutes = () => {
                 <Route path= "/menu-item/:id" element={<MenuItemDetails/>}/>
                 <Route path= "/menu-item/:id/edit" element={<MenuItemForm/>}/>
                 <Route path="/orders" element={<Orders/>}/>
+                <Route path="/manager/orders/:orderId" element={<OrderDetails/>}/>
             </Route>
             <Route path="*" element ={<Navigate to = "/dashboard" replace/>}/>
         </Routes>
