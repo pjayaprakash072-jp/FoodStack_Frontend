@@ -113,9 +113,9 @@ if(!category){
         <div className="panel">
             <h2>Category Summary</h2>
             <div className="big-number">
+            <h1>Menu Items</h1>
                 {items.length}
             </div>
-            <p>Menu Items</p>
             <Link className="button primary" to={`/menu-items?category=${id}`}>Manage Menu Items</Link>
         </div>
     </div>

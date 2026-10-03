@@ -7,37 +7,83 @@ import SearchBar from "../../components/Common/SearchBar";
 import Loader from "../../components/Common/Loader";
 import OrderCard from "../../components/Cards/OrderCard";
 import { useNavigate } from "react-router-dom";
-// import { Navigate } from "react-router-dom";
+import { socket } from "../../services/socket";
+import { toast } from "sonner";
 
 
 const Orders = () => {
     const [orders,setOrders] = useState([]);
-    const {isAuthenticated} = useAuth();
-    const navigate = useNavigate();
     const [busy,setBusy] = useState(true);
-    const {isManagerAuthenticated} = useManagerContext();
     const [search,setSearch]  = useState("");
-    const filtered = orders.filter( (o)=> `${o.deliveryAddress}`.toLowerCase().includes(search.toLowerCase()))
+    const navigate = useNavigate();
+    const {isManagerAuthenticated,manager,setOrdersNum} = useManagerContext();
+    const {isAuthenticated} = useAuth();
+    const outletId  = manager?.outlet?._id;
+    const loadOrders = async(showLoader = true)=>{
+      try {
+        if(showLoader){
+          setBusy(true);
+        }
+        let response;
+        if(isManagerAuthenticated){
+          response = await managerService.getOrders();
+        }else if(isAuthenticated){
+          response = await orderService.getAllByVendor();
+        }
+        setOrders(response?.orders || [])
+        setOrdersNum(response?.orders?.length);
+      } catch (error) {
+      console.log("Failed to load orders",error); 
+      }finally{
+        setBusy(false)
+      }
+    }
     useEffect(
       ()=>{
-        const load = async()=>{
-          try { 
-            const response = isManagerAuthenticated? await managerService.getOrders() : isAuthenticated && await orderService.getAllByVendor();
-            setOrders(response.orders)
-            console.log(response)
-          } catch (error) {
-            console.log(error)
-          }finally{
-            setBusy(false)
-          }
-        }
-        load();
-      },[]
+        loadOrders(true);
+      },[isAuthenticated,isManagerAuthenticated]
     )
+    useEffect(
+      ()=>{
+        if(!isManagerAuthenticated || !outletId) return;
+        console.log("Connecting socket...");
+        if(!socket.connected){
+          socket.connect();
+        }
+        const handleNewOrder = (data)=>{
+          console.log("NEW ORDER RECEIVED",data)
+          if(String(data.outletId) !== String(outletId)) return ;
+          toast.success("New order received!",{
+            description:`Order # ${String(data.orderId).slice(-6)}`
+          })
+          loadOrders(false);
+        }
+        socket.on("new-order",handleNewOrder);
+        const joinRoom = ()=>{
+          console.log("Joining outlet room:",outletId);
+          socket.emit("join-outlet",outletId)
+        }
+        if(socket.connected){
+          joinRoom();
+        }
+        socket.on("connect",joinRoom)
+        // return ()=>{
+        //   socket.off(
+        //     "new-order",handleNewOrder
+        //   )
+        //   socket.off("connect",joinRoom)
+        // }
+      },[isManagerAuthenticated,outletId]
+    )
+    const filtered = orders.filter( (o)=> `${o.deliveryAddress}`.toLowerCase().includes(search.toLowerCase()))
   return (
     <div className="page">
       <div className="page-heading">
-        <p className="eyebrow">Orders</p>
+        <div>
+          <p className="eyebrow">Orders</p>
+          <h1>Orders</h1>
+          <p>Receive and manager every order</p>
+        </div>
         <div className="toolbar">
           <SearchBar
           value={search}
@@ -63,7 +109,7 @@ const Orders = () => {
               )
             }
           </div>
-        ):(<h1></h1>)
+        ):(<h1>No orders Found</h1>)
       }
     </div>
   )

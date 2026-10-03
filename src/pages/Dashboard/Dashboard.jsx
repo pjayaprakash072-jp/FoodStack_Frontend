@@ -76,38 +76,38 @@ const Dashboard = () => {
                 <StatCard label="Menu Items" value = {data.items.length} hint = "Products listed" icon={Utensils}/>
                 <StatCard label="Stats" value = {vendor?.status || "active"} hint = "Vendor Accont" icon={Activity}/>
             </div>
-        <section className="section">
-            <div className="section-title">
-                <div>
-                    <h2>Recent outlets</h2>
-                    <p>Quick access to your locatins</p>
+            <section className="section">
+                <div className="section-title">
+                    <div>
+                        <h2>Recent outlets</h2>
+                        <p>Quick access to your locatins</p>
+                    </div>
+                    <Link to = "/outlets" className="text-link" >View all</Link>
                 </div>
-                <Link to = "/outlets" className="text-link" >View all</Link>
-            </div>
-            {
-                data.outlets.length? (
-                    <div className="card-grid">
-                        {
-                            data.outlets.slice(0,4).map((o)=>(
-                                <OutletCard 
-                                key={o._id}
-                                outlet={o}
-                                />
+                {
+                    data.outlets.length? (
+                        <div className="card-grid">
+                            {
+                                data.outlets.slice(0,4).map((o)=>(
+                                    <OutletCard 
+                                    key={o._id}
+                                    outlet={o}
+                                    />
 
-                            ))
-                        }
-                    </div>
-                ):(
-                    <div className="panel">
-                        <p>
-                            No Outlets yet.{" "}
-                            <Link to = "/outlets/new">
-                            Create your first Outlet.</Link>
-                        </p>
-                    </div>
-                )
-            }
-        </section>
+                                ))
+                            }
+                        </div>
+                    ):(
+                        <div className="panel">
+                            <p>
+                                No Outlets yet.{" "}
+                                <Link to = "/outlets/new">
+                                Create your first Outlet.</Link>
+                            </p>
+                        </div>
+                    )
+                }
+            </section>
         </div>
     );
 };

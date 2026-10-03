@@ -13,18 +13,7 @@ const OrderCard = ({ order, onClick }) => {
     return (
         <div
             onClick={onClick}
-            className="
-                w-full
-                max-w-md
-                bg-white dark:bg-gray-900
-                border border-gray-200 dark:border-gray-700
-                rounded-2xl
-                p-5
-                shadow-sm
-                hover:shadow-md
-                transition-all duration-200
-                cursor-pointer
-            "
+            className="order-card"
         >
             {/* Header */}
             <div className="flex items-center justify-between gap-3">
@@ -42,7 +31,7 @@ const OrderCard = ({ order, onClick }) => {
                         dark:bg-yellow-900/30 dark:text-yellow-400
                     "
                 >
-                    <span className="w-1.5 h-1.5 rounded-full bg-yellow-500"></span>
+                    <span className="w-2.5 h-2.5 rounded-full bg-yellow-500"></span>
                     {order.orderStatus}
                 </span>
             </div>

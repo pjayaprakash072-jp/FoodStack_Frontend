@@ -231,8 +231,11 @@ a{
   bg-transparent
 }
 .sidebar{
-  @apply fixed left-0 top-0 z-20 w-48 md:w-72 h-screen
-  bg-blue-950 text-white p-3 
+  @apply fixed left-0 top-0 z-20 
+  w-48 md:w-72 
+  h-screen
+  p-3 
+  bg-blue-950 text-white 
   transform transition-transform duration-300 ease-in-out
 }
 .sidebar-overlay{
@@ -320,6 +323,14 @@ a{
   border border-gray-900
   rounded-2xl
 }
+.panel>h2{
+  @apply text-[30px]
+  tracking-[2px]
+}
+.panel>h1{
+  @apply text-[20px]
+  tracking-[2px]
+}
 .stat-card{
   @apply flex justify-between
   p-5
@@ -361,22 +372,9 @@ a{
   text-slate-500
 }
 .card-grid{
-  @apply grid grid-cols-1 md:grid-cols-3 gap-4
+  @apply grid grid-cols-1 md:grid-cols-4 gap-4
 }
-.outlet-card{
-  @apply overflow-hidden flex flex-col md:flex-row
-}
-.outlet-image{
-  @apply w-full
-  h-42.5 md:h-auto
-  md:w-36.25
-  md:min-w-36.25
-  bg-slate-200
-  grid place-items-center
-  text-[38px]
-  font-extrabold
-  text-slate-500
-}
+
 .profile-image{
   @apply
   w-36.5
@@ -384,29 +382,44 @@ a{
   overflow-hidden
   bg-red-500
 }
-.outlet-image img,.profile-image img {
+.profile-image img {
   @apply w-full h-full object-cover
 }
+.outlet-card{
+  @apply flex md:flex-col
+  overflow-hidden
+  rounded-xl
+}
+.outlet-card>img{
+  @apply
+  w-[45%] md:w-full
+  h-full md:h-42.5
+  object-cover md:object-fill
+}
 .outlet-card-body{
-  @apply p-4.5 flex-1
+  @apply p-1.5 md:p-3
+  md:text-2xl
 }
-.outlet-card h3{
-  @apply m-0 text-lg 
-}
-.outlet-card p{
-  @apply text-slate-500 text-[13px]
+.outlet-card-body>p{
+  @apply line-clamp-2 text-[15px]
+  py-0.5 md:py-2
 }
 .row-between{
   @apply flex
   justify-between
   gap-4.5
+  pr-2 
+}
+.row-between>h3{
+  @apply font-extrabold
+  tracking-[2px]
 }
 .mini-meta{
   @apply flex
   flex-wrap
   gap-3
   text-slate-500
-  text-xs
+  text-xs md:text-[13px]
 }
 .mini-meta span{
   @apply flex 
@@ -438,7 +451,8 @@ a{
   text-slate-600
 }
 .view-arrow{
-  @apply inline-flex
+  @apply inline-flex w-full pr-3 md:pr-5
+  justify-between
   items-center
   gap-2.25
   text-slate-700
@@ -473,7 +487,7 @@ a{
 }
 /* Details-grid */
 .details-grid{
-  @apply grid grid-cols-[2fr_1fr] gap-5
+  @apply grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-5
 }
 .detail{
   @apply flex
@@ -489,7 +503,7 @@ a{
 .big-number{
   @apply text-4xl
   font-extrabold
-  mt-2.5
+  mt-2.5 flex justify-between
 }
 /* Modal */
 
@@ -600,4 +614,17 @@ th{
   @apply text-center
   p-8.75
   text-slate-400
+}
+.order-card{
+  @apply
+                  w-full
+                max-w-md
+                bg-white dark:bg-gray-900
+                border border-gray-200 dark:border-gray-700
+                rounded-2xl
+                p-5
+                shadow-sm
+                hover:shadow-md
+                transition-all duration-200
+                cursor-pointer
 }

@@ -9,6 +9,7 @@ export const ManagerAuthProvider =({children})=>{
     const [token, setAuthToken] = useState(getManagerToken());
     const [manager,setAuthManager] = useState(getManager());
     const [managerLogin,setManagerLogin] = useState(true);
+    const [ordersNum,setOrdersNum] = useState(0);
 
 
     const updateManager = (managerData)=>{
@@ -43,9 +44,11 @@ export const ManagerAuthProvider =({children})=>{
                 manager,
                 updateManager,
                 managerLogin,
-                setManagerLogin
+                setManagerLogin,
+                ordersNum,
+                setOrdersNum
             }
-        ),[token,manager,managerLogin]
+        ),[token,manager,managerLogin,ordersNum]
     )
     return (
         <ManagerContext.Provider

@@ -5,7 +5,6 @@ import {MapPin , Phone , ArrowRight,ListOrdered} from "lucide-react"
 const OutletCard = ({outlet}) => {
   return (
     <div className="outlet-card">
-        <div className="outlet-image">
             {outlet.image?.url?
             (
                 <img src = {outlet.image.url} alt = {outlet.name}/>
@@ -19,7 +18,6 @@ const OutletCard = ({outlet}) => {
                 </span>
             )
         }
-        </div>
         <div className="outlet-card-body">
             <div className="row-between">
                 <h3>

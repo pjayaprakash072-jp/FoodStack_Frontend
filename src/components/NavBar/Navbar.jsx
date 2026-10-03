@@ -13,13 +13,13 @@ import {useAuth} from "../../context/useAuth"
 import useManagerContext from '../../context/useManagerContext'
 const Navbar = ({onMenu}) => {
     const {vendor,logout,isAuthenticated} = useAuth();
-  const {isManagerAuthenticated,manager,Managerlogout,managerLogin} = useManagerContext();
+  const {isManagerAuthenticated,manager,Managerlogout,managerLogin,ordersNum} = useManagerContext();
 
   const ManagerLinks = [
     {to:`/outlets/${manager?.outlet?._id}` , label: "Dashboard"},
     {to:`/categories?outlet=${manager?.outlet?._id}`, label: "Categories"},
     {to:`/menu-items?outlet=${manager?.outlet?._id}` , label: "Menu Items"},
-    {to:"/orders",label:"Orders"}
+    {to:"/orders",label:"Orders",num:`${ordersNum}`}
   ]
   const links = isAuthenticated? Vendorlinks:ManagerLinks;
   const accessBoth = isAuthenticated || isManagerAuthenticated;
@@ -40,13 +40,13 @@ return (
         {accessBoth&& <div className="navbar-links">
                 {
                     links.map(
-                        ({to,label})=>(
+                        ({to,label,num})=>(
                             <NavLink 
                             className={({isActive})=> isActive? "navbar-link active"  : "navbar-link"}
                             key={to} 
                             to={to}
                             >
-                                <small>{label}</small>
+                                <small>{label}{(label === "Orders")&&`${num}`}</small>
                             </NavLink>
                         )
                     )

@@ -4,7 +4,6 @@ import {ListOrdered , ArrowRight} from "lucide-react"
 const CategoryCard = ({menuCategory}) => {
   return (
     <div className="outlet-card">
-        <div className="outlet-image">
             {menuCategory.image?.url?
             (
                 <img src = {menuCategory.image.url} alt = {menuCategory.name}/>
@@ -18,8 +17,7 @@ const CategoryCard = ({menuCategory}) => {
                 </span>
             )
         }
-        </div>
-        <div className="outlet-card-body">
+        <div className="outlet-card-body">  
             <div className="row-between">
                 <h3>
                     {
@@ -33,11 +31,9 @@ const CategoryCard = ({menuCategory}) => {
                 </span>
             </div>
             <p>
-                    
-                                    {
-                                            menuCategory.description || "No description provided."
-                                        }
-
+                {
+                    menuCategory.description || "No description provided."
+                }
             </p>
             <div className="mini-meta">
                 <span>
