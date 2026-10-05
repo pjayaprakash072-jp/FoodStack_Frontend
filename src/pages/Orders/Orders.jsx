@@ -67,12 +67,12 @@ const Orders = () => {
           joinRoom();
         }
         socket.on("connect",joinRoom)
-        // return ()=>{
-        //   socket.off(
-        //     "new-order",handleNewOrder
-        //   )
-        //   socket.off("connect",joinRoom)
-        // }
+        return ()=>{
+          socket.off(
+            "new-order",handleNewOrder
+          )
+          socket.off("connect",joinRoom)
+        }
       },[isManagerAuthenticated,outletId]
     )
     const filtered = orders.filter( (o)=> `${o.deliveryAddress}`.toLowerCase().includes(search.toLowerCase()))
@@ -97,7 +97,7 @@ const Orders = () => {
         busy?(
           <Loader/>
         ): filtered.length?(
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+          <div className="order-grid">
             {
               filtered.map(
                 (o)=>(

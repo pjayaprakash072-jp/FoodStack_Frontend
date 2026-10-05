@@ -10,7 +10,7 @@ import { Activity, Pencil,Tags,Trash2 } from "lucide-react"
 
 import { getErrorMessage } from "../../utils/api"
 import StatCard from "../../components/Cards/StatCard"
-// import { useAuth } from "../../context/useAuth"
+import { useAuth } from "../../context/useAuth"
 // import useManagerContext from "../../context/useManagerContext"
 
 
@@ -18,7 +18,7 @@ import StatCard from "../../components/Cards/StatCard"
 const OutletDetails = () => {
     
     const {id} = useParams();
-    // const {isAuthenticated} = useAuth();    
+    const {isAuthenticated} = useAuth();    
     // const {manager} = useManagerContext();
     const [error,setError] = useState("");
     
@@ -31,8 +31,6 @@ const OutletDetails = () => {
     const [cats ,setCats] = useState([]);
 
     const [del,setDel] = useState(false);
-
-    const [showMain,setShowMain] = useState(true);
 
     const nav  = useNavigate();
 
@@ -96,12 +94,12 @@ const OutletDetails = () => {
             <div className="button-row">
                 <button className="button primary" onClick={()=>setShowDetails(!showDetails)}>{showDetails?"close":"Details"}</button>
                 <Link className="button secondary" to = {`/outlets/${id}/edit`}><Pencil size = {17}/>Edit</Link>
-                <button className="button danger" onClick={()=>setDel(true)}><Trash2 size = {17}/> Delete</button>
+                {isAuthenticated && <button className="button danger" onClick={()=>setDel(true)}><Trash2 size = {17}/> Delete</button>}
             </div>
         </div>
         {error && <div className="alert error">{error}</div>}
         {
-            showMain && (
+            !showDetails && (
                 <div className="stats-grid">
                     <StatCard label="Categories" value={cats.length || 0} hint ="Menu groups" icon={Tags}/>
                     <StatCard label="MunuItems" value={items.length || 0} hint ="Products Listed" icon={Tags}/>

@@ -16,47 +16,34 @@ const OrderCard = ({ order, onClick }) => {
             className="order-card"
         >
             {/* Header */}
-            <div className="flex items-center justify-between gap-3">
-                <h3 className="text-base font-semibold text-gray-900 dark:text-white">
+            <div className="order-card-head">
+                <h3 >
                     Order #{orderId}
                 </h3>
 
-                <span
-                    className="
-                        inline-flex items-center gap-1.5
-                        px-3 py-1
-                        rounded-full
-                        text-xs font-medium
-                        bg-yellow-100 text-yellow-700
-                        dark:bg-yellow-900/30 dark:text-yellow-400
-                    "
-                >
-                    <span className="w-2.5 h-2.5 rounded-full bg-yellow-500"></span>
+                <span>
+                    <span className="circle"></span>
                     {order.orderStatus}
                 </span>
             </div>
 
             {/* Date */}
-            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+            <p >
                 {date}
             </p>
 
             <div className="my-4 border-t border-gray-100 dark:border-gray-800"></div>
 
             {/* Customer */}
-            <div className="flex items-start gap-3">
-                <span className="text-lg">👤</span>
-
+            <div className="order-card-customer">
+                <span>👤</span>
                 <div>
-                    <p className="text-sm font-medium text-gray-800 dark:text-gray-200">
+                    <p >
                         {order.user?.name || "Customer"}
                     </p>
-
-                    {order.user?.phone && (
-                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                            {order.user.phone}
-                        </p>
-                    )}
+                    <p>
+                       📞 {order?.user?.phone || "+1234567890"}
+                    </p>
                 </div>
             </div>
 
