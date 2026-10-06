@@ -284,7 +284,7 @@ a{
   @apply
   flex flex-col md:flex-row
   justify-between
-  items-center md:items-end
+  items-start md:items-end
   gap-5
   mb-7
 }
@@ -628,12 +628,16 @@ th{
 .order-card{
   @apply
   w-full
-  /* bg-red-500 */
+  bg-white
   /* dark:bg-gray-900 */
   border border-gray-200
   rounded-2xl
   cursor-pointer
   p-2 md:p-5
+}
+.line{
+  @apply  my-5 border-t border-gray-800 
+  /* dark:border-slate-100 */
 }
 .order-card-head{
   @apply 
@@ -642,10 +646,10 @@ th{
 }
 .order-card-head>h3{
   @apply 
-  text-base
+
   text-slate-900 
   /* dark:text-slate-100 */
-  font-semibold 
+  font-extrabold text-lg 
 }
 .order-card-head>span{
   @apply inline-flex items-center 
@@ -674,11 +678,39 @@ th{
 .order-card-customer>div{
   @apply flex-1 flex justify-between pr-2
 }
-.order-card-customer>span{
-  @apply text-[20px] 
+.order-card-customer>span
+,.order-card-address>span{
+  @apply text-[20px]
 }
-.order-card-customer>p{
-  @apply font-semibold text-xs 
+.order-card-customer>div>p,
+.order-card-address>p,
+.order-summary>p,
+.order-total>p{
+  @apply font-semibold text-sm
+  text-slate-900
+  /* dark:text-slate-400 */
+}
+.order-card-address{
+  @apply 
+  flex
+  items-start
+  mt-2 md:mt-4
+  gap-3
+}
+.order-summary{
+  @apply flex
+  justify-between 
+  mt-5
+  items-center
+}
+.order-total{
+  @apply flex items-center justify-between
+}
+.order-total>p{
+  @apply font-extrabold text-xl
+}
+.order-summary>p{
+  @apply font-semibold text-[17px]
 }
 /* .order-card{
   @apply

@@ -67,10 +67,10 @@ const OrderDetails = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-950 p-5 md:p-8">
+        <div className="page">
 
             {/* Header */}
-            <div className="max-w-4xl mx-auto">
+            <div>
 
                 <button
                     onClick={() => navigate(-1)}
@@ -85,7 +85,7 @@ const OrderDetails = () => {
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 
                         <div>
-                            <p className="text-sm text-gray-500">
+                            <p>
                                 Order
                             </p>
 

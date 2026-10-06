@@ -32,7 +32,7 @@ const OrderCard = ({ order, onClick }) => {
                 {date}
             </p>
 
-            <div className="my-4 border-t border-gray-100 dark:border-gray-800"></div>
+            <div className="line"></div>
 
             {/* Customer */}
             <div className="order-card-customer">
@@ -48,23 +48,22 @@ const OrderCard = ({ order, onClick }) => {
             </div>
 
             {/* Address */}
-            <div className="flex items-start gap-3 mt-4">
-                <span className="text-lg">📍</span>
-
-                <p className="text-sm text-gray-600 dark:text-gray-400 leading-5">
+            <div className="order-card-address">
+                <span>📍</span>
+                <p>
                     {order.deliveryAddress}
                 </p>
             </div>
 
             {/* Order Summary */}
-            <div className="flex items-center justify-between mt-5">
-                <p className="text-sm text-gray-600 dark:text-gray-300">
+            <div className="order-summary">
+                <p>
                     {order.items?.length || 0} items
                 </p>
 
-                <p className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                <p>
                     {order.paymentMethod}{" "}
-                    <span className="text-gray-400">•</span>{" "}
+                    <span>•</span>{" "}
                     <span
                         className={
                             order.paymentStatus === "paid"
@@ -77,17 +76,16 @@ const OrderCard = ({ order, onClick }) => {
                 </p>
             </div>
 
-            <div className="my-4 border-t border-gray-100 dark:border-gray-800"></div>
+            <div className="line"></div>
 
             {/* Total */}
-            <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-500 dark:text-gray-400">
+            <div className="order-total">
+                <p>
                     Total
-                </span>
-
-                <span className="text-xl font-bold text-gray-900 dark:text-white">
+                </p>
+                <p>
                     ₹{order.totalAmount}
-                </span>
+                </p>
             </div>
 
             {/* View Order */}
@@ -96,19 +94,7 @@ const OrderCard = ({ order, onClick }) => {
                     e.stopPropagation();
                     onClick?.();
                 }}
-                className="
-                    w-full
-                    mt-5
-                    py-2.5
-                    rounded-xl
-                    bg-indigo-600
-                    hover:bg-indigo-700
-                    text-white
-                    text-sm
-                    font-medium
-                    transition-colors
-                    duration-200
-                "
+                className="button primary full"
             >
                 View Order →
             </button>
