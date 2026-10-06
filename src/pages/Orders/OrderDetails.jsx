@@ -181,7 +181,7 @@ const OrderDetails = () => {
                     </div>
                 </div>
             </div>
-            <div className="panel md-only">
+            <div className="panel md-only mt-5">
                 <OrderStatus/>
             </div>
         </div>

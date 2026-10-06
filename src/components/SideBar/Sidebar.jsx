@@ -13,7 +13,7 @@ const vendorLinks = [
   {to:"/profile" , label: "Profile" , icon:User},
 ]
 const Sidebar = ({open , onClose}) => {
-  const {manager} = useManagerContext();
+  const {manager,Managerlogout} = useManagerContext();
   const {isAuthenticated} = useAuth();
   const ManagerLinks = [
     {to:`/outlets/${manager?.outlet?._id}` , label: "Dashboard" , icon:LayoutDashboard},
@@ -59,7 +59,7 @@ const Sidebar = ({open , onClose}) => {
               )
               }
             </nav>
-                <button className='button logout'  onClick={logout}><LogOut size = {17}/>Logout</button>
+                <button className='button logout'  onClick={isAuthenticated ? logout :Managerlogout}><LogOut size = {17}/>Logout</button>
           </div>
         </>
   )

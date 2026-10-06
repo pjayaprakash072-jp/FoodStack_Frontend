@@ -401,7 +401,7 @@ a{
   @apply
   w-[45%] md:w-full
   h-full md:h-42.5
-  object-cover md:object-fill
+  object-cover 
 }
 .outlet-card-body{
   @apply p-1.5 md:p-3

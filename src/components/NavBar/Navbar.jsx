@@ -1,5 +1,5 @@
 import {NavLink} from 'react-router-dom'
-import {Menu , LogOut, UserCircle} from "lucide-react"
+import {Menu , LogOut, UserCircle, ShoppingBag} from "lucide-react"
 
 const Vendorlinks = [
 {to:"/dashboard" , label: "Dashboard"},
@@ -46,7 +46,7 @@ return (
                             key={to} 
                             to={to}
                             >
-                                <small>{label}{(label === "Orders")&&`${num}`}</small>
+                                <small>{label}{(label === "Orders")&& isManagerAuthenticated && `${num}`}</small>
                             </NavLink>
                         )
                     )
@@ -58,9 +58,9 @@ return (
                 accessBoth?(
                     <>
                             <NavLink
-                            to="/profile"
+                            to={isAuthenticated ? "/profile" : "/orders"}
                             >
-                            <UserCircle size = {22}/>
+                            {isAuthenticated ? <UserCircle size = {22}/> :<div className='flex items-center gap-1 text-center md:hidden'><ShoppingBag/>{ordersNum}</div> }
                             </NavLink>
                             <span>
                                 {vendor?.name || vendor?.businessName || manager.name ||'Vendor'}
@@ -77,7 +77,7 @@ return (
         {
             accessBoth? (
                 <button className="ghost-button" onClick={isAuthenticated ? logout :Managerlogout}>
-                        <LogOut size = {17}/>
+                        <LogOut size = {17} className='md-only'/>
                         <span className='md:visible hidden'>Logout</span>
                     </button>
             ):(
