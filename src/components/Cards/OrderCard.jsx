@@ -1,4 +1,4 @@
-const OrderCard = ({ order, onClick }) => {
+const OrderCard = ({ order, onClick,single }) => {
     const orderId = order._id?.slice(-8);
 
     const date = new Date(order.createdAt).toLocaleString("en-IN", {
@@ -12,8 +12,8 @@ const OrderCard = ({ order, onClick }) => {
 
     return (
         <div
-            onClick={onClick}
-            className="order-card"
+            onClick={!single && onClick}
+            className={`order-card ${!single ? "cursor-pointer p-2 md:p-5": "md:p-0"}`}
         >
             {/* Header */}
             <div className="order-card-head">
@@ -56,48 +56,54 @@ const OrderCard = ({ order, onClick }) => {
             </div>
 
             {/* Order Summary */}
-            <div className="order-summary">
-                <p>
-                    {order.items?.length || 0} items
-                </p>
+            {
+                !single && (
+                        <>
+                            <div className="order-summary">
+                                <p>
+                                    {order.items?.length || 0} items
+                                </p>
 
-                <p>
-                    {order.paymentMethod}{" "}
-                    <span>•</span>{" "}
-                    <span
-                        className={
-                            order.paymentStatus === "paid"
-                                ? "text-green-600 dark:text-green-400"
-                                : "text-red-600 dark:text-red-400"
-                        }
-                    >
-                        {order.paymentStatus}
-                    </span>
-                </p>
-            </div>
+                                <p>
+                                    {order.paymentMethod}{" "}
+                                    <span>•</span>{" "}
+                                    <span
+                                        className={
+                                            order.paymentStatus === "paid"
+                                                ? "text-green-600 dark:text-green-400"
+                                                : "text-red-600 dark:text-red-400"
+                                        }
+                                    >
+                                        {order.paymentStatus}
+                                    </span>
+                                </p>
+                            </div>
 
-            <div className="line"></div>
+                            <div className="line"></div>
 
-            {/* Total */}
-            <div className="order-total">
-                <p>
-                    Total
-                </p>
-                <p>
-                    ₹{order.totalAmount}
-                </p>
-            </div>
+                            {/* Total */}
+                            <div className="order-total">
+                                <p>
+                                    Total
+                                </p>
+                                <p>
+                                    ₹{order.totalAmount}
+                                </p>
+                            </div>
 
-            {/* View Order */}
-            <button
-                onClick={(e) => {
-                    e.stopPropagation();
-                    onClick?.();
-                }}
-                className="button primary full"
-            >
-                View Order →
-            </button>
+                            {/* View Order */}
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onClick?.();
+                                }}
+                                className="button primary full"
+                            >
+                                View Order →
+                            </button>
+                                </>
+                )
+            }
         </div>
     );
 };

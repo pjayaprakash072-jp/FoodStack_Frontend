@@ -632,8 +632,7 @@ th{
   /* dark:bg-gray-900 */
   border border-gray-200
   rounded-2xl
-  cursor-pointer
-  p-2 md:p-5
+  /* p-2 md:p-5 it is applied in the card only l */
 }
 .line{
   @apply  my-5 border-t border-gray-800 
@@ -711,6 +710,69 @@ th{
 }
 .order-summary>p{
   @apply font-semibold text-[17px]
+}
+.order-details{
+  @apply flex flex-col md:flex-row gap-3
+}
+.order-items-card{
+  @apply bg-white 
+}
+.order-items-card>h2{
+  @apply text-lg font-semibold 
+}
+.order-items{
+  @apply divide-y divide-black
+}
+.order-item{
+  @apply py-4 
+  flex items-center justify-between
+}
+.payment-summary{
+  @apply bg-white  
+}
+.payment-summary>h2,
+.payment>h2{
+  @apply text-lg font-semibold  mb-4
+}
+.subtotal,
+.delivery-fee,
+.discount,
+.total,
+.payment-method,
+.payment-status{
+  @apply flex justify-between
+}
+.total{
+  @apply border-t
+}
+.total>span{
+  @apply font-extrabold
+  text-lg
+}
+.discount>span::first-chile,
+.payment-status>span::first-child{
+  @apply text-black  
+}
+.payment{
+  @apply mt-5 space-y-3 border-t
+}
+.mobile-only{
+  @apply block md:hidden
+}
+.md-only{
+  @apply hidden md:block
+}
+.status-steps{
+  @apply flex  justify-between flex-wrap gap-8 md:gap-2
+}
+.status-step{
+  @apply flex-1 text-center p-2 md:p-1
+}
+.status-step span{
+  @apply grid place-items-center
+}
+.status-step.active{
+  @apply text-green-600 font-extrabold bg-green-100 rounded-lg
 }
 /* .order-card{
   @apply
