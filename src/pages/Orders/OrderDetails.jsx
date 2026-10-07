@@ -19,6 +19,8 @@ const OrderDetails = () => {
     const [order, setOrder] = useState(null);
     const [Busy, setBusy] = useState(true);
     const [error, setError] = useState("");
+    const [statusUpdating,setStatusUpdating] = useState(false);
+
 
     useEffect(() => {
         const getOrder = async () => {
@@ -49,24 +51,22 @@ const OrderDetails = () => {
         };
 
         getOrder();
-    }, [orderId]);
+    }, [orderId,isAuthenticated,isManagerAuthenticated]);
+    const handleStatusUpdate = async(orderStatus)=>{
+        try {
+            setStatusUpdating(true);
+            const response = await managerService.updateOrder(order._id,{orderStatus})
+            setOrder(response.order)
+        } catch (error) {
+            setError(getErrorMessage(error))
+        }finally{
+            setStatusUpdating(false);
+        }
+    }
+
 
     if (Busy) return <Loader/>
 
-    if (error) {
-        return (
-            <div className="min-h-screen flex flex-col items-center justify-center gap-4">
-                <p className="text-red-500">{error}</p>
-
-                <button
-                    onClick={() => navigate(-1)}
-                    className="px-4 py-2 rounded-lg bg-indigo-600 text-white"
-                >
-                    Go Back
-                </button>
-            </div>
-        );
-    }
 
     return (
         <div className="page">
@@ -79,6 +79,7 @@ const OrderDetails = () => {
                     ← Back to Orders
                 </button>
             </div>
+            {error && <div className="error">{error}</div>}
             <div className="order-details">
                 <div className="panel mobile-only">
                     <OrderStatus/>
@@ -182,7 +183,7 @@ const OrderDetails = () => {
                 </div>
             </div>
             <div className="panel md-only mt-5">
-                <OrderStatus/>
+                <OrderStatus status={order.orderStatus} order={order} updateStatus ={handleStatusUpdate} statusUpdating={statusUpdating}/>
             </div>
         </div>
     );
