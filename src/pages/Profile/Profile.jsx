@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { useAuth } from "../../context/useAuth";
 
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { getErrorMessage } from "../../utils/api";
 import vendorService from "./../../services/vendorService";
 import { Trash2 } from "lucide-react";
@@ -11,7 +11,6 @@ import { toast } from "sonner";
 
 export default function Profile() {
   const { vendor, setVendor } = useAuth();
-  const [params] = useSearchParams();
   const nav = useNavigate();
   const [password, setPassword] = useState("");
   const [takePassword, setTakePassword] = useState(false);
@@ -31,15 +30,6 @@ export default function Profile() {
 
   const [busy, setBusy] = useState(false);
   const [del, setDel] = useState(false);
-  useEffect(() => {
-    (() => {
-      const msg = params.get("message");
-      if (msg) {
-        setMsg(msg);
-      }
-    })();
-  }, [params]);
-
   const change = (e) => {
     const { type, value, name, files } = e.target;
     setForm({
@@ -127,10 +117,10 @@ export default function Profile() {
               </button>
         </div>
       </div>
+      {msg && <div className="alert success">{msg}</div>}
+      {error && <div className="alert error">{error}</div>}
       {showForm ? (
         <>
-          {msg && <div className="alert success">{msg}</div>}
-          {error && <div className="alert error">{error}</div>}
           <form className="panel form grid-2" onSubmit={submit}>
             <label>
               {" "}

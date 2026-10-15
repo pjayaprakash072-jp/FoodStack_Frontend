@@ -5,6 +5,8 @@ import { getErrorMessage } from "../../utils/api";
 import { LogIn } from "lucide-react";
 import { GoogleLogin } from "@react-oauth/google";
 import useManagerContext from "../../context/useManagerContext";
+import vendorService from "../../services/vendorService";
+import { toast } from "sonner";
 
 const Login = () => {
     const [form,setForm] = useState({
@@ -22,6 +24,14 @@ const Login = () => {
     const { login:vendorLogin ,googleLogin } = useAuth();
     const { login:loginManager ,managerLogin,setManagerLogin } = useManagerContext();
     const navigate = useNavigate();
+    const [showPhoneForm,setShowPhoneForm] =useState(false);
+    const [phoneAndOUtletName,setPhoneAndOutletName] = useState(
+        {
+            phone:"",
+            businessName:""
+        }
+    )
+    const{setVendor} = useAuth();
 
 
     const handleSubmit = async (e) => {
@@ -48,133 +58,183 @@ const Login = () => {
             setBusy(false);
         }
     };
-
+    const googleLoginSuccess = async(credentialResponse) =>{
+        console.log("GOOGLE SUCCESS");
+        console.log(credentialResponse);
+        try {
+            const respose = await googleLogin(credentialResponse.credential);
+            const vendor = respose.vendor;
+            if(vendor?.phone?.trim()){
+                navigate("/dashboard")
+            }else{
+                setShowPhoneForm(true);
+                // const message = "please update phone and password";
+                // navigate(`/profile?message=${message}`)
+            }
+        } catch (error) {
+            console.log("Google logn failed :", error);
+            setError(getErrorMessage(error));
+        }
+    }
+    const googleLoginError = async(error)=>{
+        console.log("Google Login faield",error);
+        setError(getErrorMessage(error))
+    }
+    const completeProfile = async(e)=>{
+        e.preventDefault();
+        setBusy(true);
+        setError("");
+        try {
+            const formData = new FormData();
+            Object.entries(phoneAndOUtletName).forEach(([key,value])=>{
+                if( value != null && value != undefined){
+                    formData.append(key,value);
+                }
+            })
+            const response = await vendorService.update(formData);
+            setVendor(response.vendor);
+            toast.success("Account Created Successfully!");
+            navigate("/dashboard")
+        } catch (error) {
+            setError(getErrorMessage(error));
+        }finally{
+            setBusy(false);
+        }
+    }
 
     return (
         <div className="auth-page">
             <div className="auth-card">
-
-                <div className="auth-brand">
-                    <div className="brand-mark">VM</div>
-
-                    <h1>Welcome Back</h1>
-
-                    <p>
-                        Sign in to manage your food business.
-                    </p>
-                </div>
-                <div className="forgot-pass mb-3">
-                <button className={"button secondary"} onClick={()=>{setManagerLogin(true)}}>Manager</button>
-                <button className={"button secondary"} onClick={()=>{setManagerLogin(false)}}>Vendor</button>
-                </div>
                 {
-                    !managerLogin && (
-                        <GoogleLogin
-                        onSuccess={ async (credentialResponse)=>{
-                            console.log("GOOGLE SUCCESS");
-                            console.log(credentialResponse)
-                            try{
-                                await googleLogin(credentialResponse.credential)
-                                console.log("BACKEND GOOGLE LOGIN SUCCESS");
-                                const message = "please update phone and password";
-                                navigate(`/profile?message=${message}`)
-                            }catch(err){
-                                console.error(err);
-                                setError("Google Login failed")
-                                console.log("BACKEND GOOGLE LOGIN FAILED");
-                                console.log(err.response?.data);
-                                console.log(err);
-                            }
-                        }}
-                        onError={(error)=>{
-                            console.log(error);
-                            setError("Google Login failed")
-                        }}/>
-                    )
-                }
-
-                <form
-                    className="form"
-                    onSubmit={handleSubmit}
-                >
-
-                    {
-                        managerLogin ? (
+                    showPhoneForm ? 
                             <>
-                                <label>
-                                    phone
-
-                                    <input
-                                        type="tel"
-                                        placeholder="Enter phone"
-                                        value={managerForm.phone}
+                                <div className="auth-brand">
+                                    <div className="brand-mark">VM</div>
+                                    <h1>Add phone and Business Name</h1>
+                                </div>
+                                <form className="form" onSubmit={completeProfile}>
+                                    <label>
+                                        Business Name
+                                        <input 
+                                        placeholder="Enter Business Name"
+                                        value={phoneAndOUtletName.businessName}
+                                        onChange={(e)=>setPhoneAndOutletName({...phoneAndOUtletName,businessName:e.target.value})}
+                                        type="text" 
                                         required
-                                        onChange={(e) => setManagerForm({...managerForm,phone:e.target.value})}
-                                    />
-                                </label>
-
-                                <label>
-                                    <p>Password</p>
-                                    <input
-                                        type="password"
-                                        placeholder="••••••••"
-                                        value={managerForm.password}
-                                        onChange={(e) => setManagerForm({...managerForm,password:e.target.value})}
+                                        />
+                                    </label>
+                                    <label>
+                                        Phone
+                                        <input 
+                                        placeholder="Enter Phone"
+                                        value={phoneAndOUtletName.phone}
+                                        onChange={(e)=>setPhoneAndOutletName({...phoneAndOUtletName,phone:e.target.value})}
+                                        type="tel" 
                                         required
-                                    />
-                                </label>
+                                        />
+                                    </label>
+                                    <button className="button primary full" type="submit"><LogIn size={18}/>{busy ? "Complete Account Details...":"Complete Account Details"}</button>
+                                </form>
                             </>
-                        ):(
+
+                            :
+                    
                             <>
-                                <label>
-                                    Email
-
-                                    <input
-                                        type="email"
-                                        placeholder="Email"
-                                        value={form.email}
-                                        onChange={(e) => setForm({...form,email:e.target.value})}
-                                        required
-                                    />
-                                </label>
-
-                                <label>
-                                    <div className="forgot-pass">
-                                    <p>Password</p>
+                                <div className="auth-brand">
+                                    <div className="brand-mark">VM</div>
+                                    <h1>Welcome Back</h1>
                                     <p>
-                                        <Link to = "/forgot-password">Forgot Password</Link>
+                                        Sign in to manage your food business.
                                     </p>
-                                    </div>
-                                    <input
-                                        type="password"
-                                        placeholder="••••••••"
-                                        value={form.password}
-                                        onChange={(e) => setForm({...form,password:e.target.value})}
-                                        required
-                                    />
-                                </label>
+                                </div>
+                                <div className="forgot-pass mb-3">
+                                <button className={"button secondary"} onClick={()=>{setManagerLogin(true)}}>Manager</button>
+                                <button className={"button secondary"} onClick={()=>{setManagerLogin(false)}}>Vendor</button>
+                                </div>
+                                {
+                                    !managerLogin && (
+                                        <GoogleLogin
+                                        onSuccess={googleLoginSuccess}
+                                        onError={googleLoginError}
+                                        />
+                                    )
+                                }
+                                <form
+                                    className="form"
+                                    onSubmit={handleSubmit}
+                                >
+                                    {
+                                        managerLogin ? (
+                                            <>
+                                                <label>
+                                                    phone
+                                                    <input
+                                                        type="tel"
+                                                        placeholder="Enter phone"
+                                                        value={managerForm.phone}
+                                                        required
+                                                        onChange={(e) => setManagerForm({...managerForm,phone:e.target.value})}
+                                                    />
+                                                </label>
+                                                <label>
+                                                    <p>Password</p>
+                                                    <input
+                                                        type="password"
+                                                        placeholder="••••••••"
+                                                        value={managerForm.password}
+                                                        onChange={(e) => setManagerForm({...managerForm,password:e.target.value})}
+                                                        required
+                                                    />
+                                                </label>
+                                            </>
+                                        ):(
+                                            <>
+                                                <label>
+                                                    Email
+                                                    <input
+                                                        type="email"
+                                                        placeholder="Email"
+                                                        value={form.email}
+                                                        onChange={(e) => setForm({...form,email:e.target.value})}
+                                                        required
+                                                    />
+                                                </label>
+                                                <label>
+                                                    <div className="forgot-pass">
+                                                    <p>Password</p>
+                                                    <p>
+                                                        <Link to = "/forgot-password">Forgot Password</Link>
+                                                    </p>
+                                                    </div>
+                                                    <input
+                                                        type="password"
+                                                        placeholder="••••••••"
+                                                        value={form.password}
+                                                        onChange={(e) => setForm({...form,password:e.target.value})}
+                                                        required
+                                                    />
+                                                </label>
+                                            </>
+                                        )
+                                    }
+                                    {error && ( <p className="alert error"> {error} </p> )}
+                                    <button
+                                        type="submit"
+                                        className="button primary full"
+                                        disabled={busy}
+                                    >
+                                        <LogIn size={18}/>
+                                        {busy ? "Logging in..." : "Login"}
+                                    </button>
+                                </form>
+                                {
+                                    !managerLogin && (
+                                        <p className="auth-footer">
+                                            New Vendor? <Link to="/register" > Create an Account</Link>
+                                        </p>
+                                    )
+                                }
                             </>
-                        )
-                    }
-
-                    {error && ( <p className="alert error"> {error} </p> )}
-
-                    <button
-                        type="submit"
-                        className="button primary full"
-                        disabled={busy}
-                    >
-                        <LogIn size={18}/>
-                        {busy ? "Logging in..." : "Login"}
-                    </button>
-
-                </form>
-                {
-                    !managerLogin && (
-                        <p className="auth-footer">
-                            New Vendor? <Link to="/register" > Create an Account</Link>
-                        </p>
-                    )
                 }
             </div>
         </div>

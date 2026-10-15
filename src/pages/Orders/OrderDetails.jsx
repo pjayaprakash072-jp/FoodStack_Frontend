@@ -82,7 +82,7 @@ const OrderDetails = () => {
             {error && <div className="error">{error}</div>}
             <div className="order-details">
                 <div className="panel mobile-only">
-                    <OrderStatus/>
+                    <OrderStatus status={order.orderStatus} order={order} updateStatus ={handleStatusUpdate} statusUpdating={statusUpdating}/>
                 </div>
                 <div className="panel md:w-[28%]">
                     <OrderCard order={order} single/>

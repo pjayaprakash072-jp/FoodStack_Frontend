@@ -2,7 +2,6 @@
 const EmptyState = ({title = "Nothing here yet",
                     text = "create your first record to get started"
                     ,action,
-
 }) => {
   return (
     <div className="empty">

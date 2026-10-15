@@ -68,7 +68,8 @@ const OutletList = () => {
             ):(
                 <EmptyState
                 title = "No outlets found"
-                text = {q ?"Try a different search" : "Create your first outlet"} action = {<Link className="button primary" to = "/outlets/new" > Add Outlet</Link>}/>
+                text = {q ?"Try a different search" : "Create your first outlet"} 
+                action = {<Link className="button primary" to = "/outlets/new" > Add Outlet</Link>}/>
             )
         }
     </div>

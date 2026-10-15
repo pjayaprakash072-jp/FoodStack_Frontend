@@ -13,6 +13,7 @@ import outletService from '../../services/outletService';
 import categoryService from '../../services/categoryService';
 import menuItemService from '../../services/menuItemService';
 import { useAuth } from "../../context/useAuth";
+import EmptyState from "../../components/Common/EmptyState";
 
 const arr = (x) =>
   Array.isArray(x)
@@ -98,13 +99,11 @@ const Dashboard = () => {
                             }
                         </div>
                     ):(
-                        <div className="panel">
-                            <p>
-                                No Outlets yet.{" "}
-                                <Link to = "/outlets/new">
-                                Create your first Outlet.</Link>
-                            </p>
-                        </div>
+                        <EmptyState
+                        title="No Outelts yer."
+                        text="Create your First Outlet"
+                        action={<Link className="button primary" to="/outlets/new">Add Outlet</Link>}
+                        />
                     )
                 }
             </section>
