@@ -130,6 +130,12 @@ a{
   border-slate-500
   shadow-[0_0_0_3px_#e2e8f0]
 }
+.password-container{
+  @apply w-full relative flex items-center
+}
+.password-container>button{
+  @apply absolute right-3
+}
 .form input[type="checkbox"]{
   @apply w-4
 }

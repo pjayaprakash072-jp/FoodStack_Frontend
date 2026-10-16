@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link,useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/useAuth";
 import { getErrorMessage } from "../../utils/api";
-import { LogIn } from "lucide-react";
+import { Eye, EyeOff, LogIn } from "lucide-react";
 import { GoogleLogin } from "@react-oauth/google";
 import useManagerContext from "../../context/useManagerContext";
 import vendorService from "../../services/vendorService";
@@ -23,6 +23,7 @@ const Login = () => {
     const [busy, setBusy] = useState(false);
     const { login:vendorLogin ,googleLogin } = useAuth();
     const { login:loginManager ,managerLogin,setManagerLogin } = useManagerContext();
+    const [showPassword,setShowPassword] = useState(false)
     const navigate = useNavigate();
     const [showPhoneForm,setShowPhoneForm] =useState(false);
     const [phoneAndOUtletName,setPhoneAndOutletName] = useState(
@@ -177,14 +178,17 @@ const Login = () => {
                                                     />
                                                 </label>
                                                 <label>
-                                                    <p>Password</p>
-                                                    <input
-                                                        type="password"
-                                                        placeholder="••••••••"
-                                                        value={managerForm.password}
-                                                        onChange={(e) => setManagerForm({...managerForm,password:e.target.value})}
-                                                        required
-                                                    />
+                                                    Password
+                                                    <div className="password-container">
+                                                        <input
+                                                            type={showPassword ? "text":"password"}
+                                                            placeholder="••••••••"
+                                                            value={managerForm.password}
+                                                            onChange={(e) => setManagerForm({...managerForm,password:e.target.value})}
+                                                            required
+                                                        />
+                                                        <button type="button" onClick={()=>setShowPassword(!showPassword)}>{showPassword ? <EyeOff size={18}/> : <Eye size={18}/>}</button>
+                                                    </div>
                                                 </label>
                                             </>
                                         ):(
@@ -206,13 +210,16 @@ const Login = () => {
                                                         <Link to = "/forgot-password">Forgot Password</Link>
                                                     </p>
                                                     </div>
+                                                    <div className="password-container">
                                                     <input
-                                                        type="password"
+                                                        type={showPassword?"text":"password"}
                                                         placeholder="••••••••"
                                                         value={form.password}
                                                         onChange={(e) => setForm({...form,password:e.target.value})}
                                                         required
                                                     />
+                                                    <button type="button" onClick={()=>setShowPassword(!showPassword)}>{showPassword?<EyeOff size={18}/> : <Eye size={18}/>}</button>
+                                                    </div>
                                                 </label>
                                             </>
                                         )
