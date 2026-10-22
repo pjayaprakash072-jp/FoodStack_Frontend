@@ -63,7 +63,7 @@ return (
                             {isAuthenticated ? <UserCircle size = {22}/> :<div className='flex items-center gap-1 text-center md:hidden'><ShoppingBag/>{ordersNum}</div> }
                             </NavLink>
                             <span>
-                                {vendor?.name || vendor?.businessName || manager.name ||'Vendor'}
+                                {vendor?.name || vendor?.businessName || manager?.name ||'Vendor'}
                             </span>
                     </>
 

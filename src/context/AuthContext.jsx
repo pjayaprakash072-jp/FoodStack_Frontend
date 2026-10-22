@@ -41,14 +41,13 @@ export function AuthProvider({children}){
             throw new Error("No token received form Server")
 
         }
-
-
-        if(result.vendor){
-            updateVendor(result.vendor)
+        const getVendor = await vendorService.getOne();
+        if(getVendor.vendor){
+            updateVendor(getVendor.vendor)
         }
 
 
-        return result;
+        return getVendor;
     }
 
     const logout = ()=>{

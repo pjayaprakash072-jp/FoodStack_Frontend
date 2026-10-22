@@ -1,10 +1,11 @@
 import api, { unwrap } from "../utils/api"
 
 const vendorService = {
-    register:async(payload)=> unwrap(await api.post("/vendor/create",payload)),
-    login: async (payload)=> unwrap(await api.post("/vendor/login",payload)),
+    register:async(payload)=> unwrap(await api.post("/vendorAuth/create",payload)),
+    create:async(authId,payload)=>unwrap(await api.post(`/vendor/create/${authId}`,payload)),
+    login: async (payload)=> unwrap(await api.post("/vendorAuth/login",payload)),
     getAll:async()=> unwrap(await api.get("/vendor/getall")),
-    getOne:async(id)=>unwrap(await api.get(`/vendor/get/${id}`)),
+    getOne:async()=>unwrap(await api.get("/vendor/getOne")),
     update:async(payload)=>unwrap(await api.put(`/vendor/update`,payload)),
     remove:async(id)=>unwrap(await api.delete(`/vendor/delete/${id}`)),
     sendResetLink:async(email)=> unwrap(await api.post("/vendor/forgot-password",{email})),
