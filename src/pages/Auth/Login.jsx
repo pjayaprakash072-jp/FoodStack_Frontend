@@ -28,6 +28,8 @@ const Login = () => {
     const [showPhoneForm,setShowPhoneForm] =useState(false);
     const [phoneAndOUtletName,setPhoneAndOutletName] = useState(
         {
+            name:"",
+            email:"",
             phone:"",
             businessName:""
         }
@@ -64,13 +66,18 @@ const Login = () => {
         console.log(credentialResponse);
         try {
             const respose = await googleLogin(credentialResponse.credential);
-            const vendor = respose.vendor;
+            const vendor = respose.vendorAuth;
             if(vendor?.phone?.trim()){
                 navigate("/dashboard")
             }else{
+                setPhoneAndOutletName(
+                    (prev)=>(
+                        {
+                            ...prev,name:vendor.name,email:vendor.email
+                        }
+                    )
+                )
                 setShowPhoneForm(true);
-                // const message = "please update phone and password";
-                // navigate(`/profile?message=${message}`)
             }
         } catch (error) {
             console.log("Google logn failed :", error);
@@ -92,8 +99,17 @@ const Login = () => {
                     formData.append(key,value);
                 }
             })
-            const response = await vendorService.update(formData);
-            setVendor(response.vendor);
+            formData.delete("password");
+            const response = await vendorService.updateAuth(
+                {
+                    name:phoneAndOUtletName.name,
+                    email:phoneAndOUtletName.email,
+                    businessName:phoneAndOUtletName.businessName,
+                    phone:phoneAndOUtletName.phone
+                }
+            );
+            const resposnevendor = await vendorService.create(response.vendorAuth?._id,formData)
+            setVendor(resposnevendor.vendor);
             toast.success("Account Created Successfully!");
             navigate("/dashboard")
         } catch (error) {

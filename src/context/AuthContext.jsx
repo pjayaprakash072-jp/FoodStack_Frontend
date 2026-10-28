@@ -25,9 +25,9 @@ export function AuthProvider({children}){
 
         setToken(result.token);
         setAuthToken(result.token);
-        if(result.vendor){
-            updateVendor(result.vendor)
-        }
+        // if(result.vendor){
+        //     updateVendor(result.vendor)
+        // }
         return result;
     }
     const login = async (credentials)=>{
