@@ -68,6 +68,8 @@ const Login = () => {
             const respose = await googleLogin(credentialResponse.credential);
             const vendor = respose.vendorAuth;
             if(vendor?.phone?.trim()){
+                const getVendor = await vendorService.getOne();
+                setVendor(getVendor.vendor);
                 navigate("/dashboard")
             }else{
                 setPhoneAndOutletName(

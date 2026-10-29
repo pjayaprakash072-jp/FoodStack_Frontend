@@ -15,7 +15,7 @@ import managerService from "../../services/managerService"
 
 const MenuItemList = () => {
     const {vendor,isAuthenticated} = useAuth();
-    const {isManagerAuthenticated} = useManagerContext();
+    const {isManagerAuthenticated,manager} = useManagerContext();
     const [items,setItems] = useState([]);
     const [categories,setCategories] = useState([]);
     const [params] = useSearchParams();
@@ -27,7 +27,6 @@ const MenuItemList = () => {
     const [search,setSearch] = useState("");
     const isManager = isManagerAuthenticated && ! isAuthenticated;
     const isVendor =isAuthenticated && !isManagerAuthenticated;
-    
     const selectedCategory = (isManagerAuthenticated && categoryFilter) ? categories : categories.find((c)=>c._id === categoryFilter)
 
     useEffect(()=>{
@@ -43,7 +42,7 @@ const MenuItemList = () => {
                         ]
                     )
                     setItems(i?.menuItems)
-                    setCategories(c?.menuCategories)
+                    setCategories(Array.isArray(c?.menuCategories)?c?.menuCategories:[])
                 }
                 if(isManager ){
                     const [i,c] = await Promise.all(
@@ -52,8 +51,8 @@ const MenuItemList = () => {
                             categoryFilter ? managerService.getCategoryById(categoryFilter) : managerService.getAllCategories()
                         ]
                     )
-                    setItems(i?.menuItems);
-                    setCategories(c?.menuCategories || c?.menuCategory)
+                    setItems(i?.menuItems || []);
+                    setCategories(Array.isArray(c?.menuCategories)? c?.menuCategories :c?.menuCategory ? [c?.menuCategory]: [])
                 }
             } catch (error) {
                 setError(getErrorMessage(error))
@@ -98,7 +97,7 @@ const MenuItemList = () => {
             <div className="button-row">
                 {
                     categoryFilter && (
-                        <Link className="button secondary"  to="/menu-items"><ArrowLeft size={19}/> All menu items</Link>
+                        <Link className="button secondary"  to={ isManagerAuthenticated ? `/menu-items?outlet=${manager?.outlet?._id}`:"/menu-items"}><ArrowLeft size={19}/> All menu items</Link>
                     )
                 }
                 <Link className="button primary"  to ={addMenuItemUrl}><Plus size={18}/> Add Menu Item </Link>

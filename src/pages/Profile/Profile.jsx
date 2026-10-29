@@ -10,7 +10,7 @@ import ConfirmDialog from "../../components/Common/ConfirmDialog";
 import { toast } from "sonner";
 
 export default function Profile() {
-  const { vendor, setVendor } = useAuth();
+  const { vendor, setVendor,logout } = useAuth();
   const nav = useNavigate();
   const [password, setPassword] = useState("");
   const [takePassword, setTakePassword] = useState(false);
@@ -41,6 +41,8 @@ export default function Profile() {
   const remove = async () => {
     try {
       await vendorService.remove(vendor._id);
+      await vendorService.deleteAuth();
+      logout();
       nav("/login");
     } catch (error) {
       setError(getErrorMessage(error));
@@ -56,15 +58,22 @@ export default function Profile() {
 
     try {
       const formData = new FormData();
-      if (takePassword) {
-        formData.append("password", password);
-      }
       Object.entries(form).forEach(([key, value]) => {
         if (value != null && value != undefined) {
           formData.append(key, value);
         }
       });
-
+      if (takePassword) {
+        await vendorService.updateAuth({password});
+      }else{
+        const authdata = {
+          name:form.name,
+          email:form.email,
+          phone:form.phone
+        }
+        await vendorService.updateAuth(authdata);
+      }
+      formData.delete("password");
       const response = await vendorService.update(formData);
       setVendor(response.vendor);
       setTakePassword(false);
@@ -183,14 +192,6 @@ export default function Profile() {
               </button>
             </div>
           </form>
-          <ConfirmDialog
-            open={del}
-            setOpen={setDel}
-            onCancel={() => setDel(false)}
-            onConfirm={remove}
-            title="Delete Vendor"
-            message="Are you sure you want to delte Account"
-          />
         </>
       ) :takePassword?(
         <div className="panel auth-card grid place-content-center">
@@ -225,6 +226,14 @@ export default function Profile() {
           </div>
         </>
       )}
+          <ConfirmDialog
+            open={del}
+            setOpen={setDel}
+            onCancel={() => setDel(false)}
+            onConfirm={remove}
+            title="Delete Vendor"
+            message="Are you sure you want to delte Account"
+          />
     </div>
   );
 }
