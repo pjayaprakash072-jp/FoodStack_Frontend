@@ -1,7 +1,8 @@
 import api,{unwrap} from "../utils/managerApi"
 
 const managerService = {
-    login:async(payload)=>unwrap(await api.post("/manager/login",payload)),
+    login:async(payload)=>unwrap(await api.post("/managerAuth/login",payload)),
+    getManagerById:async()=>unwrap(await api.get('/manager/get')),
     updateOutlet:async(payload)=>unwrap(await api.put("/manager/outlet/update",payload)),
     getAllCategories:async()=>unwrap(await api.get('/manager/categories/outlet')),
     createCategory:async(payload)=>unwrap(await api.post('/manager/category/create',payload)),

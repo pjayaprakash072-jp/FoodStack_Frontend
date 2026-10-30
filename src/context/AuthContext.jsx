@@ -59,7 +59,7 @@ export function AuthProvider({children}){
     const value = useMemo(
         ()=>(
             {
-                token, isAuthenticated:Boolean(token), login , logout,googleLogin,vendor, setVendor:updateVendor
+                token, isAuthenticated:Boolean(vendor?._id), login , logout,googleLogin,vendor, setVendor:updateVendor
             }
             ),[token,vendor]);
 
