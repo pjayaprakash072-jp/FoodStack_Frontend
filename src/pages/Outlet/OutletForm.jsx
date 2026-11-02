@@ -81,16 +81,19 @@ const  FormPage = ({form,change,outletNext,busy,id,sendData,isManagerAuthenticat
                     onChange={change}
                     />{" "} Currently open
                 </label>
-                <label className="grid-span-2">
-                    Outlet image
-                    <input 
-                    type="file"
-                    name = "image"
-                    accept="image/*"
-                    capture="environment"
-                    onChange={change}
-                    />
-                </label>
+                {
+                    !isManagerAuthenticated && 
+                    <label className="grid-span-2">
+                        Outlet image
+                        <input 
+                        type="file"
+                        name = "image"
+                        accept="image/*"
+                        capture="environment"
+                        onChange={change}
+                        />
+                    </label>
+                }
                 <div className="grid-span-2 form-actions">
                     <button type="button" className="button secondary" onClick={()=>history.back()}>Cancel</button>
                     <button className="button secondary" type="submit"  disabled={busy}>{busy?"Saving...": id ? "Update Outlet":"Next"}</button>
