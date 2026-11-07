@@ -19,35 +19,26 @@ export function AuthProvider({children}){
     const googleLogin = async (credential)=>{
         const result = await vendorService.googleLogin(credential)
 
-        if(!result?.token){
-            throw new Error("Gogle Login failed");
+        if(result?.token){
+            setToken(result.token);
+            setAuthToken(result.token);
         }
-
-        setToken(result.token);
-        setAuthToken(result.token);
-        // if(result.vendor){
-        //     updateVendor(result.vendor)
-        // }
+        if(result?.vendor){
+            updateVendor(result.vendor)
+        }
         return result;
     }
     const login = async (credentials)=>{
         const result = await vendorService.login(credentials);
-        if(result?.token){
-            
-            setToken(result.token);
-            
-            setAuthToken(result.token);
-        }else{
-            throw new Error("No token received form Server")
-
+        if(!result?.token){
+            throw new Error("No token received from Server")
         }
-        const getVendor = await vendorService.getOne();
-        if(getVendor.vendor){
-            updateVendor(getVendor.vendor)
+        setToken(result.token);
+        setAuthToken(result.token);
+        if(result?.vendor){
+            updateVendor(result.vendor);
         }
-
-
-        return getVendor;
+        return result;
     }
 
     const logout = ()=>{

@@ -5,10 +5,16 @@ import { getErrorMessage } from "../../utils/api";
 import { Eye, EyeOff, LogIn } from "lucide-react";
 import { GoogleLogin } from "@react-oauth/google";
 import useManagerContext from "../../context/useManagerContext";
-import vendorService from "../../services/vendorService";
-import { toast } from "sonner";
-
 const Login = () => {
+
+    const [error, setError] = useState("");
+    const [busy, setBusy] = useState(false);
+    const { login:vendorLogin ,googleLogin } = useAuth();
+    const { login:loginManager ,managerLogin,setManagerLogin } = useManagerContext();
+    const [showPassword,setShowPassword] = useState(false)
+    const navigate = useNavigate();
+    const [showPhoneForm,setShowPhoneForm] =useState(false);
+    const [googleCredential,setGoogleCredential] = useState("");
     const [form,setForm] = useState({
         email:"",
         password:""
@@ -19,23 +25,10 @@ const Login = () => {
             password:""
         }
     )
-    const [error, setError] = useState("");
-    const [busy, setBusy] = useState(false);
-    const { login:vendorLogin ,googleLogin } = useAuth();
-    const { login:loginManager ,managerLogin,setManagerLogin } = useManagerContext();
-    const [showPassword,setShowPassword] = useState(false)
-    const navigate = useNavigate();
-    const [showPhoneForm,setShowPhoneForm] =useState(false);
-    const [phoneAndOUtletName,setPhoneAndOutletName] = useState(
-        {
-            name:"",
-            email:"",
-            phone:"",
-            businessName:""
-        }
-    )
-    const{setVendor} = useAuth();
-
+    const [phoneAndOUtletName,setPhoneAndOutletName] = useState({
+        phone:"",
+        businessName:"",
+    });
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -61,64 +54,43 @@ const Login = () => {
             setBusy(false);
         }
     };
-    const googleLoginSuccess = async(credentialResponse) =>{
-        console.log("GOOGLE SUCCESS");
-        console.log(credentialResponse);
+    const googleSuccess = async(credentialResponse)=>{
+        console.log("GOOGLE SUCCESS" ,credentialResponse);
+        const credential = credentialResponse.credential;
+        setGoogleCredential(credential);
+        await googleLoginSuccess({credential})
+    }
+    const googleLoginError = (error)=>{
+        console.log("Google Login faield",error);
+        setError(getErrorMessage(error))
+    }
+    const googleLoginSuccess = async(data) =>{
+        setBusy(true);
+        setError("");
         try {
-            const respose = await googleLogin(credentialResponse.credential);
-            const vendor = respose.vendorAuth;
-            if(vendor?.phone?.trim()){
-                const getVendor = await vendorService.getOne();
-                setVendor(getVendor.vendor);
-                navigate("/dashboard")
-            }else{
-                setPhoneAndOutletName(
-                    (prev)=>(
-                        {
-                            ...prev,name:vendor.name,email:vendor.email
-                        }
-                    )
-                )
+            const respose = await googleLogin(data);
+            if(respose?.no){
                 setShowPhoneForm(true);
+            }else if(respose?.token){
+                navigate("/dashboard")
+            }
+            else{
+                setError("Invalid login response from server!")
             }
         } catch (error) {
             console.log("Google logn failed :", error);
             setError(getErrorMessage(error));
-        }
-    }
-    const googleLoginError = async(error)=>{
-        console.log("Google Login faield",error);
-        setError(getErrorMessage(error))
-    }
-    const completeProfile = async(e)=>{
-        e.preventDefault();
-        setBusy(true);
-        setError("");
-        try {
-            const formData = new FormData();
-            Object.entries(phoneAndOUtletName).forEach(([key,value])=>{
-                if( value != null && value != undefined){
-                    formData.append(key,value);
-                }
-            })
-            formData.delete("password");
-            const response = await vendorService.updateAuth(
-                {
-                    name:phoneAndOUtletName.name,
-                    email:phoneAndOUtletName.email,
-                    businessName:phoneAndOUtletName.businessName,
-                    phone:phoneAndOUtletName.phone
-                }
-            );
-            const resposnevendor = await vendorService.create(response.vendorAuth?._id,formData)
-            setVendor(resposnevendor.vendor);
-            toast.success("Account Created Successfully!");
-            navigate("/dashboard")
-        } catch (error) {
-            setError(getErrorMessage(error));
         }finally{
             setBusy(false);
         }
+    }
+    const completeProfile = async(e)=>{
+        e.preventDefault();
+        const data = {
+            credential:googleCredential,
+            ...phoneAndOUtletName
+        }
+        await googleLoginSuccess(data);
     }
 
     return (
@@ -152,7 +124,14 @@ const Login = () => {
                                         required
                                         />
                                     </label>
-                                    <button className="button primary full" type="submit"><LogIn size={18}/>{busy ? "Complete Account Details...":"Complete Account Details"}</button>
+                                    <button 
+                                    className="button primary full" 
+                                    type="submit"
+                                    disabled={busy}
+                                    >
+                                        <LogIn size={18}/>
+                                        {busy ? "Complete Account Details...":"Complete Account Details"}
+                                    </button>
                                 </form>
                             </>
 
@@ -167,15 +146,17 @@ const Login = () => {
                                     </p>
                                 </div>
                                 <div className="forgot-pass mb-3">
-                                <button className={"button secondary"} onClick={()=>{setManagerLogin(true)}}>Manager</button>
-                                <button className={"button secondary"} onClick={()=>{setManagerLogin(false)}}>Vendor</button>
+                                <button className={"button secondary"} onClick={()=>{setManagerLogin(true);setError("")}}>Manager</button>
+                                <button className={"button secondary"} onClick={()=>{setManagerLogin(false);setError("")}}>Vendor</button>
                                 </div>
                                 {
-                                    !managerLogin && (
+                                    (!managerLogin && !busy) ? (
                                         <GoogleLogin
-                                        onSuccess={googleLoginSuccess}
+                                        onSuccess={googleSuccess}
                                         onError={googleLoginError}
                                         />
+                                    ):(
+                                        <p>Processing...</p>
                                     )
                                 }
                                 <form
