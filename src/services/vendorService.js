@@ -4,7 +4,7 @@ const vendorService = {
     register:async(payload)=> unwrap(await api.post("/vendorAuth/create",payload)),
     updateAuth:async(payload)=>unwrap(await api.put('/vendorAuth/update',payload)),
     deleteAuth:async()=>unwrap(await api.delete("/vendorAuth/delete")),
-    create:async(authId,payload)=>unwrap(await api.post(`/vendor/create/${authId}`,payload)),
+    create:async(authId,payload)=>unwrap(await api.post(`/vendor/create?authId=${authId}`,payload)),
     login: async (payload)=> unwrap(await api.post("/vendorAuth/login",payload)),
     getAll:async()=> unwrap(await api.get("/vendor/getall")),
     getOne:async()=>unwrap(await api.get("/vendor/getOne")),

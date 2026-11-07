@@ -39,7 +39,8 @@ export default function Register(){
     setBusy(true);
     try{
       const response = await vendorService.register(form);
-      await vendorService.create(response.vendorAuth?._id,form);
+      console.log("vendor created!",response);
+      // await vendorService.create(response.vendorAuth?._id,form);
       navigate("/login",{state:{registered:true}})
 
     }catch(err){
