@@ -150,14 +150,14 @@ const Login = () => {
                                 <button className={"button secondary"} onClick={()=>{setManagerLogin(false);setError("")}}>Vendor</button>
                                 </div>
                                 {
-                                    (!managerLogin && !busy) ? (
+                                    !managerLogin ? (
                                         <GoogleLogin
                                         onSuccess={googleSuccess}
                                         onError={googleLoginError}
                                         />
-                                    ):(
+                                    ):busy ?(
                                         <p>Processing...</p>
-                                    )
+                                    ):null
                                 }
                                 <form
                                     className="form"

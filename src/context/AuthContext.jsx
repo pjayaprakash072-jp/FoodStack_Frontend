@@ -16,8 +16,8 @@ export function AuthProvider({children}){
         saveVendor(vendorData)
     }
 
-    const googleLogin = async (credential)=>{
-        const result = await vendorService.googleLogin(credential)
+    const googleLogin = async (data)=>{
+        const result = await vendorService.googleLogin(data)
 
         if(result?.token){
             setToken(result.token);

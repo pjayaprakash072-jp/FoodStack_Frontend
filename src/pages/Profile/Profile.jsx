@@ -1,19 +1,15 @@
 import { useState } from "react";
-
 import { useAuth } from "../../context/useAuth";
-
 import { useNavigate } from "react-router-dom";
 import { getErrorMessage } from "../../utils/api";
 import vendorService from "./../../services/vendorService";
-import { Trash2 } from "lucide-react";
+import { Pencil, Trash2, X } from "lucide-react";
 import ConfirmDialog from "../../components/Common/ConfirmDialog";
 import { toast } from "sonner";
 
 export default function Profile() {
   const { vendor, setVendor,logout } = useAuth();
   const nav = useNavigate();
-  const [password, setPassword] = useState("");
-  const [takePassword, setTakePassword] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({
     name: vendor?.name || "",
@@ -25,9 +21,7 @@ export default function Profile() {
   });
 
   const [error, setError] = useState("");
-
   const [msg, setMsg] = useState("");
-
   const [busy, setBusy] = useState(false);
   const [del, setDel] = useState(false);
   const change = (e) => {
@@ -40,8 +34,7 @@ export default function Profile() {
 
   const remove = async () => {
     try {
-      await vendorService.remove(vendor._id);
-      await vendorService.deleteAuth();
+      await vendorService.remove();
       logout();
       nav("/login");
     } catch (error) {
@@ -53,9 +46,8 @@ export default function Profile() {
 
   const submit = async (e) => {
     e.preventDefault();
-
     setBusy(true);
-
+    setError("");
     try {
       const formData = new FormData();
       Object.entries(form).forEach(([key, value]) => {
@@ -63,21 +55,8 @@ export default function Profile() {
           formData.append(key, value);
         }
       });
-      if (takePassword) {
-        await vendorService.updateAuth({password});
-      }else{
-        const authdata = {
-          name:form.name,
-          email:form.email,
-          phone:form.phone
-        }
-        await vendorService.updateAuth(authdata);
-      }
-      formData.delete("password");
       const response = await vendorService.update(formData);
       setVendor(response.vendor);
-      setTakePassword(false);
-      setPassword("");
       toast.success("profile updateded Successfully!");
       setTimeout(() => {
         setMsg("");
@@ -88,6 +67,20 @@ export default function Profile() {
       setBusy(false);
     }
   };
+    const handleUpdatePassword = async(e)=>{
+        e.preventDefault();
+        setError("");
+        setBusy(true);
+        try {
+            const response = await vendorService.sendResetLink(vendor?.email);
+            setMsg(response.message +" Change password through email.");
+            toast.success(response.message +" Change password through email.");
+        } catch (error) {
+            setError(getErrorMessage(error))
+        }finally{
+          setBusy(false);
+        }
+    }
   return (
     <div className="page">
       <div className="page-heading profile">
@@ -105,14 +98,14 @@ export default function Profile() {
         <div className="profile btns">
           <button
             className="button primary"
-            onClick={() => {setShowForm(!showForm); setTakePassword(false)}}
+            onClick={() => {setShowForm(!showForm); setError("");setMsg("")}}
           >
-            Update Profile
+            {showForm ? <X size={19}/>:<Pencil size={19}/>}
           </button>
           <button
             className="button primary"
             type="button"
-            onClick={() => {setTakePassword(!takePassword); setShowForm(false)}}
+            onClick={handleUpdatePassword}
           >
             Update Password
           </button>
@@ -122,7 +115,6 @@ export default function Profile() {
                 onClick={() => setDel(true)}
               >
                 <Trash2 size={18} />
-                Delete Account
               </button>
         </div>
       </div>
@@ -193,27 +185,7 @@ export default function Profile() {
             </div>
           </form>
         </>
-      ) :takePassword?(
-        <div className="panel auth-card grid place-content-center">
-        <form className="form" onSubmit={submit}>
-            <label>
-              {" "}
-              Password
-              <input
-                name="password"
-                value={password}
-                required
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </label>
-            <div className="grid-span-2 form-actions">
-              <button type="submit" className="button primary" disabled={busy}>
-                {busy ? "Updating..." : "Save Changes"}
-              </button>
-            </div>
-        </form>
-        </div>
-      ):
+      ) :
        (
         <>
           <div className="panel">
