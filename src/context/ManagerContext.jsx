@@ -24,11 +24,10 @@ export const ManagerAuthProvider =({children})=>{
         }else{
             throw new Error("No token received form server!")
         }
-        const managerGet = await managerService.getManagerById();
-        if(managerGet.manager){
-            updateManager(managerGet.manager);
+        if(response.manager){
+            updateManager(response.manager);
         }
-        return managerGet
+        return response;
     }
     const Managerlogout = ()=>{
         clearManagerAuth();
