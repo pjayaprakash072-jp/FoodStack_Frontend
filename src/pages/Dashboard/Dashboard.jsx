@@ -61,33 +61,36 @@ const Dashboard = () => {
 
     if(loading) return <Loader/>
     return (
-        <div className="page">
-            <div className="page-heading">
+        <div className="page-container">
+            <header className="content-header">
                 <div>
-                    <p className="eyebrow">Overview</p>
-                    <h1>Good day,{vendor?.name?.split(" ")[0] || "Vendor"}👋 </h1>
+                    <p className="content-eyebrow">Overview</p>
+                    <h1 className="content-title">Good day,{vendor?.name?.split(" ")[0] || "Vendor"}👋 </h1>
 
-                    <p>Manage outlets,categories and menu items</p>
+                    <p className="content-description">Manage outlets,categories and menu items</p>
                 </div>
-                <Link className="button primary" to = "/outlets/new"> + Add outlet</Link>
-            </div>
-            <div className="stats-grid">
+                <Link className="page-action" to = "/outlets/new"> + Add outlet</Link>
+            </header>
+            <div className="content-body">
+            <section className="statistics-grid">
                 <StatCard label="Outlets" value = {data.outlets.length} hint = "your locations" icon={Store}/>
                 <StatCard label="Categories" value = {data.categories.length} hint = "Menu groups" icon={Tags}/>
                 <StatCard label="Menu Items" value = {data.items.length} hint = "Products listed" icon={Utensils}/>
                 <StatCard label="Stats" value = {vendor?.status || "active"} hint = "Vendor Accont" icon={Activity}/>
+            </section>
+
             </div>
-            <section className="section">
-                <div className="section-title">
+            <section className="content-section">
+                <div className="section-header">
                     <div>
                         <h2>Recent outlets</h2>
                         <p>Quick access to your locatins</p>
                     </div>
-                    <Link to = "/outlets" className="text-link" >View all</Link>
+                    <Link to = "/outlets" className="section-link" >View all</Link>
                 </div>
                 {
                     data.outlets.length? (
-                        <div className="card-grid">
+                        <div className="outlet-grid">
                             {
                                 data.outlets.slice(0,4).map((o)=>(
                                     <OutletCard 
@@ -102,7 +105,7 @@ const Dashboard = () => {
                         <EmptyState
                         title="No Outelts yer."
                         text="Create your First Outlet"
-                        action={<Link className="button primary" to="/outlets/new">Add Outlet</Link>}
+                        action={<Link className="page-action" to="/outlets/new">Add Outlet</Link>}
                         />
                     )
                 }

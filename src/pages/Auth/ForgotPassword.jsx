@@ -34,41 +34,54 @@ const ForgotPassword = () => {
 
 
   return (
-    <div className="auth-page">
-        <div className="auth-card">
-            <div className="auth-brand">
-                <div className="brand-mark">VM</div>
-                <h1>Forgot password</h1>
-                <p>Enter Registered email to get password update link</p>
-            </div>
-            {error && <div className="alert error">{error}</div>}
-            {msg ? (
-                <>
-                <div className="alert success">{msg}</div>
-                <button className="button primary full" type="button" onClick={()=> nav("/login")}>login</button>
-                </>
-            ):(
+ <div className="auth-container">
+    <div className="auth-panel">
+      <header className="auth-heading">
+        <div className="auth-logo">VM</div>
+        <h1 className="auth-title">Forgot Password</h1>
+        <p className="auth-description">
+          Enter your registered email to get a password reset link.
+        </p>
+      </header>
 
-            <form className="form" onSubmit={handleSubmit}>
-                <label>
-                    Email 
-                    <input 
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e)=>setEmail(e.target.value)}
-                    />
-                </label>
-                <button 
-                type="submit"
-                className="button primary full"
-                disabled = {loading}
-                >{loading ? "Sending...":"Send reset link"}</button>
-            </form>
-            )
-            }
-        </div>
+      {error && <div className="message-error">{error}</div>}
+
+      {msg ? (
+        <>
+          <div className="message-success">{msg}</div>
+
+          <button
+            className="primary-button full-width"
+            type="button"
+            onClick={() => nav("/login")}
+          >
+            Login
+          </button>
+        </>
+      ) : (
+        <form className="form-container" onSubmit={handleSubmit}>
+          <label className="form-field">
+            Email
+            <input
+              className="form-input"
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </label>
+
+          <button
+            type="submit"
+            className="primary-button full-width"
+            disabled={loading}
+          >
+            {loading ? "Sending..." : "Send Reset Link"}
+          </button>
+        </form>
+      )}
     </div>
+  </div>
   )
 }
 

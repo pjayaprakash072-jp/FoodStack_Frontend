@@ -1,104 +1,161 @@
+import { useNavigate } from "react-router-dom"
 
 const  FormPage = ({form,change,outletNext,busy,id,sendData,isManagerAuthenticated})=>{
+    const navigate = useNavigate();
     return(       
-            <form className="panel form grid-2" onSubmit={id ?sendData :outletNext}>
-                <label>
-                    Outlet Name 
-                    <input type="text" 
-                    name="outletName"
-                    required
-                    disabled={isManagerAuthenticated}
-                    value={form.outletName}
-                    onChange={change}
-                    />
-                </label>
-                <label className="grid-span-2">
-                    Description
-                    <input type="text" 
-                    name="description"
-                    value={form.description}
-                    onChange={change}
-                    />
-                </label>
-                <label>
-                    Cuisine <span className="hint">(comma seperated)</span>
-                    <input
-                    name="cuisine"
-                    value={form.cuisine}
-                    onChange={change}
-                    />
-                </label>
-                <label>
-                    Food Type
-                    <select 
-                    name="foodType"
-                    value={form.foodType}
-                    onChange={change}
-                    
-                    >
-                        <option value="veg">veg</option>
-                        <option value="non-veg">non-veg</option>
-                        <option value="both">both</option>
+        <form
+        className="form-container"
+        onSubmit={id ? sendData : outletNext}
+        >
+        <div className="form-grid">
+            <label className="form-field">
+            Outlet Name
 
-                    </select>
-                </label>
-                <label>
-                    Opening Time 
-                    <input 
-                    type="time"
-                    required
-                    name="openingTime"
-                    value={form.openingTime}
-                    onChange={change}
-                    />
-                </label>
-                <label>
-                    Closing Time
-                    <input
-                    type="time"
-                    required
-                    name="closingTime"
-                    value={form.closingTime}
-                    onChange={change}
-                    />
-                </label>
-                <label>
-                    Status
-                    <select 
-                    name="status"
-                    value={form.status}
-                    onChange={change}
-                    
-                    >
-                        <option value="Active">active</option>
-                        <option value="Inactive">inactive</option>
-                    </select>
-                </label>
-                <label className="check">
-                    <input type="checkbox"
-                    name="isOpen"
-                    checked={form.isOpen}
-                    onChange={change}
-                    />{" "} Currently open
-                </label>
-                {
-                    !isManagerAuthenticated && 
-                    <label className="grid-span-2">
-                        Outlet image
-                        <input 
-                        type="file"
-                        name = "image"
-                        accept="image/*"
-                        capture="environment"
-                        onChange={change}
-                        />
-                    </label>
-                }
-                <div className="grid-span-2 form-actions">
-                    <button type="button" className="button secondary" onClick={()=>history.back()}>Cancel</button>
-                    <button className="button secondary" type="submit"  disabled={busy}>{busy?"Saving...": id ? "Update Outlet":"Next"}</button>
+            <input
+                className="form-input"
+                type="text"
+                name="outletName"
+                required
+                disabled={isManagerAuthenticated}
+                value={form.outletName}
+                onChange={change}
+            />
+            </label>
+
+            <label className="form-field">
+                <div>
+                    Cuisine
+                    <span className="field-hint">
+                        {" ( Comma separated )"}
+                    </span>
+
                 </div>
-            </form>
+
+            <input
+                className="form-input"
+                type="text"
+                name="cuisine"
+                value={form.cuisine}
+                onChange={change}
+                placeholder="Indian, Chinese, Italian"
+            />
+            </label>
+            <label className="form-field form-full-width">
+            Description
+
+            <textarea
+                className="form-input"
+                name="description"
+                rows={3}
+                value={form.description || ""}
+                onChange={change}
+                placeholder="Describe your outlet"
+            />
+            </label>
+
+
+            <label className="form-field">
+            Food Type
+
+            <select
+                className="form-select"
+                name="foodType"
+                value={form.foodType}
+                onChange={change}
+            >
+                <option value="veg">Veg</option>
+                <option value="non-veg">Non-Veg</option>
+                <option value="both">Both</option>
+            </select>
+            </label>
+
+            <label className="form-field">
+            Opening Time
+
+            <input
+                className="form-input"
+                type="time"
+                name="openingTime"
+                required
+                value={form.openingTime}
+                onChange={change}
+            />
+            </label>
+
+            <label className="form-field">
+            Closing Time
+
+            <input
+                className="form-input"
+                type="time"
+                name="closingTime"
+                required
+                value={form.closingTime}
+                onChange={change}
+            />
+            </label>
+
+            <label className="form-field">
+            Status
+
+            <select
+                className="form-select"
+                name="status"
+                value={form.status}
+                onChange={change}
+            >
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+            </select>
+            </label>
+
+                {!isManagerAuthenticated && (
+                <label className="form-field ">
+                    Outlet Image
+    
+                    <input
+                    className="form-input"
+                    type="file"
+                    name="image"
+                    accept="image/*"
+                    onChange={change}
+                    />
+                </label>
+                )}
+            <label className="form-checkbox">
+            <input
+                type="checkbox"
+                name="isOpen"
+                checked={Boolean(form.isOpen)}
+                onChange={change}
+            />
+            Currently Open
+            </label>
+
+        </div>
+
+        <div className="form-actions outlet-form-actions">
+            <button
+            type="button"
+            className="secondary-button"
+            onClick={() => navigate(-1)}
+            >
+            Cancel
+            </button>
+
+            <button
+            className="primary-button"
+            type="submit"
+            disabled={busy}
+            >
+            {busy
+                ? "Saving..."
+                : id
+                ? "Update Outlet"
+                : "Next"}
+            </button>
+        </div>
+        </form>
     )
 }
 export default FormPage

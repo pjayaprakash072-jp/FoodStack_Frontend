@@ -73,71 +73,103 @@ if(!category){
     return <div className='alert error'>{error || "Category not found"}</div>
 }
   return (
-    <div className="page">
-    <div className="page-heading">
+    <div className="page-container">
+        {/* Header */}
+        <div className="content-header">
         <div>
-            <p className="eyebrow">Category Details</p>
-            <h1>{category.name}</h1>
-            <p>{category.description}</p>
+            <p className="content-eyebrow">Category Details</p>
+            <h1 className="content-title">{category.name}</h1>
+            <p className="content-description">{category.description}</p>
         </div>
-        <div className="button-row">
-            <Link className='button primary' to={`/categories/${id}/edit`}><Pencil size={18}/>Edit</Link>
-            <button className='button danger' onClick={()=>setDel(true)}><Trash2 size={18}/>Delete</button>
+
+        <div className="category-actions">
+            <Link
+            className="secondary-button"
+            to={`/categories/${id}/edit`}
+            >
+            <Pencil size={18} />
+            Edit
+            </Link>
+
+            <button
+            className="danger-button"
+            onClick={() => setDel(true)}
+            >
+            <Trash2 size={18} />
+            Delete
+            </button>
         </div>
-    </div>
-    {error && <div className='alert error'>{error}</div>}
-    <div className="details-grid">
-        <div className="panel">
-            <h3>Information</h3>
-            <Detail
-            label="Outlet"
-            value={category.outlet?.name || "-"}
-            />
-            <Detail
-            label="Category"
-            value={category.name}
-            />
-            <Detail
-            label="Description"
-            value={category.description || "-"}
-            />
-            <Detail
-            label="displayOrder"
-            value={category.displayOrder}
-            />
-            <Detail
-            label="isActive"
-            value={category.isActive ? "Yes" : "No"}
-            />
         </div>
-        <div className="panel">
-            <h2>Category Summary</h2>
-            <div className="big-number">
-            <h1>Menu Items</h1>
-                {items.length}
+
+        {error && <div className="message-error">{error}</div>}
+
+        {/* Content */}
+        <div className="content-body">
+        <div className="category-details-grid">
+            <div className="details-container">
+            <h3 className="section-title">Information</h3>
+
+            <Detail
+                label="Outlet"
+                value={category.outlet?.name || "-"}
+            />
+
+            <Detail
+                label="Category"
+                value={category.name}
+            />
+
+            <Detail
+                label="Description"
+                value={category.description || "-"}
+            />
+
+            <Detail
+                label="Display Order"
+                value={category.displayOrder}
+            />
+
+            <Detail
+                label="Active"
+                value={category.isActive ? "Yes" : "No"}
+            />
             </div>
-            <Link className="button primary" to={`/menu-items?category=${id}`}>Manage Menu Items</Link>
+
+            <div className="details-container category-summary-card">
+            <h2 className="section-title">Category Summary</h2>
+
+            <div className="category-item-count">
+                <p>Menu Items</p>
+                <h1>{items.length}</h1>
+            </div>
+
+            <Link
+                className="primary-button"
+                to={`/menu-items?category=${id}`}
+            >
+                Manage Menu Items
+            </Link>
+            </div>
         </div>
-    </div>
-            <ConfirmDialog
-            open={del}
-            setOpen={setDel}
-            onCancel={()=>setDel(false)}
-            onConfirm={remove}
-            title="Delete Category"
-            message="Are you sure you want to delete this category?"
-            />
+        </div>
+
+        <ConfirmDialog
+        open={del}
+        setOpen={setDel}
+        onCancel={() => setDel(false)}
+        onConfirm={remove}
+        title="Delete Category"
+        message="Are you sure you want to delete this category?"
+        />
     </div>
   )
 }
 
 export default CategoryDetails
 
-const Detail = ({label,value})=>{
-    return(
-        <div className="detail">
-            <span>{label}</span>
-            <b>{value}</b>
-        </div>
-    )
-}
+const Detail = ({ label, value }) => (
+  <div className="detail-row">
+    <span>{label}</span>
+    <strong>{value}</strong>
+  </div>
+);

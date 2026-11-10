@@ -11,100 +11,89 @@ const OrderCard = ({ order, onClick,single }) => {
     });
 
     return (
-        <div
-            onClick={!single && onClick}
-            className={`order-card ${!single ? "cursor-pointer p-2 md:p-5": "md:p-0"}`}
-        >
-            {/* Header */}
-            <div className="order-card-head">
-                <h3 >
-                    Order #{orderId}
-                </h3>
+    <div
+    onClick={!single ? onClick : undefined}
+    className={`order-container ${
+        !single ? "cursor-pointer p-3 md:p-5" : "md:p-0"
+    }`}
+    >
+    {/* Header */}
+    <div className="order-header">
+        <h3>Order #{orderId}</h3>
 
-                <span>
-                    <span className="circle"></span>
-                    {order.orderStatus}
-                </span>
-            </div>
+        <span className="order-status">
+        <span className="order-status-indicator"></span>
+        {order.orderStatus}
+        </span>
+    </div>
 
-            {/* Date */}
-            <p >
-                {date}
-            </p>
+    {/* Date */}
+    <p className="order-date">{date}</p>
 
-            <div className="line"></div>
+    <div className="order-divider"></div>
 
-            {/* Customer */}
-            <div className="order-card-customer">
-                <span>👤</span>
-                <div>
-                    <p >
-                        {order.user?.name || "Customer"}
-                    </p>
-                    <p>
-                       📞 {order?.user?.phone || "+1234567890"}
-                    </p>
-                </div>
-            </div>
+    {/* Customer */}
+    <div className="order-customer">
+        <span>👤</span>
 
-            {/* Address */}
-            <div className="order-card-address">
-                <span>📍</span>
-                <p>
-                    {order.deliveryAddress}
-                </p>
-            </div>
+        <div>
+        <p className="order-customer-name">
+            {order.user?.name || "Customer"}
+        </p>
 
-            {/* Order Summary */}
-            {
-                !single && (
-                        <>
-                            <div className="order-summary">
-                                <p>
-                                    {order.items?.length || 0} items
-                                </p>
-
-                                <p>
-                                    {order.paymentMethod}{" "}
-                                    <span>•</span>{" "}
-                                    <span
-                                        className={
-                                            order.paymentStatus === "paid"
-                                                ? "text-green-600 dark:text-green-400"
-                                                : "text-red-600 dark:text-red-400"
-                                        }
-                                    >
-                                        {order.paymentStatus}
-                                    </span>
-                                </p>
-                            </div>
-
-                            <div className="line"></div>
-
-                            {/* Total */}
-                            <div className="order-total">
-                                <p>
-                                    Total
-                                </p>
-                                <p>
-                                    ₹{order.totalAmount}
-                                </p>
-                            </div>
-
-                            {/* View Order */}
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    onClick?.();
-                                }}
-                                className="button primary full"
-                            >
-                                View Order →
-                            </button>
-                                </>
-                )
-            }
+        <p className="order-customer-phone">
+            📞 {order?.user?.phone || "+1234567890"}
+        </p>
         </div>
+    </div>
+
+    {/* Address */}
+    <div className="order-address">
+        <span>📍</span>
+        <p>{order.deliveryAddress}</p>
+    </div>
+
+    {!single && (
+        <>
+        {/* Order Summary */}
+        <div className="order-summary">
+            <p>{order.items?.length || 0} items</p>
+
+            <p>
+            {order.paymentMethod} <span>•</span>{" "}
+            <span
+                className={
+                order.paymentStatus === "paid"
+                    ? "text-success"
+                    : "text-danger"
+                }
+            >
+                {order.paymentStatus}
+            </span>
+            </p>
+        </div>
+
+        <div className="order-divider"></div>
+
+        {/* Total */}
+        <div className="order-total">
+            <p>Total</p>
+            <p>₹{order.totalAmount}</p>
+        </div>
+
+        {/* View Order */}
+        <button
+            onClick={(e) => {
+            e.stopPropagation();
+            onClick?.();
+            }}
+            className="primary-button full-width"
+        >
+            View Order <span>→</span>
+        </button>
+        </>
+    )}
+    </div>
     );
 };
 

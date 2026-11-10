@@ -84,97 +84,152 @@ const OutletDetails = () => {
         )
     }
   return (
-    <div className="page">
-        <div className="page-heading">
-            <div>
-                <p className="eyebrow">Outler details</p>
-                <h1>{outlet.name}</h1>
-                <p>{outlet.area} , {outlet.city}</p>
+    <div className="page-container">
+        <div className="content-header">
+        <div>
+            <p className="content-eyebrow">Outlet Details</p>
+
+            <h1 className="content-title">{outlet.name}</h1>
+
+            <p className="content-description">
+            {outlet.area}, {outlet.city}
+            </p>
+        </div>
+
+        <div className="outlet-details-actions">
+            <button
+            className="secondary-button"
+            onClick={() => setShowDetails(!showDetails)}
+            >
+            {showDetails ? "Close" : "Details"}
+            </button>
+
+            <Link
+            className="secondary-button"
+            to={`/outlets/${id}/edit`}
+            >
+            <Pencil size={17} />
+            Edit
+            </Link>
+
+            {isAuthenticated && (
+            <button
+                className="danger-button"
+                onClick={() => setDel(true)}
+            >
+                <Trash2 size={17} />
+                Delete
+            </button>
+            )}
+        </div>
+        </div>
+
+        {error && <div className="message-error">{error}</div>}
+
+        {!showDetails && (
+        <div className="statistics-grid">
+            <StatCard
+            label="Categories"
+            value={cats.length || 0}
+            hint="Menu groups"
+            icon={Tags}
+            />
+
+            <StatCard
+            label="Menu Items"
+            value={items.length || 0}
+            hint="Products Listed"
+            icon={Tags}
+            />
+
+            <StatCard
+            label="Status"
+            value={outlet?.status || "-"}
+            hint="Restaurant Status"
+            icon={Activity}
+            />
+        </div>
+        )}
+
+        {showDetails && (
+        <div className="outlet-details-grid">
+            <div className="details-container">
+            <h3 className="section-title">Information</h3>
+
+            <Detail
+                label="Description"
+                value={outlet.description || "-"}
+            />
+
+            <Detail
+                label="Phone"
+                value={outlet.phone}
+            />
+
+            <Detail
+                label="Address"
+                value={outlet.address}
+            />
+
+            <Detail
+                label="Cuisine"
+                value={(outlet.cuisine || []).join(", ") || "-"}
+            />
+
+            <Detail
+                label="Food Type"
+                value={outlet.foodType}
+            />
+
+            <Detail
+                label="Hours"
+                value={`${outlet.openingTime} - ${outlet.closingTime}`}
+            />
+
+            <Detail
+                label="Status"
+                value={outlet.status}
+            />
             </div>
-            <div className="button-row">
-                <button className="button primary" onClick={()=>setShowDetails(!showDetails)}>{showDetails?"close":"Details"}</button>
-                <Link className="button secondary" to = {`/outlets/${id}/edit`}><Pencil size = {17}/>Edit</Link>
-                {isAuthenticated && <button className="button danger" onClick={()=>setDel(true)}><Trash2 size = {17}/> Delete</button>}
+
+            <div className="details-container outlet-summary-card">
+            <h3 className="section-title">Menu Summary</h3>
+
+            <div className="outlet-summary-count">
+                <p>Categories</p>
+                <h2>{cats.length}</h2>
+            </div>
+
+            <div className="outlet-summary-count">
+                <p>Menu Items</p>
+                <h2>{items.length}</h2>
+            </div>
+
+            <Link
+                className="primary-button full-width"
+                to={`/categories?outlet=${id}`}
+            >
+                Manage Categories
+            </Link>
             </div>
         </div>
-        {error && <div className="alert error">{error}</div>}
-        {
-            !showDetails && (
-                <div className="stats-grid">
-                    <StatCard label="Categories" value={cats.length || 0} hint ="Menu groups" icon={Tags}/>
-                    <StatCard label="MunuItems" value={items.length || 0} hint ="Products Listed" icon={Tags}/>
-                    <StatCard label="Stats" value = {outlet?.status || " "} hint = "Restaurant Status" icon={Activity}/>
-                </div>
-            )
-        }
+        )}
 
-        {showDetails &&(
-
-            <div className="details-grid">
-                <div className="panel">
-                    <h3>Information</h3>
-                    <Detail 
-                    label = "Description"
-                    value = {outlet.description || "-"} 
-                    />
-                    <Detail 
-                    label = "Phone"
-                    value = {outlet.phone} 
-                    />
-                    <Detail 
-                    label = "Address"
-                    value = {outlet.address} 
-                    />
-                    <Detail 
-                    label = "Cuisine"
-                    value = {(outlet.cuisine || []).join(", ") || "-"} 
-                    />
-                    <Detail 
-                    label = "Food Type"
-                    value = {outlet.foodType} 
-                    />
-                    <Detail 
-                    label = "Hours"
-                    value = {`${outlet.openingTime} - ${outlet.closingTime}`} 
-                    />
-                    <Detail 
-                    label = "Status"
-                    value = {outlet.status} 
-                    />
-                </div>
-
-                <div className="panel">
-                    <h2>Menu Summary</h2>
-                    <div className="big-number">
-                        {cats.length}
-                    </div>
-                    <p>Categoirs</p>
-                    <div className="big-number">
-                        {items.length}
-                    </div>
-                    <p>Menu Items</p>
-
-                    <Link className="button primary" to={`/categories?outlet=${id}`}>Manage categories</Link>
-                </div>
-            </div>
-        )
-        }
-
-            <ConfirmDialog 
-            open = {del}
-            onCancel={()=>setDel(false)}
-            onConfirm={remove}
-            />
+        <ConfirmDialog
+        open={del}
+        onCancel={() => setDel(false)}
+        onConfirm={remove}
+        />
     </div>
   )
 }
 
 export default OutletDetails
-const Detail = ({label , value})=>{
-    return (
-        <div className="detail">
-            <span>{label}</span>
-            <b>{value}</b>
-        </div>
-    )
-}
+const Detail = ({ label, value }) => {
+  return (
+    <div className="detail-row">
+      <span>{label}</span>
+      <strong>{value ?? "-"}</strong>
+    </div>
+  );
+};

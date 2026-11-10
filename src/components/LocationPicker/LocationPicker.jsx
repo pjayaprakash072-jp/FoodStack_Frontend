@@ -40,39 +40,52 @@ const LocationPicker = ({onSelect,onClose,initialLocation}) => {
     }
     const mapCenter = selectedLocation ? [selectedLocation.latitude,selectedLocation.longitude] : [20.5937,78.9629]
   return (
-    <div className="location-picker">
+        <div className="location-picker">
         <MapContainer
-        center={mapCenter}
-        zoom={5}
-        style={{height:"500px",width:"100%"}}
+            center={mapCenter}
+            zoom={5}
+            className="location-map-container"
         >
             <TileLayer
-            attribution="&copy; OpenStreeMap contributors"
+            attribution="&copy; OpenStreetMap contributors"
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <MapClick
-            onLocationSelect={handleLocationSelected}
+
+            <MapClick onLocationSelect={handleLocationSelected} />
+
+            {selectedLocation && (
+            <Marker
+                position={[
+                selectedLocation.latitude,
+                selectedLocation.longitude,
+                ]}
+                draggable={true}
+                eventHandlers={{
+                dragend: handleMarkerDrag,
+                }}
             />
-            {
-                selectedLocation && (
-                    <Marker
-                    position={[
-                        selectedLocation.latitude,
-                        selectedLocation.longitude
-                    ]}
-                    draggable={true}
-                    eventHandlers={{
-                        dragend:handleMarkerDrag
-                    }}
-                    />
-                )
-            }
+            )}
         </MapContainer>
-        <div className="grid-span-2 form-actions">
-            <button className="button" type="button" disabled={!selectedLocation} onClick={confirmLocation}>Confirm Location</button>
-            <button className="button" type="button" onClick={onClose}>Cancel</button>
+
+        <div className="form-actions location-picker-actions">
+            <button
+            type="button"
+            className="primary-button"
+            disabled={!selectedLocation}
+            onClick={confirmLocation}
+            >
+            Confirm Location
+            </button>
+
+            <button
+            type="button"
+            className="secondary-button"
+            onClick={onClose}
+            >
+            Cancel
+            </button>
         </div>
-    </div>
+        </div>
   )
 }
 

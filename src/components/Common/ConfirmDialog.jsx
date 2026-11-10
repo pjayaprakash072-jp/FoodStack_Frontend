@@ -11,13 +11,31 @@ const ConfirmDialog = (
     }
 ) => {
   return (
-    <Modal open = {open} title = {title} onClose = {onCancel}>
-        <p className="muted">{message}</p>
-        <div className="form-actions">
-            <button className="button secondary" onClick={onCancel}>Cancel</button>
-            <button className="button danger" disabled = {busy} onClick={onConfirm}> {busy? "Deleting..." : "Delete"}</button>
+    <Modal open={open} title={title} onClose={onCancel}>
+        <div className="confirm-dialog">
+            <p className="content-description">{message}</p>
+
+            <div className="form-actions">
+            <button
+                type="button"
+                className="secondary-button"
+                onClick={onCancel}
+                disabled={busy}
+            >
+                Cancel
+            </button>
+
+            <button
+                type="button"
+                className="danger-button"
+                disabled={busy}
+                onClick={onConfirm}
+            >
+                {busy ? "Deleting..." : "Delete"}
+            </button>
+            </div>
         </div>
-    </Modal>
+        </Modal>
   )
 }
 

@@ -1,782 +1,1876 @@
+
 @import "tailwindcss";
 
-
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   --font-sans: Inter, ui-sans-serif, system-ui, -apple-system,
     BlinkMacSystemFont, "Segoe UI", sans-serif;
-}
 
-/* =========================================================
-   GLOBAL / ROOT
-   ========================================================= */
+  --color-primary: #4f46e5;
+  --color-primary-hover: #4338ca;
+
+  --color-background: #f8fafc;
+  --color-surface: #ffffff;
+
+  --color-text-primary: #172033;
+  --color-text-secondary: #64748b;
+  --color-border: #e2e8f0;
+
+  --color-success: #16a34a;
+  --color-danger: #dc2626;
+  --color-warning: #d97706;
+}
 
 :root {
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system,
-    BlinkMacSystemFont, "Segoe UI", sans-serif;
-
+  font-family: var(--font-sans);
   color: #172033;
-  background: #f6f8fb;
-  line-height: 1.5;
+  background: #f8fafc;
+
   font-synthesis: none;
-  @apply bg-[#f6f8fb]
-  /* dark:bg-gray-900 */
-}
-*{
-  box-sizing:border-box
-}
-body{
-  @appy m-0 w-full
-}
-button,select,input,textarea{
-  font:inherit;
-}
-button{
-  cursor:pointer;
-}
-a{
-  color:inherit;
-  text-decoration:none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  line-height: 1.5;
 }
 
-.brand-mark{
-  @apply w-9 h-9
-  rounded-xl
-  grid place-items-center
-  text-slate-900
-  font-extrabold
+/* NAVBAR */
+
+.navbar {
+  @apply w-full border-b border-border bg-surface text-text-primary
+  dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100;
 }
 
-.auth-page{
-  @apply min-h-[calc(100vh-4rem)]
-  w-full
-  bg-linear-to-br
-  from-red-50
-  to-amber-200
-  grid
-  place-items-center
-  p-6
-}
-.auth-card{
-  @apply
-  min-w-0
-  bg-white
-  border border-slate-200
-  rounded-2xl
-  w-full
-  max-w-117.5
-  p-8
-}
-.auth-card.wide{
-  @apply max-w-175
-}
-.auth-brand{
-  @apply 
-  text-center
-  mb-6
-}
-.auth-brand .brand-mark{
-  @apply mx-auto mb-4.5
-}
-.auth-brand h1{
-  @apply 
-  m-0 mb-1.5
-}
-.auth-brand p{
-  @apply m-0 
-  text-slate-500
-}
-.auth-footer{
-  @apply mt-1.5
-  text-center
-  text-slate-500
-  text-[13px]
-}
-.auth-footer a{
-  @apply font-extrabold
-  text-slate-500
-}
-.form{
-  @apply grid gap-4
-}
-.form label{
-  @apply
-  grid gap-2
-  font-bold
-  text-slate-700
-}
-.forgot-pass{
-  @apply flex justify-between
-}
-.form input,
-.form textarea,
-.form select{
-  @apply
-  w-full 
-  border border-slate-200
-  rounded-xl
-  px-3 py-3 
-  outline-none
-  bg-white
-  text-slate-500
-}
-.form textarea{
-  @apply min-h-80
-}
-.form input:focus,
-.form textarea:focus,
-.form select:focus{
-  @apply
-  border-slate-500
-  shadow-[0_0_0_3px_#e2e8f0]
-}
-.password-container{
-  @apply w-full relative flex items-center
-}
-.password-container>button{
-  @apply absolute right-3
-}
-.form input[type="checkbox"]{
-  @apply w-4
-}
-.form-actions{
-  @apply flex
-  justify-between
-  gap-2.5
-}
-.grid-2{
-  @apply grid grid-cols-2
-}
-.grid-span-2{
-  @apply col-span-2
-}
-.button{
-  @apply border-0
-  rounded-2xl
-  px-4.5 py-2.5
-  inline-flex
-  justify-center
-  items-center
-  gap-2
-  font-bold
-}
-.button.primary{
-  @apply bg-slate-900 hover:bg-slate-600
-  text-white
-}
-.button.secondary{
-  @apply bg-slate-100
-  text-slate-700
-}
-.button.danger{
-  @apply bg-red-100
-  text-red-700
-}
-.button.disabled{
-  @apply opacity-60
-  cursor-not-allowed
-}
-.button.logout{
-  @apply bg-white
-  text-black
-  mt-[50%] w-full
-}
-.full {
-  @apply w-full
-}
-.button-row{
-  @apply flex 
-  justify-between
-  gap-2 
-  items-center
+.navbar-body {
+  @apply flex min-h-16 items-center justify-between
+  gap-2 px-2
+  sm:gap-4 sm:px-4
+  md:px-6;
 }
 
-.navbar{
-  @apply
-  w-full
-  h-16 
-  bg-white
-  flex items-center gap-2
-  border-b-4 border-black
-  sticky top-0 left-0 right-0
-  z-20
-  px-3
-}
-.navbar-title{
-  @apply flex-1 flex flex-col items-center justify-center
-}
-.navbar-user{
-  @apply flex items-center gap-2
-  font-semibold
-}
-.navbar-links{
-  @apply hidden 
-  md:flex
-  gap-8 
-  mr-5
-
-}
-.navbar-link{
-  @apply box-border
-  relative
-  px-3 py-2
-  rounded-xl
-}
-.navbar-link::after{
-  content:"";
-  @apply absolute bottom-0 left-0 h-0.5 w-0 bg-black rounded-full;
-  @apply transition-[width] duration-700 ease-in-out ;
-}
-.navbar-link:hover::after{
-  @apply w-full
-}
-.navbar-link.active{
-  @apply bg-black
-  text-white
+.navbar-start {
+  @apply flex shrink-0 items-center gap-3;
 }
 
-.ghost-button{
-  @apply flex items-center gap-2 
-  border-0
-  text-slate-600
-  bg-transparent
+.navbar-logo {
+  @apply h-10 w-10 object-contain;
 }
-.sidebar{
-  @apply fixed left-0 top-0 z-20 
-  w-48 md:w-72 
-  h-screen
-  p-3 
-  bg-blue-950 text-white 
-  transform transition-transform duration-300 ease-in-out
+
+.navbar-title {
+  @apply truncate text-sm font-bold sm:text-base;
 }
-.sidebar-overlay{
-  @apply fixed inset-0 z-10 bg-slate-900/50
-  transition-opacity duration-300
+
+.navbar-menu {
+  @apply flex items-center justify-center rounded-lg p-2
+  text-text-secondary transition-colors hover:bg-background
+  dark:text-slate-300 dark:hover:bg-slate-800;
 }
-.nav-link{
+
+/* NAVIGATION */
+
+.navbar-links {
+  @apply hidden items-center gap-1 md:flex;
+}
+
+.navbar-link {
+  @apply inline-flex items-center gap-2 rounded-lg px-3 py-2
+  text-sm font-medium text-text-secondary transition-colors
+  hover:bg-background hover:text-text-primary
+  dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white;
+}
+
+.navbar-link-active {
+  @apply bg-primary/10 text-primary
+  dark:bg-indigo-500/15 dark:text-indigo-400;
+}
+
+.navbar-count {
+  @apply rounded-full bg-primary px-2 py-0.5
+  text-xs font-semibold text-white;
+}
+
+/* USER ACTIONS */
+
+.navbar-actions {
+  @apply flex shrink-0 items-center gap-2 sm:gap-3;
+}
+
+.navbar-user {
+  @apply flex items-center gap-2;
+}
+
+.navbar-user-link {
+  @apply flex items-center text-text-secondary hover:text-primary
+  dark:text-slate-300 dark:hover:text-indigo-400;
+}
+
+.navbar-username {
+  @apply hidden max-w-28 truncate text-sm font-medium
+  text-text-secondary dark:text-slate-300
+  md:inline;
+}
+
+.navbar-orders {
+  @apply flex items-center gap-1;
+}
+
+.navbar-logout {
+  @apply inline-flex items-center gap-2 rounded-lg px-2 py-2
+  text-sm font-medium text-text-secondary transition-colors
+  hover:bg-danger/10 hover:text-danger
+  dark:text-slate-300 dark:hover:bg-red-500/10 dark:hover:text-red-400;
+}
+
+.navbar-auth-link {
+  @apply rounded-lg px-3 py-2 text-sm font-semibold
+  text-primary hover:bg-primary/10
+  dark:text-indigo-400 dark:hover:bg-indigo-500/10;
+}
+
+.navbar-register {
+  @apply rounded-lg bg-primary px-3 py-2
+  text-sm font-semibold text-white transition-colors
+  hover:bg-primary-hover;
+}
+
+/* THEME SWITCHER */
+
+.theme-switcher {
+  @apply relative;
+}
+
+.theme-trigger {
+  @apply inline-flex items-center gap-1 rounded-lg border border-border
+  bg-surface px-2 py-2 text-sm font-semibold text-text-primary
+  shadow-sm transition-colors hover:bg-background
+  dark:border-slate-700 dark:bg-slate-800
+  dark:text-slate-200 dark:hover:bg-slate-700
+  sm:gap-2 sm:px-3;
+}
+
+.theme-trigger span {
+  @apply hidden sm:inline;
+}
+
+.theme-dropdown {
+  @apply absolute right-0 top-full z-50 mt-2 w-40
+  rounded-xl border border-border bg-surface p-1.5 shadow-lg
+  dark:border-slate-700 dark:bg-slate-900;
+}
+
+.theme-option {
+  @apply flex w-full items-center gap-3 rounded-lg px-3 py-2.5
+  text-sm font-medium text-text-secondary transition-colors
+  hover:bg-background
+  dark:text-slate-300 dark:hover:bg-slate-800;
+}
+
+.theme-option-active {
+  @apply bg-primary/10 text-primary
+  dark:bg-indigo-500/15 dark:text-indigo-400;
+}
+
+.theme-check {
+  @apply ml-auto;
+}
+
+.navbar-logout span {
+  @apply hidden sm:inline;
+}
+
+/* ================================
+   SIDEBAR
+================================ */
+
+.sidebar {
+  @apply fixed left-0 top-0 z-50
+  flex h-screen w-64 flex-col
+  border-r border-border bg-surface
+  text-text-primary shadow-xl
+  transition-transform duration-300 ease-in-out
+  -translate-x-full
+  dark:border-slate-700 dark:bg-slate-900
+  dark:text-slate-100
+  md:shadow-none;
+}
+
+.sidebar-open {
+  @apply translate-x-0;
+}
+
+
+/* ================================
+   SIDEBAR OVERLAY
+================================ */
+
+.sidebar-overlay {
+  @apply invisible fixed inset-0 z-40
+  bg-black/40 opacity-0
+  transition-all duration-300;
+}
+
+.sidebar-overlay-visible {
+  @apply visible opacity-100;
+}
+
+
+/* ================================
+   SIDEBAR HEADER
+================================ */
+
+.sidebar-header {
+  @apply flex min-h-16 items-center
+  justify-between gap-3
+  border-b border-border px-4
+  dark:border-slate-700;
+}
+
+.sidebar-brand {
+  @apply flex min-w-0 items-center gap-3
+  text-text-primary;
+}
+
+.sidebar-logo {
+  @apply h-9 w-9 shrink-0 object-contain;
+}
+
+.sidebar-brand-text {
+  @apply flex flex-col leading-tight;
+}
+
+.sidebar-brand-text strong {
+  @apply text-sm font-bold;
+}
+
+.sidebar-brand-text span {
+  @apply text-xs text-text-secondary
+  dark:text-slate-400;
+}
+
+.sidebar-close {
+  @apply flex shrink-0 items-center
+  justify-center rounded-lg p-2
+  text-text-secondary transition-colors
+  hover:bg-background hover:text-text-primary
+  dark:text-slate-400 dark:hover:bg-slate-800
+  dark:hover:text-white
+  md:hidden;
+}
+
+
+/* ================================
+   SIDEBAR NAVIGATION
+================================ */
+
+.sidebar-links {
+  @apply flex flex-1 flex-col gap-1
+  overflow-y-auto p-3;
+}
+
+.sidebar-link {
   @apply flex items-center gap-3
-  px-3 py-3
-  rounded-lg
-  font-semibold
-  text-slate-400
-}
-.nav-link:hover,
-.nav-link:active{
-  @apply bg-slate-800 text-white
-}
-.brand{
-  @apply flex items-center gap-3 justify-between
-  text-white
-  px-2.5 py-4
-}
-.brand b{
-  @apply block text-[17px]
-}
-.brand small{
-  @apply block text-slate-400
+  rounded-lg px-3 py-2.5
+  text-sm font-medium text-text-secondary
+  transition-colors
+  hover:bg-background hover:text-text-primary
+  dark:text-slate-400 dark:hover:bg-slate-800
+  dark:hover:text-white;
 }
 
-.main{
-  @apply w-screen
-  p-0
-}
-.page{
-  @apply
-  md:px-50
-  p-6
-  md:pt-5
-}
-.page-heading{
-  @apply
-  flex flex-col md:flex-row
-  justify-between
-  items-start md:items-end
-  gap-5
-  mb-7
-}
-.page-heading.profile{
-  @apply box-border
-  flex flex-wrap
-  justify-center md:justify-between 
-  gap-6
-  mb-2
-}
-.profile.btns{
-  @apply box-border
-  flex 
-  flex-wrap 
-  justify-center 
- gap-0.5
-}
-.page-heading h1{
-  @apply mt-0 mb-1.5
-  text-[30px]
-  /* dark:text-slate-50 */
-  tracking-[-o.6px] 
-}
-.page-heading p{
-  @apply
-  m-0 text-slate-500
-}
-.eyebrow{
-  @apply text-xs
-  uppercase
-  tracking-[0.12rem]
-  text-slate-500
-  font-extrabold
-}
-.stats-grid{
-  @apply grid grid-cols-1 md:grid-cols-4 gap-4
-}
-.stat-card,
-.panel,
-.outlet-card{
-  @apply bg-white 
-  /* dark:bg-slate-950 */
-  border border-gray-900
-  rounded-2xl
-}
-.panel>h2{
-  @apply text-[30px]
-  tracking-[2px]
-}
-.panel>h1{
-  @apply text-[20px]
-  tracking-[2px]
-}
-.stat-card{
-  @apply flex justify-between
-  p-5
-}
-.stat-card p{
-  @apply m-0
-  text-slate-500
-  text-[13px]
-}
-.stat-card h2{
-  @apply 
-  mt-3.75 mb-0.5
-  text-[26px]
-  capitalize;
-}
-.stat-card small{
-  @apply text-slate-400
-}
-.stat-icon{
-  @apply
-  w-11 h-11
-  bg-slate-100
-  rounded-2xl
-  grid place-items-center
-}
-.section{
-  @apply mt-7.5
-}
-.section-title{
-  @apply flex justify-between items-center 
-  mb-3.5
-}
-.section-title h2{
-  @apply m-0;
+.sidebar-link-active {
+  @apply bg-primary/10 text-primary
+  dark:bg-indigo-500/15 dark:text-indigo-400;
 }
 
-.section-title p{
-  @apply my-1.5
-  text-slate-500
-}
-.card-grid{
-  @apply grid grid-cols-1 md:grid-cols-4 gap-4
+
+/* ================================
+   SIDEBAR FOOTER
+================================ */
+
+.sidebar-footer {
+  @apply border-t border-border p-3
+  dark:border-slate-700;
 }
 
-.profile-image{
-  @apply
-  w-36.5
-  rounded-full
-  overflow-hidden
-  bg-red-500
+.sidebar-logout {
+  @apply flex w-full items-center gap-3
+  rounded-lg px-3 py-2.5
+  text-sm font-medium text-text-secondary
+  transition-colors
+  hover:bg-danger/10 hover:text-danger
+  dark:text-slate-300 dark:hover:bg-red-500/10
+  dark:hover:text-red-400;
 }
-.profile-image img {
-  @apply w-full h-full object-cover
-}
-.outlet-card{
-  @apply flex md:flex-col
-  overflow-hidden
-  rounded-xl
-}
-.outlet-card>img{
-  @apply
-  w-[45%] md:w-full
-  h-full md:h-42.5
-  object-cover 
-}
-.outlet-card-body{
-  @apply p-1.5 md:p-3
-  md:text-2xl
-}
-.outlet-card-body>p{
-  @apply line-clamp-2 text-[15px]
-  py-0.5 md:py-2
-}
-.row-between{
-  @apply flex
-  justify-between
-  gap-4.5
-  pr-2 
-}
-.row-between>h3{
-  @apply font-extrabold
-  tracking-[2px]
-}
-.mini-meta{
-  @apply flex
-  flex-wrap
-  gap-3
-  text-slate-500
-  text-xs md:text-[13px]
-}
-.mini-meta span{
-  @apply flex 
-  items-center
-  gap-1
+/* ================================
+   LOADER
+================================ */
+
+.loader-wrap {
+  @apply flex min-h-40 w-full
+  flex-col items-center justify-center
+  gap-3 text-sm font-medium
+  text-text-secondary
+  dark:text-slate-400;
 }
 
-.badge{
-  @apply inline-flex
-  px-2.25 py-1
-  bg-green-100
-  rounded-full
-  text-green-800
-  text-[11px]
-  capitalize;
-}
-.badge.gray{
-  @apply bg-slate-100
-  text-slate-500
-}
-
-.icon-button{
-  @apply border-0
-  bg-slate-50
-  rounded-[9px]
-  p-2
-  inline-grid
-  place-items-center
-  text-slate-600
-}
-.view-arrow{
-  @apply inline-flex w-full pr-3 md:pr-5
-  justify-between
-  items-center
-  gap-2.25
-  text-slate-700
-  font-bold
-  text-[13px]
-}
-
-/* Search */
-
-.toolbar{
-  @apply mb-4
-}
-.search{
-  @apply bg-white
-  border border-slate-200
-  rounded-xl
-  flex items-center
-  gap-2
-  px-3
-  max-w-105
-  text-slate-400
-}
-.search input{
-  @apply border-0
-  outline-none
-  py-3
-  w-full
-  bg-transparent
-}
-.panel{
-  @apply p-5
-}
-/* Details-grid */
-.details-grid{
-  @apply grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-5
-}
-.detail{
-  @apply flex
-  justify-between
-  border-b
-  gap-3.75
-  py-3.25
-  border-slate-100
-}
-.detail span{
-  @apply text-slate-500
-}
-.big-number{
-  @apply text-4xl
-  font-extrabold
-  mt-2.5 flex justify-between
-}
-/* Modal */
-
-.modal-backdrop{
-  @apply fixed inset-0
-  bg-slate-900/50
-  grid
-  place-items-center
-  p-5
-  z-60
-}
-.modal{
-  @apply bg-white 
-  rounded-2xl
-  w-full
-  max-w-125
-  p-5
-}
-.modal-header{
-  @apply flex justify-between items-center
-}
-.modal-header h3{
-  @apply m-0;
-}
-/* LOADER */
-.loader-wrap{
-  @apply min-h-65
-  grid
-  place-items-center
-  content-center
-  gap-2.5
-  text-slate-500
-}
-.spinner{
-  @apply w-7 h-7
-  border-[3px]
-  border-slate-200
-  border-t-slate-900
-  rounded-full
+/* SPINNER */
+.spinner {
+  @apply h-9 w-9 rounded-full
+  border-4 border-slate-200
+  border-t-primary
   animate-spin
+  dark:border-slate-700
+  dark:border-t-indigo-400;
 }
 
-.alert{
-  @apply rounded-[10px]
-  px-3.5 py-3
-  mb-4
-  text-[13px]
-}
-.alert.error{
-  @apply bg-red-100
-  text-red-800
-}
-.alert.success{
-  @apply bg-green-100
-  text-green-800
-}
-/* EMPTY STATE */
-.empty{
-  @apply text-center
-  bg-white
-  border border-dashed
-  border-slate-900
-  rounded-2xl
-  px-5 py-13.75
-}
-.empty-icon{
-  @apply bg-slate-100
-  rounded-full
-  w-11.25
-  h-11.25
-  grid
-  place-items-center
-  mx-auto
-  text-[25px]
-  text-slate-500
-}
-.empty h3{
-  @apply mt-3.25 mb-1
-}
-.empty p{
-  @apply text-slate-500
-  mt-0 mb-4.5
+/* ================================
+   APPLICATION LAYOUT
+================================ */
+
+.app-layout {
+  @apply flex min-h-screen flex-col
+  bg-background text-text-primary
+  dark:bg-slate-950 dark:text-slate-100;
 }
 
-/* TABLE */
-.table-wrap{
-  @apply overflow-auto
+/* Main area below the 64px Navbar */
+.app-main {
+  @apply flex min-h-0 w-full flex-1 flex-col
+  overflow-y-auto;
+  height: calc(100dvh - 4rem);
 }
-table{
-  @apply border-collapse
-  w-full 
-  min-w-180
-}
-th,td{
-  @apply text-left
-  px-3
-  py-3.25
-  border-b border-slate-100
-  text-[14px]
-}
-th{
-  @apply text-slate-500
-  text-[11px]
-  uppercase
-  tracking-[0.06rem]
-}
-.table-empty{
-  @apply text-center
-  p-8.75
-  text-slate-400
-}
-.order-grid{
-  @apply grid grid-cols-1 md:grid-cols-3 gap-4
-}
-.order-card{
-  @apply
-  w-full
-  bg-white
-  /* dark:bg-gray-900 */
-  border border-gray-200
-  rounded-2xl
-  /* p-2 md:p-5 it is applied in the card only l */
-}
-.line{
-  @apply  my-5 border-t border-gray-800 
-  /* dark:border-slate-100 */
-}
-.order-card-head{
-  @apply 
-  flex
-  items-center justify-between
-}
-.order-card-head>h3{
-  @apply 
 
-  text-slate-900 
-  /* dark:text-slate-100 */
-  font-extrabold text-lg 
+/* ================================
+   PAGE CONTAINER
+================================ */
+
+.page-container {
+  @apply flex min-h-full w-full flex-col
+  gap-5 p-3
+  sm:gap-6 sm:p-5
+  lg:gap-7 lg:p-6;
 }
-.order-card-head>span{
-  @apply inline-flex items-center 
-  rounded-full
-  px-2 md:px-3
-  py-1
-  text-xs font-medium
-  bg-yellow-100 text-yellow-600
-  gap-1.5 md:gap-2
-  /* dark:bg-yellow-900/30 dark:text-yellow-400 */
+
+/* ================================
+   PAGE HEADER
+================================ */
+
+.content-header {
+  @apply flex flex-col items-start
+  justify-between gap-4
+  border-b border-border pb-5
+  dark:border-slate-700
+  sm:flex-row sm:items-center;
 }
-.order-card-head>p{
-  @apply mt-2 text-sm 
-  text-gray-500 
-  /* dark:text-gray-400 */
+
+.content-eyebrow {
+  @apply mb-1 text-xs font-semibold uppercase
+  tracking-wider text-primary
+  dark:text-indigo-400;
 }
-.circle{
-  @apply w-2.5 h-2.5
-  rounded-full
-  bg-yellow-400
+
+.content-title {
+  @apply text-xl font-bold tracking-tight
+  text-text-primary
+  dark:text-white
+  sm:text-2xl lg:text-3xl;
 }
-.order-card-customer{
-  @apply
-  flex items-center gap-3 justify-start
+
+.content-description {
+  @apply mt-1 text-sm
+  text-text-secondary
+  dark:text-slate-400;
 }
-.order-card-customer>div{
-  @apply flex-1 flex justify-between pr-2
+
+.page-action {
+  @apply inline-flex shrink-0 items-center
+  justify-center rounded-lg
+  bg-primary px-4 py-2.5
+  text-sm font-semibold text-white
+  transition-colors hover:bg-primary-hover;
 }
-.order-card-customer>span
-,.order-card-address>span{
-  @apply text-[20px]
+
+/* ================================
+   PAGE BODY
+================================ */
+
+.content-body {
+  @apply flex w-full flex-1 flex-col gap-6;
 }
-.order-card-customer>div>p,
-.order-card-address>p,
-.order-summary>p,
-.order-total>p{
-  @apply font-semibold text-sm
-  text-slate-900
-  /* dark:text-slate-400 */
+
+/* ================================
+   STATISTICS GRID
+================================ */
+
+.statistics-grid {
+  @apply grid w-full grid-cols-1 gap-4
+  sm:grid-cols-2
+  xl:grid-cols-4;
 }
-.order-card-address{
-  @apply 
-  flex
-  items-start
-  mt-2 md:mt-4
-  gap-3
+
+/* ================================
+   CONTENT SECTION
+================================ */
+
+.content-section {
+  @apply flex w-full flex-col gap-4;
 }
-.order-summary{
-  @apply flex
-  justify-between 
-  mt-5
-  items-center
+
+.section-header {
+  @apply flex items-center justify-between gap-3;
 }
-.order-total{
+
+.section-header h2 {
+  @apply text-lg font-bold
+  text-text-primary
+  dark:text-white;
+}
+
+.section-header p {
+  @apply mt-1 text-sm
+  text-text-secondary
+  dark:text-slate-400;
+}
+
+.section-link {
+  @apply shrink-0 text-sm font-semibold
+  text-primary transition-colors
+  hover:text-primary-hover
+  dark:text-indigo-400;
+}
+
+/* ================================
+   OUTLET GRID
+================================ */
+
+.outlet-grid {
+  @apply grid grid-cols-1 gap-4
+  sm:grid-cols-2
+  xl:grid-cols-3
+  2xl:grid-cols-4;
+}
+
+/* ================================
+   OUTLET CARD
+================================ */
+
+.outlet-container {
+  @apply flex w-full min-w-0 flex-col
+  overflow-hidden rounded-xl
+  border border-border bg-surface
+  shadow-sm transition-shadow
+  hover:shadow-md
+  dark:border-slate-700 dark:bg-slate-900;
+}
+
+/* ================================
+   OUTLET IMAGE
+================================ */
+
+.outlet-image {
+  @apply flex h-40 w-full shrink-0
+  items-center justify-center
+  overflow-hidden bg-background
+  dark:bg-slate-800;
+}
+
+.outlet-image img {
+  @apply h-full w-full object-cover;
+}
+
+.outlet-image span {
+  @apply flex h-20 w-20 items-center
+  justify-center rounded-full
+  bg-primary/10 text-3xl font-bold
+  text-primary
+  dark:bg-indigo-500/15 dark:text-indigo-400;
+}
+
+/* ================================
+   OUTLET CONTENT
+================================ */
+
+.outlet-content {
+  @apply flex flex-1 flex-col gap-3 p-4 sm:p-5;
+}
+
+/* ================================
+   OUTLET HEADER
+================================ */
+
+.outlet-header {
+  @apply flex items-start justify-between gap-2;
+}
+
+.outlet-header h3 {
+  @apply min-w-0 break-words
+  text-base font-bold
+  text-text-primary
+  dark:text-white;
+}
+
+/* ================================
+   OUTLET STATUS
+================================ */
+
+.outlet-status {
+  @apply shrink-0 rounded-full
+  px-2.5 py-1 text-xs font-semibold
+  capitalize;
+}
+
+.outlet-status-active {
+  @apply bg-success/10 text-success;
+}
+
+.outlet-status-inactive {
+  @apply bg-slate-100 text-slate-500
+  dark:bg-slate-800 dark:text-slate-400;
+}
+
+/* ================================
+   OUTLET DESCRIPTION
+================================ */
+
+.outlet-description {
+  @apply line-clamp-2 min-h-10
+  text-sm text-text-secondary
+  dark:text-slate-400;
+}
+
+/* ================================
+   OUTLET META INFORMATION
+================================ */
+
+.outlet-meta {
+  @apply flex flex-col gap-2
+  border-t border-border pt-3
+  dark:border-slate-700;
+}
+
+.outlet-meta span {
+  @apply flex min-w-0 items-center gap-2
+  text-xs text-text-secondary
+  dark:text-slate-400;
+}
+
+.outlet-meta svg {
+  @apply shrink-0 text-primary
+  dark:text-indigo-400;
+}
+
+/* ================================
+   VIEW OUTLET LINK
+================================ */
+
+.outlet-view-link {
+  @apply mt-auto flex items-center
+  justify-between gap-2
+  border-t border-border pt-3
+  text-sm font-semibold text-primary
+  transition-colors hover:text-primary-hover
+  dark:border-slate-700
+  dark:text-indigo-400
+  dark:hover:text-indigo-300;
+}
+
+/* ================================
+   OUTLET IMAGE
+================================ */
+
+.outlet-image {
+  @apply h-36 sm:h-44;
+}
+
+
+/* ================================
+   EMPTY STATE
+================================ */
+
+.empty-state {
+  @apply flex min-h-56 w-full flex-col
+  items-center justify-center gap-3
+  rounded-xl border border-dashed
+  border-border bg-surface p-6
+  text-center
+  dark:border-slate-700 dark:bg-slate-900;
+}
+
+.empty-state-icon {
+  @apply flex h-12 w-12 items-center
+  justify-center rounded-full
+  bg-primary/10 text-2xl text-primary
+  dark:bg-indigo-500/15 dark:text-indigo-400;
+}
+
+.empty-state h3 {
+  @apply text-base font-semibold
+  text-text-primary dark:text-white;
+}
+
+.empty-state p {
+  @apply text-sm text-text-secondary
+  dark:text-slate-400;
+}
+
+/* ================================
+   SEARCH BAR
+================================ */
+
+.search-bar {
+  @apply flex w-full items-center gap-2
+  rounded-lg border border-border
+  bg-surface px-3 py-2.5
+  text-text-secondary
+  transition-colors
+  focus-within:border-primary
+  dark:border-slate-700 dark:bg-slate-900
+  dark:text-slate-400;
+}
+
+.search-bar input {
+  @apply min-w-0 w-full bg-transparent
+  text-sm text-text-primary outline-none
+  placeholder:text-text-secondary
+  dark:text-slate-100
+  dark:placeholder:text-slate-500;
+}
+
+/* ================================
+   OUTLET LIST TOOLBAR
+================================ */
+
+.outlet-toolbar {
+  @apply flex w-full flex-col
+  items-start justify-between gap-3
+  md:gap-5
+  sm:flex-row sm:items-center;
+}
+
+/* ================================
+   SEARCH WIDTH
+================================ */
+
+.outlet-toolbar .search-bar {
+  @apply w-full sm:max-w-md;
+}
+
+/* ================================
+   OUTLET COUNT
+================================ */
+
+.outlet-count {
+  @apply shrink-0 text-xs font-medium
+  text-text-secondary
+  dark:text-slate-400;
+}
+
+
+/* =================================
+   AUTHENTICATION LAYOUT
+================================= */
+
+.auth-container {
+  @apply flex min-h-full w-full
+  items-center justify-center
+  bg-background p-4
+  dark:bg-slate-950;
+}
+
+.auth-panel {
+  @apply w-full max-w-md
+  rounded-2xl border border-border
+  bg-surface p-5 shadow-sm
+  sm:p-7
+  dark:border-slate-700 dark:bg-slate-900;
+}
+
+.auth-heading {
+  @apply mb-6 flex flex-col
+  items-center gap-2 text-center;
+}
+
+.auth-logo {
+  @apply flex h-12 w-12
+  items-center justify-center
+  rounded-xl bg-primary
+  text-lg font-bold text-white;
+}
+
+.auth-title {
+  @apply text-xl font-bold
+  text-text-primary
+  dark:text-white;
+}
+
+.auth-description {
+  @apply text-sm text-text-secondary
+  dark:text-slate-400;
+}
+
+.auth-footer {
+  @apply mt-6 text-center
+  text-sm text-text-secondary
+  dark:text-slate-400;
+}
+
+.auth-footer a {
+  @apply font-semibold text-primary
+  hover:underline
+  dark:text-indigo-400;
+}
+
+
+/* =================================
+   FORM CONTAINER
+================================= */
+
+.form-container {
+  @apply w-full rounded-xl
+  border border-border bg-surface
+  p-4 shadow-sm
+  sm:p-6
+  dark:border-slate-700
+  dark:bg-slate-900;
+}
+
+
+/* =================================
+   FORM GRID
+================================= */
+
+.form-grid {
+  @apply grid w-full
+  grid-cols-1 gap-5
+  sm:grid-cols-2;
+}
+
+.form-full-width {
+  @apply sm:col-span-2;
+}
+
+
+/* =================================
+   FORM FIELD
+================================= */
+
+.form-field {
+  @apply flex min-w-0
+  flex-col gap-2
+  text-sm font-medium
+  text-text-primary
+  dark:text-slate-200;
+}
+
+.field-hint {
+  @apply text-xs font-normal
+  text-text-secondary
+  dark:text-slate-400;
+}
+
+
+/* =================================
+   FORM INPUT
+================================= */
+
+.form-input {
+  @apply w-full min-w-0
+  rounded-lg border border-border
+  bg-surface px-3 py-2.5
+  text-sm text-text-primary
+  outline-none transition-colors
+  placeholder:text-text-secondary
+  focus:border-primary
+  focus:ring-2 focus:ring-primary/10
+  disabled:cursor-not-allowed
+  disabled:bg-slate-100
+  disabled:opacity-70
+  dark:border-slate-700
+  dark:bg-slate-800
+  dark:text-white
+  dark:placeholder:text-slate-500
+  dark:disabled:bg-slate-800;
+}
+
+
+/* =================================
+   FORM SELECT
+================================= */
+
+.form-select {
+  @apply w-full min-w-0
+  rounded-lg border border-border
+  bg-surface px-3 py-2.5
+  text-sm text-text-primary
+  outline-none transition-colors
+  focus:border-primary
+  focus:ring-2 focus:ring-primary/10
+  dark:border-slate-700
+  dark:bg-slate-800
+  dark:text-white;
+}
+
+
+/* =================================
+   CHECKBOX
+================================= */
+
+.form-checkbox {
+  @apply flex items-center
+  gap-3 self-center
+  text-sm font-medium
+  text-text-primary
+  dark:text-slate-200;
+}
+
+.form-checkbox input {
+  @apply h-4 w-4
+  cursor-pointer accent-primary;
+}
+
+
+/* =================================
+   FORM ACTIONS
+================================= */
+
+.form-actions {
+  @apply flex flex-col-reverse
+  justify-end gap-3
+  border-t border-border
+  pt-4
+  sm:flex-row
+  dark:border-slate-700;
+}
+
+
+/* =================================
+   BUTTONS
+================================= */
+
+.primary-button {
+  @apply inline-flex
+  items-center justify-center
+  gap-2 rounded-lg
+  bg-primary px-4 py-2.5
+  text-sm font-semibold text-white
+  transition-colors
+  hover:bg-primary-hover
+  disabled:cursor-not-allowed
+  disabled:opacity-60;
+}
+
+.secondary-button {
+  @apply inline-flex
+  items-center justify-center
+  gap-2 rounded-lg
+  border border-border
+  bg-surface px-4 py-2.5
+  text-sm font-semibold
+  text-text-primary
+  transition-colors
+  hover:bg-background
+  disabled:cursor-not-allowed
+  disabled:opacity-60
+  dark:border-slate-700
+  dark:bg-slate-800
+  dark:text-slate-200
+  dark:hover:bg-slate-700;
+}
+
+.danger-button {
+  @apply inline-flex
+  items-center justify-center
+  gap-2 rounded-lg
+  bg-danger/10 px-4 py-2.5
+  text-sm font-semibold text-danger
+  transition-colors
+  hover:bg-danger/20
+  dark:text-red-400;
+}
+
+.full-width {
+  @apply w-full;
+}
+
+
+/* =================================
+   ERROR AND SUCCESS MESSAGES
+================================= */
+
+.message-error {
+  @apply mb-4 rounded-lg
+  border border-red-200
+  bg-red-50 px-4 py-3
+  text-sm font-medium text-red-700
+  dark:border-red-900
+  dark:bg-red-950/40
+  dark:text-red-400;
+}
+
+.message-success {
+  @apply mb-4 rounded-lg
+  border border-green-200
+  bg-green-50 px-4 py-3
+  text-sm font-medium text-green-700
+  dark:border-green-900
+  dark:bg-green-950/40
+  dark:text-green-400;
+}
+
+
+/* =================================
+   PROFILE
+================================= */
+
+.profile-image {
+  @apply h-16 w-16 shrink-0
+  overflow-hidden rounded-full
+  border-2 border-border
+  bg-slate-100
+  dark:border-slate-700
+  dark:bg-slate-800;
+}
+
+.profile-image img {
+  @apply h-full w-full object-cover;
+}
+
+.profile-actions {
+  @apply flex flex-wrap
+  items-center gap-3;
+}
+
+
+/* =================================
+   DETAILS
+================================= */
+
+.details-container {
+  @apply w-full rounded-xl
+  border border-border
+  bg-surface p-5 shadow-sm
+  dark:border-slate-700
+  dark:bg-slate-900;
+}
+
+.section-title {
+  @apply mb-4 text-lg
+  font-bold text-text-primary
+  dark:text-white;
+}
+
+.detail-row {
+  @apply flex flex-col
+  justify-between gap-1
+  border-b border-border
+  py-3 text-sm
+  last:border-0
+  sm:flex-row sm:items-center
+  dark:border-slate-700;
+}
+
+.detail-row span {
+  @apply text-text-secondary
+  dark:text-slate-400;
+}
+
+.detail-row strong {
+  @apply break-all font-semibold
+  text-text-primary
+  dark:text-slate-200;
+}
+/* =================================
+   LOGIN ACCOUNT SWITCH
+================================= */
+
+.login-account-switch {
+  @apply mb-5 grid grid-cols-2
+  gap-2 rounded-xl
+  border border-border
+  bg-background p-1
+  dark:border-slate-700
+  dark:bg-slate-800;
+}
+
+.account-option {
+  @apply flex items-center
+  justify-center rounded-lg
+  px-4 py-2.5
+  text-sm font-semibold
+  text-text-secondary
+  transition-colors
+  hover:bg-surface
+  hover:text-text-primary
+  dark:text-slate-400
+  dark:hover:text-white;
+}
+
+.account-option-active {
+  @apply bg-surface text-primary
+  shadow-sm
+  dark:bg-slate-700
+  dark:text-indigo-400;
+}
+
+
+/* =================================
+   GOOGLE LOGIN
+================================= */
+
+.google-login-container {
+  @apply mb-5 flex w-full
+  justify-center;
+}
+
+
+/* =================================
+   FORM FIELDS
+================================= */
+
+.form-fields {
+  @apply flex w-full
+  flex-col gap-5;
+}
+
+
+/* =================================
+   PASSWORD LABEL
+================================= */
+
+.password-label {
+  @apply flex items-center
+  justify-between gap-2;
+}
+
+.password-label a {
+  @apply text-xs font-semibold
+  text-primary
+  hover:underline
+  dark:text-indigo-400;
+}
+
+
+/* =================================
+   PASSWORD INPUT
+================================= */
+
+.password-field {
+  @apply relative flex w-full
+  items-center;
+}
+
+.password-field .form-input {
+  @apply pr-11;
+}
+
+.password-toggle {
+  @apply absolute right-3
+  flex items-center
+  justify-center
+  rounded-md p-1
+  text-text-secondary
+  transition-colors
+  hover:text-primary
+  dark:text-slate-400
+  dark:hover:text-indigo-400;
+}
+
+
+/* =================================
+   LOGIN PROCESSING
+================================= */
+
+.login-processing {
+  @apply mb-4 text-center
+  text-sm font-medium
+  text-text-secondary
+  dark:text-slate-400;
+}
+
+
+/* =================================
+   CATEGORY CARD
+================================= */
+
+.category-grid {
+  @apply grid w-full grid-cols-1 gap-4
+  sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4;
+}
+
+.category-container {
+  @apply flex min-w-0 flex-col overflow-hidden
+  rounded-xl border border-border bg-surface
+  shadow-sm transition-shadow hover:shadow-md
+  dark:border-slate-700 dark:bg-slate-900;
+}
+
+.category-image {
+  @apply flex h-36 w-full items-center justify-center
+  overflow-hidden bg-background
+  dark:bg-slate-800;
+}
+
+.category-image img {
+  @apply h-full w-full object-cover;
+}
+
+.category-image span {
+  @apply flex h-20 w-20 items-center justify-center
+  rounded-full bg-primary/10 text-3xl font-bold
+  text-primary dark:bg-indigo-500/15 dark:text-indigo-400;
+}
+
+.category-content {
+  @apply flex flex-1 flex-col gap-3 p-4;
+}
+
+.category-header {
+  @apply flex items-start justify-between gap-2;
+}
+
+.category-header h3 {
+  @apply min-w-0 break-words text-base font-bold
+  text-text-primary dark:text-white;
+}
+
+.category-status {
+  @apply shrink-0 rounded-full px-2.5 py-1
+  text-xs font-semibold capitalize;
+}
+
+.category-status-active {
+  @apply bg-success/10 text-success;
+}
+
+.category-status-inactive {
+  @apply bg-slate-100 text-slate-500
+  dark:bg-slate-800 dark:text-slate-400;
+}
+
+.category-description {
+  @apply line-clamp-2 min-h-10 text-sm
+  text-text-secondary dark:text-slate-400;
+}
+
+.category-meta {
+  @apply flex items-center gap-2 border-t
+  border-border pt-3 text-xs
+  text-text-secondary dark:border-slate-700
+  dark:text-slate-400;
+}
+
+.category-meta span {
+  @apply flex items-center gap-2;
+}
+
+.category-meta svg {
+  @apply text-primary dark:text-indigo-400;
+}
+
+.category-view-link {
+  @apply mt-auto flex items-center justify-between
+  gap-2 border-t border-border pt-3
+  text-sm font-semibold text-primary
+  transition-colors hover:text-primary-hover
+  dark:border-slate-700 dark:text-indigo-400
+  dark:hover:text-indigo-300;
+}
+
+
+/* =================================
+   CATEGORY ACTIONS AND TOOLBAR
+================================= */
+
+.category-actions {
+  @apply flex w-full flex-wrap items-center gap-2
+  sm:w-auto;
+}
+
+.category-toolbar {
+  @apply flex w-full items-center;
+}
+
+.category-toolbar .search-bar {
+  @apply w-full sm:max-w-md;
+}
+
+
+/* =================================
+   CATEGORY DETAILS
+================================= */
+
+.category-details-grid {
+  @apply grid w-full grid-cols-1 gap-5
+  lg:grid-cols-2;
+}
+
+.category-summary-card {
+  @apply flex flex-col gap-4;
+}
+
+.category-item-count {
+  @apply flex flex-col gap-1 rounded-xl
+  bg-background p-5 dark:bg-slate-800;
+}
+
+.category-item-count p {
+  @apply text-sm text-text-secondary
+  dark:text-slate-400;
+}
+
+.category-item-count h1 {
+  @apply text-3xl font-bold text-primary
+  dark:text-indigo-400;
+}
+
+
+/* =================================
+   STATISTICS CARD
+================================= */
+
+.statistics-card {
+  @apply flex min-w-0 items-start justify-between
+  gap-4 rounded-xl border border-border
+  bg-surface p-4 shadow-sm
+  sm:p-5 dark:border-slate-700
+  dark:bg-slate-900;
+}
+
+.statistics-content {
+  @apply flex min-w-0 flex-col gap-1;
+}
+
+.statistics-content p {
+  @apply text-sm font-medium text-text-secondary
+  dark:text-slate-400;
+}
+
+.statistics-content h2 {
+  @apply break-words text-2xl font-bold
+  text-text-primary dark:text-white;
+}
+
+.statistics-content small {
+  @apply text-xs text-text-secondary
+  dark:text-slate-400;
+}
+
+.statistics-icon {
+  @apply flex h-11 w-11 shrink-0 items-center
+  justify-center rounded-xl bg-primary/10
+  text-primary dark:bg-indigo-500/15
+  dark:text-indigo-400;
+}
+
+
+/* =================================
+   ORDER CARD
+================================= */
+
+.order-grid {
+  @apply grid w-full grid-cols-1 gap-4
+  sm:grid-cols-2 xl:grid-cols-3;
+}
+
+.order-container {
+  @apply flex min-w-0 flex-col gap-3
+  rounded-xl border border-border
+  bg-surface p-4 shadow-sm
+  transition-shadow hover:shadow-md
+  dark:border-slate-700 dark:bg-slate-900;
+}
+
+.order-header {
+  @apply flex items-start justify-between gap-2;
+}
+
+.order-header h3 {
+  @apply min-w-0 break-all text-sm font-bold
+  text-text-primary dark:text-white;
+}
+
+.order-status {
+  @apply flex shrink-0 items-center gap-2
+  rounded-full bg-background px-2.5 py-1
+  text-xs font-semibold capitalize
+  text-text-secondary dark:bg-slate-800
+  dark:text-slate-300;
+}
+
+.order-status-indicator {
+  @apply h-2 w-2 rounded-full bg-primary;
+}
+
+.order-date {
+  @apply text-xs text-text-secondary
+  dark:text-slate-400;
+}
+
+.order-divider {
+  @apply w-full border-t border-border
+  dark:border-slate-700;
+}
+
+.order-customer {
+  @apply flex items-center gap-3;
+}
+
+.order-customer-name {
+  @apply text-sm font-semibold text-text-primary
+  dark:text-slate-200;
+}
+
+.order-customer-phone {
+  @apply mt-1 text-xs text-text-secondary
+  dark:text-slate-400;
+}
+
+.order-address {
+  @apply flex items-start gap-3;
+}
+
+.order-address p {
+  @apply min-w-0 break-words text-sm
+  text-text-secondary dark:text-slate-400;
+}
+
+.order-summary {
+  @apply flex flex-wrap items-center
+  justify-between gap-2 text-xs
+  text-text-secondary dark:text-slate-400;
+}
+
+.order-total {
   @apply flex items-center justify-between
+  text-sm font-semibold;
 }
-.order-total>p{
-  @apply font-extrabold text-xl
+
+.order-total p:first-child {
+  @apply text-text-secondary dark:text-slate-400;
 }
-.order-summary>p{
-  @apply font-semibold text-[17px]
+
+.order-total p:last-child {
+  @apply text-text-primary dark:text-white;
 }
-.order-details{
-  @apply flex flex-col md:flex-row gap-3
+
+
+/* =================================
+   ORDER STATUS STEPS
+================================= */
+
+.status-container {
+  @apply flex w-full flex-wrap items-center
+  justify-center gap-3;
 }
-.order-items-card{
-  @apply bg-white 
+
+.status-step {
+  @apply flex min-w-20 flex-1 flex-col
+  items-center gap-2 rounded-lg p-2
+  text-center text-text-secondary
+  transition-colors dark:text-slate-400;
 }
-.order-items-card>h2{
-  @apply text-lg font-semibold 
+
+.status-step > span {
+  @apply flex h-9 w-9 items-center justify-center
+  rounded-full border-2 border-border
+  bg-surface text-sm font-semibold
+  dark:border-slate-600 dark:bg-slate-800;
 }
-.order-items{
-  @apply divide-y divide-black
+
+.status-step small {
+  @apply text-xs capitalize;
 }
-.order-item{
-  @apply py-4 
-  flex items-center justify-between
+
+.status-step-active {
+  @apply text-primary dark:text-indigo-400;
 }
-.payment-summary{
-  @apply bg-white  
+
+.status-step-active > span {
+  @apply border-primary bg-primary text-white
+  dark:border-indigo-400 dark:bg-indigo-500;
 }
-.payment-summary>h2,
-.payment>h2{
-  @apply text-lg font-semibold  mb-4
+
+.status-step-clickable {
+  @apply cursor-pointer hover:bg-primary/5
+  dark:hover:bg-indigo-500/10;
 }
-.subtotal,
-.delivery-fee,
-.discount,
-.total,
-.payment-method,
-.payment-status{
-  @apply flex justify-between
+
+.status-step:disabled {
+  @apply cursor-not-allowed opacity-70;
 }
-.total{
-  @apply border-t
+
+
+/* =================================
+   ORDER DETAILS LAYOUT
+================================= */
+
+.order-details-grid {
+  @apply grid w-full grid-cols-1 gap-5
+  lg:grid-cols-2;
 }
-.total>span{
-  @apply font-extrabold
-  text-lg
+
+.order-information {
+  @apply min-w-0;
 }
-.discount>span::first-chile,
-.payment-status>span::first-child{
-  @apply text-black  
+
+.order-items-container {
+  @apply min-w-0;
 }
-.payment{
-  @apply mt-5 space-y-3 border-t
+
+.order-items-list {
+  @apply flex flex-col;
 }
-.mobile-only{
-  @apply block md:hidden
+
+.order-item-row {
+  @apply flex items-center justify-between
+  gap-4 border-b border-border py-4
+  last:border-0 dark:border-slate-700;
 }
-.md-only{
-  @apply hidden md:block
+
+.order-item-info {
+  @apply flex min-w-0 flex-col gap-1;
 }
-.status-steps{
-  @apply flex  justify-between flex-wrap gap-8 md:gap-2
+
+.order-item-info p {
+  @apply break-words text-sm font-semibold
+  text-text-primary dark:text-white;
 }
-.status-step{
-  @apply flex-1 text-center p-2 md:p-1
+
+.order-item-info span {
+  @apply text-xs text-text-secondary
+  dark:text-slate-400;
 }
-.status-step span{
-  @apply grid place-items-center
+
+.order-item-price {
+  @apply shrink-0 text-sm font-semibold
+  text-text-primary dark:text-white;
 }
-.status-step.active{
-  @apply text-green-600 font-extrabold bg-green-100 rounded-lg
+
+.payment-summary,
+.payment-information {
+  @apply flex flex-col gap-3;
+}
+
+.payment-information {
+  @apply mt-6 border-t border-border pt-5
+  dark:border-slate-700;
+}
+
+.payment-summary-list {
+  @apply flex flex-col gap-3;
+}
+
+.payment-row {
+  @apply flex items-center justify-between
+  gap-3 text-sm;
+}
+
+.payment-row > span:first-child {
+  @apply text-text-secondary dark:text-slate-400;
+}
+
+.payment-row strong {
+  @apply text-text-primary dark:text-slate-200;
+}
+
+.payment-total {
+  @apply flex items-center justify-between
+  gap-3 border-t border-border pt-3
+  text-base font-bold dark:border-slate-700;
+}
+
+.payment-total span {
+  @apply text-text-primary dark:text-white;
+}
+
+.payment-total strong {
+  @apply text-primary dark:text-indigo-400;
+}
+
+
+/* =================================
+   ORDER STATUS RESPONSIVE
+================================= */
+
+.order-status-mobile {
+  @apply lg:hidden;
+}
+
+.order-status-desktop {
+  @apply hidden lg:block;
+}
+
+
+/* =================================
+   ORDERS TOOLBAR
+================================= */
+
+.orders-toolbar {
+  @apply flex w-full flex-col gap-2
+  sm:w-auto sm:flex-row sm:items-center;
+}
+
+.orders-toolbar .search-bar {
+  @apply w-full sm:w-72;
+}
+
+
+/* =================================
+   RESPONSIVE STATUS STEPS
+================================= */
+
+@media (max-width: 640px) {
+  .status-container {
+    @apply grid grid-cols-3 gap-2;
+  }
+
+  .status-step {
+    @apply min-w-0;
+  }
+}
+
+/* =================================
+   MENU ITEM DETAILS
+================================= */
+
+.menu-item-details-grid {
+  @apply grid w-full grid-cols-1 gap-5
+  lg:grid-cols-2;
+}
+
+/* =================================
+   MENU ITEM ACTIONS
+================================= */
+
+.menu-item-actions {
+  @apply flex w-full flex-wrap
+  items-center gap-2
+  sm:w-auto;
+}
+
+/* =================================
+   MENU ITEM IMAGE CONTAINER
+================================= */
+
+.menu-item-image-container {
+  @apply flex flex-col gap-4;
+}
+
+.menu-item-image {
+  @apply flex w-full items-center
+  justify-center overflow-hidden
+  rounded-xl border border-border
+  bg-background p-3
+  dark:border-slate-700
+  dark:bg-slate-800;
+}
+
+.menu-item-image img {
+  @apply max-h-96 w-full rounded-lg
+  object-contain;
+}
+
+/* =================================
+   MENU ITEM EMPTY IMAGE
+================================= */
+
+.menu-item-no-image {
+  @apply flex min-h-64 w-full
+  items-center justify-center
+  rounded-xl border border-dashed
+  border-border bg-background
+  text-sm font-medium
+  text-text-secondary
+  dark:border-slate-700
+  dark:bg-slate-800
+  dark:text-slate-400;
+}
+
+/* =================================
+   MENU ITEMS TOOLBAR
+================================= */
+
+.menu-items-toolbar {
+  @apply flex w-full flex-col items-start
+  justify-between gap-3
+  sm:flex-row sm:items-center;
+}
+
+.menu-items-toolbar .search-bar {
+  @apply w-full sm:max-w-md;
+}
+
+/* =================================
+   MENU ITEMS TABLE
+================================= */
+
+.menu-items-table-container {
+  @apply w-full min-w-0 overflow-hidden
+  rounded-xl border border-border
+  bg-surface shadow-sm
+  dark:border-slate-700 dark:bg-slate-900;
+}
+
+.menu-items-table-scroll {
+  @apply w-full overflow-x-auto;
+}
+
+.menu-items-table {
+  @apply w-full min-w-[850px] border-collapse
+  text-left text-sm;
+}
+
+.menu-items-table thead {
+  @apply bg-background dark:bg-slate-800;
+}
+
+.menu-items-table th {
+  @apply whitespace-nowrap px-4 py-4
+  text-xs font-semibold uppercase
+  tracking-wide text-text-secondary
+  dark:text-slate-400;
+}
+
+.menu-items-table td {
+  @apply whitespace-nowrap border-t
+  border-border px-4 py-3
+  text-sm text-text-primary
+  dark:border-slate-700 dark:text-slate-200;
+}
+
+.menu-items-table tbody tr {
+  @apply transition-colors
+  hover:bg-background
+  dark:hover:bg-slate-800/60;
+}
+
+.menu-items-table td strong {
+  @apply font-semibold text-text-primary
+  dark:text-white;
+}
+
+/* =================================
+   MENU ITEM TABLE IMAGE
+================================= */
+
+.menu-items-table-image {
+  @apply h-12 w-12 rounded-full
+  border border-border object-cover
+  dark:border-slate-700;
+}
+
+.table-image-empty {
+  @apply text-xs text-text-secondary
+  dark:text-slate-400;
+}
+
+/* =================================
+   MENU ITEM STATUS
+================================= */
+
+.menu-item-status {
+  @apply inline-flex rounded-full
+  px-2.5 py-1 text-xs font-semibold;
+}
+
+.menu-item-status-active {
+  @apply bg-success/10 text-success;
+}
+
+.menu-item-status-inactive {
+  @apply bg-slate-100 text-slate-500
+  dark:bg-slate-800 dark:text-slate-400;
+}
+
+/* =================================
+   MENU ITEM TABLE ACTIONS
+================================= */
+
+.menu-item-table-actions {
+  @apply flex items-center gap-2;
+}
+
+.menu-item-icon-button {
+  @apply inline-flex h-9 w-9
+  items-center justify-center
+  rounded-lg border border-border
+  bg-surface text-text-secondary
+  transition-colors hover:bg-background
+  hover:text-primary
+  dark:border-slate-700 dark:bg-slate-800
+  dark:text-slate-300 dark:hover:bg-slate-700;
+}
+
+.menu-item-delete-button {
+  @apply text-danger hover:bg-danger/10
+  hover:text-danger
+  dark:text-red-400 dark:hover:bg-red-500/10;
+}
+
+.menu-item-view-link {
+  @apply inline-flex h-8 w-8
+  items-center justify-center
+  rounded-lg bg-primary/10
+  text-primary transition-colors
+  hover:bg-primary/20
+  dark:bg-indigo-500/15
+  dark:text-indigo-400;
+}
+/* =================================
+   WIZARD SECTION
+================================= */
+
+.wizard-section {
+  @apply flex w-full flex-col gap-5;
+}
+
+.wizard-heading {
+  @apply flex flex-col gap-1;
+}
+
+.wizard-actions {
+  @apply mt-6 flex-wrap;
+}
+
+/* =================================
+   LOCATION ACTIONS
+================================= */
+
+.location-actions {
+  @apply items-stretch;
+}
+
+.location-map-container {
+  @apply mt-5 w-full overflow-hidden
+  rounded-xl border border-border
+  bg-surface shadow-sm
+  dark:border-slate-700 dark:bg-slate-900;
+}
+
+@media (max-width: 640px) {
+  .location-actions {
+    @apply flex-col;
+  }
+
+  .location-actions button {
+    @apply w-full;
+  }
+}
+/* =================================
+   OUTLET DETAILS ACTIONS
+================================= */
+
+.outlet-details-actions {
+  @apply flex w-full flex-wrap
+  items-center gap-2
+  sm:w-auto;
+}
+
+/* =================================
+   OUTLET DETAILS GRID
+================================= */
+
+.outlet-details-grid {
+  @apply grid w-full grid-cols-1
+  gap-5 lg:grid-cols-2;
+}
+
+/* =================================
+   OUTLET SUMMARY
+================================= */
+
+.outlet-summary-card {
+  @apply flex flex-col gap-4;
+}
+
+.outlet-summary-count {
+  @apply flex flex-col gap-1
+  rounded-xl bg-background p-5
+  dark:bg-slate-800;
+}
+
+.outlet-summary-count p {
+  @apply text-sm font-medium
+  text-text-secondary
+  dark:text-slate-400;
+}
+
+.outlet-summary-count h2 {
+  @apply text-3xl font-bold
+  text-primary dark:text-indigo-400;
+}
+/* =================================
+   OUTLET FORM ACTIONS
+================================= */
+
+.outlet-form-actions {
+  @apply mt-6;
+}
+
+/* =================================
+   WIZARD SECTION
+================================= */
+
+.wizard-section {
+  @apply flex w-full flex-col gap-5;
+}
+
+.wizard-heading {
+  @apply flex flex-col gap-1;
+}
+
+.wizard-actions {
+  @apply mt-6 flex-wrap;
+}
+/* =========================
+   MODAL
+========================= */
+
+.modal-backdrop {
+  @apply fixed inset-0 z-50 flex items-center justify-center
+  bg-black/50 p-4;
+}
+
+.modal-container {
+  @apply w-full max-w-lg rounded-2xl border border-border
+  bg-surface p-5 shadow-xl
+  dark:border-slate-700 dark:bg-slate-900;
+}
+
+.modal-header {
+  @apply mb-5 flex items-center justify-between gap-4
+  border-b border-border pb-4
+  dark:border-slate-700;
+}
+
+.modal-close-button {
+  @apply flex h-9 w-9 items-center justify-center
+  rounded-lg text-text-secondary transition
+  hover:bg-slate-100 hover:text-text-primary
+  dark:hover:bg-slate-800 dark:hover:text-white;
+}
+
+/* =========================
+   CONFIRM DIALOG
+========================= */
+
+.confirm-dialog {
+  @apply flex flex-col gap-5;
+}
+
+/* =========================
+   LOCATION PICKER
+========================= */
+
+.location-picker {
+  @apply flex w-full flex-col gap-5;
+}
+
+.location-picker-actions {
+  @apply flex flex-wrap justify-end;
+}
+
+.location-map-container {
+  @apply h-[500px] w-full overflow-hidden rounded-xl;
 }

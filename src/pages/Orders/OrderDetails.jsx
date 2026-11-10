@@ -8,6 +8,7 @@ import { getErrorMessage } from "../../utils/api";
 import Loader from "../../components/Common/Loader";
 import OrderCard from './../../components/Cards/OrderCard';
 import OrderStatus from "../../components/OrderStatus/OrderStatus";
+import { ArrowLeft } from "lucide-react";
 
 const OrderDetails = () => {
     const { orderId } = useParams();
@@ -69,123 +70,121 @@ const OrderDetails = () => {
 
 
     return (
-        <div className="page">
-            {/* Header */}
-            <div>
-                <button
-                    onClick={() => navigate(-1)}
-                    className="mb-5 text-sm text-indigo-600 hover:text-indigo-700"
-                >
-                    ← Back to Orders
-                </button>
-            </div>
-            {error && <div className="error">{error}</div>}
-            <div className="order-details">
-                <div className="panel mobile-only">
-                    <OrderStatus status={order.orderStatus} order={order} updateStatus ={handleStatusUpdate} statusUpdating={statusUpdating}/>
-                </div>
-                <div className="panel md:w-[28%]">
-                    <OrderCard order={order} single/>
-                </div>
-                <div className="panel flex-1">
-                    <div className="order-items-card">
-                        <h2>
-                            Items
-                        </h2>
-                        <div className="order-items">
-                            {order.items.map((item) => (
-                                <div
-                                    key={item._id}
-                                    className="order-item"
-                                >
-                                    <div className="flex-1">
-                                        <p className="font-medium">
-                                            {item.name}
-                                        </p>
-                                        <p className="text-sm  mt-1">
-                                            ₹{item.price} × {item.quantity}
-                                        </p>
-                                    </div>
-                                    <p className="font-semibold ">
-                                        ₹{item.price * item.quantity}
-                                    </p>
+    <div className="page-container">
+        <div>
+        <button
+            onClick={() => navigate(-1)}
+            className="secondary-button"
+        >
+            <ArrowLeft size={16} />
+            Back to Orders
+        </button>
+        </div>
 
-                                </div>
-                            ))}
+        {error && <div className="message-error">{error}</div>}
 
-                        </div>
+        <div className="order-details-grid">
+        {/* Mobile Order Status */}
+        <div className="details-container order-status-mobile">
+            <OrderStatus
+            status={order.orderStatus}
+            updateStatus={handleStatusUpdate}
+            statusUpdating={statusUpdating}
+            />
+        </div>
 
-                    </div>
+        {/* Order Information */}
+        <div className="details-container order-information">
+            <OrderCard order={order} single />
+        </div>
+
+        {/* Order Items */}
+        <div className="details-container order-items-container">
+            <h2 className="section-title">Items</h2>
+
+            <div className="order-items-list">
+            {order.items.map((item) => (
+                <div key={item._id} className="order-item-row">
+                <div className="order-item-info">
+                    <p>{item.name}</p>
+                    <span>
+                    ₹{item.price} × {item.quantity}
+                    </span>
                 </div>
 
-                <div className="panel">
-                    <div className="payment-summary">
-                        <h2>
-                            Payment Summary
-                        </h2>
-                        <div className="space-y-3 text-sm">
-                            <div className="subtotal">
-                                <span>
-                                    Subtotal
-                                </span>
-                                <span>
-                                    ₹{order.subTotal}
-                                </span>
-                            </div>
-                            <div className="delivery-fee">
-                                <span>
-                                    Delivery Fee
-                                </span>
-                                <span>
-                                    ₹{order.deliveryFee}
-                                </span>
-                            </div>
-                            <div className="discount">
-                                <span>
-                                    Discount
-                                </span>
-                                <span className="text-green-600">
-                                    - ₹{order.discount}
-                                </span>
-                            </div>
-                            <div className="total">
-                                <span>
-                                    Total
-                                </span>
-                                <span>
-                                    ₹{order.totalAmount}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    {/* Payment */}
-                    <div className="payment">
-                        <h2>
-                            Payment
-                        </h2>
-                        <div className="payment-method">
-                            <span>
-                                Method
-                            </span>
-                            <span>
-                                {order.paymentMethod}
-                            </span>
-                        </div>
-                        <div className="payment-status">
-                            <span>
-                                Status
-                            </span>
-                            <span className="font-medium text-green-600">
-                                {order.paymentStatus}
-                            </span>
-                        </div>
-                    </div>
+                <p className="order-item-price">
+                    ₹{item.price * item.quantity}
+                </p>
                 </div>
-            </div>
-            <div className="panel md-only mt-5">
-                <OrderStatus status={order.orderStatus} order={order} updateStatus ={handleStatusUpdate} statusUpdating={statusUpdating}/>
+            ))}
             </div>
         </div>
+
+        {/* Payment Summary */}
+        <div className="details-container">
+            <div className="payment-summary">
+            <h2 className="section-title">Payment Summary</h2>
+
+            <div className="payment-summary-list">
+                <div className="payment-row">
+                <span>Subtotal</span>
+                <span>₹{order.subTotal}</span>
+                </div>
+
+                <div className="payment-row">
+                <span>Delivery Fee</span>
+                <span>₹{order.deliveryFee}</span>
+                </div>
+
+                <div className="payment-row">
+                <span>Discount</span>
+                <span className="text-success">
+                    - ₹{order.discount}
+                </span>
+                </div>
+
+                <div className="payment-total">
+                <span>Total</span>
+                <strong>₹{order.totalAmount}</strong>
+                </div>
+            </div>
+            </div>
+
+            <div className="payment-information">
+            <h2 className="section-title">Payment</h2>
+
+            <div className="payment-row">
+                <span>Method</span>
+                <strong>{order.paymentMethod}</strong>
+            </div>
+
+            <div className="payment-row">
+                <span>Status</span>
+                <strong
+                className={
+                    order.paymentStatus === "paid"
+                    ? "text-success"
+                    : "text-danger"
+                }
+                >
+                {order.paymentStatus}
+                </strong>
+            </div>
+            </div>
+        </div>
+        </div>
+
+        {/* Desktop Order Status */}
+        <div className="details-container order-status-desktop">
+        <h2 className="section-title">Update Order Status</h2>
+
+        <OrderStatus
+            status={order.orderStatus}
+            updateStatus={handleStatusUpdate}
+            statusUpdating={statusUpdating}
+        />
+        </div>
+    </div>
     );
 };
 

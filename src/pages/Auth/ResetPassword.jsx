@@ -42,37 +42,50 @@ const ResetPassword = () => {
 
     }
   return (
-    <div className="auth-page">
-        <div className="auth-card">
-            <div className="auth-brand">
-                <div className="brand-mark">VM</div>
-                <h1>Reset Password</h1>
-            </div>
-            {error && <div className="alert error">{error}</div>}
-            {msg && <div className="alert success">{msg}</div>}
-            <form className="form" onSubmit={handleSubmit}>
-                <label>
-                    New Password 
-                    <input 
-                    type="password" 
-                    placeholder="New Password"
-                    value={password}
-                    onChange={(e)=>setPassword(e.target.value)}
-                    />
-                </label>
-                <label>
-                    Confirm Password 
-                    <input 
-                    type="password" 
-                    placeholder="Confirm Password"
-                    value={confirmPassword}
-                    onChange={(e)=>setConfirmPassword(e.target.value)}
-                    />
-                </label>
-                <button className="button primary full" type="submit" disabled={loading}>
-                    {loading? "Updating":"Update Password"}
-                </button>
-            </form>
+    <div className="auth-container">
+        <div className="auth-panel">
+        <header className="auth-heading">
+            <div className="auth-logo">VM</div>
+            <h1 className="auth-title">Reset Password</h1>
+            <p className="auth-description">
+            Create a new password for your account.
+            </p>
+        </header>
+
+        {error && <div className="message-error">{error}</div>}
+        {msg && <div className="message-success">{msg}</div>}
+
+        <form className="form-container" onSubmit={handleSubmit}>
+            <label className="form-field">
+            New Password
+            <input
+                className="form-input"
+                type="password"
+                placeholder="New Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+            />
+            </label>
+
+            <label className="form-field">
+            Confirm Password
+            <input
+                className="form-input"
+                type="password"
+                placeholder="Confirm Password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+            </label>
+
+            <button
+            className="primary-button full-width"
+            type="submit"
+            disabled={loading}
+            >
+            {loading ? "Updating..." : "Update Password"}
+            </button>
+        </form>
         </div>
     </div>
   )

@@ -51,79 +51,109 @@ export default function Register(){
   }
 
   return(
-    <div className="auth-page">
-      <div className="auth-card wide">
-        <div className="auth-brand">
-          <div className="brand-mark">VM</div>
-          <h1>Create Vendor account</h1>
-          <p>start by registering your vendor profile.</p>
-        </div>
-        {error && <div className='alert error'>{error}</div>}
-        <form className='form grid-2' onSubmit={submit}>
-            <label>
-              Full name
-              <input type="text"
-                name='name'
-                required
-                value={form.name}
-                onChange={change}
-              />
-            </label>
-            <label >
-              BusinessName 
-              <input type="text"
-              name='businessName'
-              value={form.businessName}
-              onChange={change}
-
-              />
-            </label>
-            <label >
-              Email
-              <input type="email"
-              name='email'
-              required
-              value={form.email}
-              onChange={change}
-              />
-            </label>
-            <label >
-              Phone
-              <input type="tel"
-              name='phone'
-              required
-              value={form.phone}
-              onChange={change}
-              />
-            </label>
-            <label >
-              Password
-              <input type="password"
-              name='password'
-              required
-              minLength="6"
-              value={form.password}
-              onChange={change}
-              />
-            </label>
-            <label>
-              Status 
-              <select name="status"
-              value={form.status}
-              onChange={change}
-              >
-                <option>active</option>
-                <option>inactive</option>
-                <option>suspended</option>
-              </select>
-            </label>
-            <button className="button primary full grid-span-2" disabled = {busy}><UserPlus size ={18}/>{ busy ? "Creating... " : "Create Account"}</button>
-        </form>
-        <p className="auth-footer">
-          Already registered? <Link to="/login">Login</Link>
+ <div className="auth-container">
+    <div className="auth-panel">
+      <header className="auth-heading">
+        <div className="auth-logo">VM</div>
+        <h1 className="auth-title">Create Vendor Account</h1>
+        <p className="auth-description">
+          Start by registering your vendor profile.
         </p>
-      </div>
+      </header>
+
+      {error && (
+        <div className="message-error">{error}</div>
+      )}
+
+      <form className="form-grid" onSubmit={submit}>
+        <label className="form-field">
+          Full Name
+          <input
+            className="form-input"
+            type="text"
+            name="name"
+            required
+            value={form.name}
+            onChange={change}
+          />
+        </label>
+
+        <label className="form-field">
+          Business Name
+          <input
+            className="form-input"
+            type="text"
+            name="businessName"
+            value={form.businessName}
+            onChange={change}
+          />
+        </label>
+
+        <label className="form-field">
+          Email
+          <input
+            className="form-input"
+            type="email"
+            name="email"
+            required
+            value={form.email}
+            onChange={change}
+          />
+        </label>
+
+        <label className="form-field">
+          Phone
+          <input
+            className="form-input"
+            type="tel"
+            name="phone"
+            required
+            value={form.phone}
+            onChange={change}
+          />
+        </label>
+
+        <label className="form-field">
+          Password
+          <input
+            className="form-input"
+            type="password"
+            name="password"
+            required
+            minLength="6"
+            value={form.password}
+            onChange={change}
+          />
+        </label>
+
+        <label className="form-field">
+          Status
+          <select
+            className="form-select"
+            name="status"
+            value={form.status}
+            onChange={change}
+          >
+            <option>active</option>
+            <option>inactive</option>
+            <option>suspended</option>
+          </select>
+        </label>
+
+        <button
+          className="primary-button form-full-width"
+          disabled={busy}
+        >
+          <UserPlus size={18} />
+          {busy ? "Creating..." : "Create Account"}
+        </button>
+      </form>
+
+      <p className="auth-footer">
+        Already registered? <Link to="/login">Login</Link>
+      </p>
     </div>
+  </div>
   )
 
 }

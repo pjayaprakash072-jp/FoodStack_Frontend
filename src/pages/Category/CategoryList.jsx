@@ -78,56 +78,83 @@ const CategoryLIst = () => {
 
     const addCategoryUrl = selectedOutletId ? `/category/new?outlet=${selectedOutletId}`:"/category/new"
   return (
-    <div className="page">
-    <div className="page-heading">
+    <div className="page-container">
+        {/* Header */}
+        <div className="content-header">
         <div>
-            <p className="eyebrow">{ selectedOutletId ? "Outlet":"Categories"}</p>
-            <h1>{ selectedOutletId? `${selectedOutlet?.name || "Outlet" } Categories`:"Categories"}</h1>
-            <p>{selectedOutletId ? `Manage categories for ${selectedOutlet?.name}`:"Create and manage every category of your menu"}</p>
+            <p className="content-eyebrow">
+            {selectedOutletId ? "Outlet" : "Categories"}
+            </p>
 
+            <h1 className="content-title">
+            {selectedOutletId
+                ? `${selectedOutlet?.name || "Outlet"} Categories`
+                : "Categories"}
+            </h1>
+
+            <p className="content-description">
+            {selectedOutletId
+                ? `Manage categories for ${selectedOutlet?.name || "this outlet"}`
+                : "Create and manage every category of your menu"}
+            </p>
         </div>
-        <div className="button-row">
-            {
-                outletFilter && !isManagerAuthenticated &&(
-                    <Link className="button secondary" to="/categories"> <ArrowLeft size = {18}/> All Categories</Link>
+
+        <div className="category-actions">
+            {outletFilter && !isManagerAuthenticated && (
+            <Link className="secondary-button" to="/categories">
+                <ArrowLeft size={18} />
+                All Categories
+            </Link>
+            )}
+
+            <Link className="primary-button" to={addCategoryUrl}>
+            <Plus size={19} />
+            Add Category
+            </Link>
+        </div>
+        </div>
+
+        {/* Search */}
+        <div className="content-body">
+        <div className="category-toolbar">
+            <SearchBar
+            value={q}
+            onChange={setQ}
+            placeholder="Search Categories by name or description..."
+            />
+        </div>
+
+        {busy ? (
+            <Loader />
+        ) : filtered.length ? (
+            <div className="category-grid">
+            {filtered.map((c) => (
+                <CategoryCard key={c._id} menuCategory={c} />
+            ))}
+            </div>
+        ) : (
+            <EmptyState
+            title={
+                selectedOutletId
+                ? `No categories for ${selectedOutlet?.name}`
+                : "No categories found"
+            }
+            text={q ? "Try a different search" : "Create your first category"}
+            action={
+                isAuthenticated && outlets.length === 0 ? (
+                <Link className="primary-button" to="/outlets/new">
+                    Create Outlet First
+                </Link>
+                ) : (
+                <Link className="primary-button" to={addCategoryUrl}>
+                    Add Category
+                </Link>
                 )
             }
-            <Link className="button primary" to={addCategoryUrl}><Plus size={19}/>Add Category</Link>
+            />
+        )}
         </div>
     </div>
-    <div className="toolbar">
-        <SearchBar 
-        value={q}
-        onChange={setQ}
-        placeholder="Search Categories by name or description..."
-        />
-    </div>
-    {
-        busy?(
-            <Loader/>
-
-        ):filtered.length?(
-            <div className="card-grid">
-                {
-                    filtered.map((c)=>(
-                        <CategoryCard key={c._id} menuCategory={c}/>
-                    ))
-                }
-            </div>
-            ):(
-                <EmptyState
-                title={selectedOutletId? `No categories for ${selectedOutlet?.name}` :"No categories found"}
-                text={q ? "Try a different search" : "Create your first category"}
-                action={
-                    isAuthenticated && outlets.length === 0?(
-                    <Link className="button primary" to = "/outlets/new" >Create Outlet First</Link>):(
-
-                <Link className="button primary" to={addCategoryUrl}>Add Category</Link>)
-            }
-                />
-            )
-    }
-     </div>
   )
 }
 

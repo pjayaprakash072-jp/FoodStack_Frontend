@@ -132,88 +132,123 @@ const CategoryForm = () => {
     }
     if(loading) return <Loader/>; 
   return (
-    <div className="page">
-        <div className="page-heading">
-            <div>
-                <p className="eyebrow">Category</p>
-                <h1>{id?"Edit category" : "Create Category"}</h1>
-            </div>
+    <div className="page-container">
+        <header className="content-header">
+        <div>
+            <p className="content-eyebrow">Menu Management</p>
+            <h1 className="content-title">
+            {id ? "Edit Category" : "Create Category"}
+            </h1>
+            <p className="content-description">
+            Manage your menu categories and their details.
+            </p>
         </div>
-        {error && <div className="alert error" >{error}</div>}
-        <form className="panel form grid-2" onSubmit={submit}>
-            <label>
-                Name
-                <input 
+        </header>
+
+        <div className="content-body">
+        {error && <div className="message-error">{error}</div>}
+
+        <form className="form-container form-grid" onSubmit={submit}>
+            <label className="form-field">
+            Name
+            <input
+                className="form-input"
                 type="text"
                 name="name"
                 required
                 value={form.name}
                 onChange={change}
-                />
+            />
             </label>
-            {
-                isVendor && 
-                    <label>
-                        Outlet
-                        <select
-                        required
-                        name="outlet"
-                        value={form.outlet}
-                        disabled = {Boolean(id) || Boolean(params.get('outlet'))}
-                        onChange={change}
-                        >
-                    <option value="">Select outet</option>
-                    {
-                        outlets.map((o)=>(
-                            <option key={o._id} value={o._id}>{o.name}</option>
-                        ))
-                    }
-                    </select>
-                    </label>
-            }
-            <label className="grid-span-2">
-                Description
-                <input type="text"
+
+            {isVendor && (
+            <label className="form-field">
+                Outlet
+                <select
+                className="form-select"
+                required
+                name="outlet"
+                value={form.outlet}
+                disabled={Boolean(id) || Boolean(params.get("outlet"))}
+                onChange={change}
+                >
+                <option value="">Select Outlet</option>
+                {outlets.map((o) => (
+                    <option key={o._id} value={o._id}>
+                    {o.name}
+                    </option>
+                ))}
+                </select>
+            </label>
+            )}
+
+            <label className="form-field form-full-width">
+            Description
+            <input
+                className="form-input"
+                type="text"
                 name="description"
-                
                 value={form.description}
                 onChange={change}
-                />
+            />
             </label>
-            <label>
-                Display Order 
-                <input 
+
+            <label className="form-field">
+            Display Order
+            <input
+                className="form-input"
                 type="number"
-                name = "displayOrder"
+                name="displayOrder"
                 required
                 min={0}
                 value={form.displayOrder}
                 onChange={change}
-                />
+            />
             </label>
-            <label className="check">
-                
-                <input 
+
+            <label className="form-checkbox">
+            <input
                 type="checkbox"
                 name="isActive"
                 checked={form.isActive}
                 onChange={change}
-                />{" "} Active
+            />
+            Active
             </label>
-            <label className="grid-span-2">
-                Category Image
-                <input
+
+            <label className="form-field form-full-width">
+            Category Image
+            <input
+                className="form-input"
                 type="file"
                 name="image"
                 accept="image/*"
                 onChange={change}
-                />
+            />
             </label>
-            <div className="grid-span-2 form-actions">
-                <button className="button secondary" type="button" onClick={()=>nav("/categories")}> Cancel</button>
-                <button className="button primary" disabled={busy}>{ busy? "Saving..." : id? "Update category":"create Category"}</button>
+
+            <div className="form-actions form-full-width">
+            <button
+                className="secondary-button"
+                type="button"
+                onClick={() => nav("/categories")}
+            >
+                Cancel
+            </button>
+
+            <button
+                className="primary-button"
+                disabled={busy}
+            >
+                {busy
+                ? "Saving..."
+                : id
+                    ? "Update Category"
+                    : "Create Category"}
+            </button>
             </div>
         </form>
+        </div>
     </div>
   )
 }

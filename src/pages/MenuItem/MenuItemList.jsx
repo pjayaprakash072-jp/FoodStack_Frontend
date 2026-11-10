@@ -85,127 +85,176 @@ const MenuItemList = () => {
 
     const addMenuItemUrl = categoryFilter? `/menu-item/new?category=${categoryFilter}` : "/menu-item/new"
   return (
-    <div className="page">
-        <div className="page-heading">
-            <div>
-                <p className="eyebrow">Products</p>
-                <h1>{categoryFilter? `${selectedCategory?.name || "Category"} Menu Items`:"Menu Items"}</h1>
-                <p>{
-                    categoryFilter? `Manage menu items  for ${selectedCategory?.name || "This Category"} `: "Manage Pricing, Stock, availability and preparation time"}
-                </p>
-            </div>
-            <div className="button-row">
-                {
-                    categoryFilter && (
-                        <Link className="button secondary"  to={ isManagerAuthenticated ? `/menu-items?outlet=${manager?.outlet?._id}`:"/menu-items"}><ArrowLeft size={19}/> All menu items</Link>
-                    )
+    <div className="page-container">
+        <div className="content-header">
+        <div>
+            <p className="content-eyebrow">Products</p>
+
+            <h1 className="content-title">
+            {categoryFilter
+                ? `${selectedCategory?.name || "Category"} Menu Items`
+                : "Menu Items"}
+            </h1>
+
+            <p className="content-description">
+            {categoryFilter
+                ? `Manage menu items for ${selectedCategory?.name || "This Category"}`
+                : "Manage pricing, stock, availability and preparation time"}
+            </p>
+        </div>
+
+        <div className="menu-item-actions">
+            {categoryFilter && (
+            <Link
+                className="secondary-button"
+                to={
+                isManagerAuthenticated
+                    ? `/menu-items?outlet=${manager?.outlet?._id}`
+                    : "/menu-items"
                 }
-                <Link className="button primary"  to ={addMenuItemUrl}><Plus size={18}/> Add Menu Item </Link>
+            >
+                <ArrowLeft size={19} />
+                All Menu Items
+            </Link>
+            )}
+
+            <Link className="primary-button" to={addMenuItemUrl}>
+            <Plus size={18} />
+            Add Menu Item
+            </Link>
+        </div>
+        </div>
+
+        {error && <div className="message-error">{error}</div>}
+
+        <div className="menu-items-toolbar">
+        <SearchBar
+            value={search}
+            onChange={setSearch}
+            placeholder="Search Menu Items by name..."
+        />
+
+        <span className="outlet-count">
+            {filtered.length} Menu Items
+        </span>
+        </div>
+
+        {busy ? (
+        <Loader />
+        ) : filtered.length ? (
+        <div className="menu-items-table-container">
+            <div className="menu-items-table-scroll">
+            <table className="menu-items-table">
+                <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Image</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Food</th>
+                    <th>Status</th>
+                    <th>Details</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {filtered.map((item) => (
+                    <tr key={item._id}>
+                    <td>
+                        <strong>{item.name}</strong>
+                    </td>
+
+                    <td>
+                        {item.image?.url ? (
+                        <img
+                            className="menu-items-table-image"
+                            src={item.image.url}
+                            alt={item.name}
+                        />
+                        ) : (
+                        <span className="table-image-empty">No Image</span>
+                        )}
+                    </td>
+
+                    <td>
+                        ₹{Number(item.price || 0).toFixed(2)}
+                    </td>
+
+                    <td>{item.stock}</td>
+
+                    <td className="capitalize">{item.foodType}</td>
+
+                    <td>
+                        <span
+                        className={`menu-item-status ${
+                            item.status === "Inactive"
+                            ? "menu-item-status-inactive"
+                            : "menu-item-status-active"
+                        }`}
+                        >
+                        {item.status}
+                        </span>
+                    </td>
+
+                    <td>
+                        <Link
+                        className="menu-item-view-link"
+                        to={`/menu-item/${item._id}`}
+                        >
+                        <ArrowRight size={16} />
+                        </Link>
+                    </td>
+
+                    <td>
+                        <div className="menu-item-table-actions">
+                        <Link
+                            className="menu-item-icon-button"
+                            to={`/menu-item/${item._id}/edit`}
+                            aria-label={`Edit ${item.name}`}
+                        >
+                            <Pencil size={18} />
+                        </Link>
+
+                        <button
+                            className="menu-item-icon-button menu-item-delete-button"
+                            onClick={() => setDel(item._id)}
+                            aria-label={`Delete ${item.name}`}
+                        >
+                            <Trash2 size={18} />
+                        </button>
+                        </div>
+                    </td>
+                    </tr>
+                ))}
+                </tbody>
+            </table>
             </div>
-                {/* <Link 
-                    className="button primary"
-                    to={
-                        categoryFilter? `/menu-item/new?category=${categoryFilter}` : "/menu-item/new"
-                    } 
-                    >
-                    <Plus size={18}/> Add Menu Item
-                </Link> */}
-            </div>
-            {error && <div className="error">{error}</div>}
-            <div className="toolbar">
-                <SearchBar
-                value={search}
-                onChange={setSearch}
-                placeholder="Search Menu Items by name ...."
-                />
-                
-            </div>
-            {
-                busy? (
-                    <Loader/>
-                ):filtered.length ?(
-                    <div className="panel table-wrap">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Item</th>
-                                    <th>Image</th>
-                                    <th>Price</th>
-                                    <th>Stock</th>
-                                    <th>Food</th>
-                                    <th>Status</th>
-                                    <th>Details</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {
-                                    filtered.map((item)=>(
-                                        <tr key={item._id}>
-                                            <td>
-                                                <b>{item.name}</b>
-                                            </td>
-                                            <td>
-                                                {
-                                                    item.image?.url ? (
-                                                        <img src={item.image.url} alt={item.name} style={{width :"50px", height:"50px",objectFit:"cover",border:"8px",borderRadius:"50%"}} />
-                                                    ):(
-                                                        <span>No Image</span>
-                                                    )
-                                                }
-                                            </td>
-                                            <td>
-                                                ₹{Number(item.price || 0 ).toFixed(2)}
-                                            </td>
-                                            <td>
-                                                {item.stock}
-                                            </td>
-                                            <td>
-                                                {item.foodType}
-                                            </td>
-                                            <td>
-                                                <span className={`badge ${item.status === "Inactive" ? "gray" : ""}`}>{item.status}</span>
-                                            </td>
-                                            <td>
-                                                <Link className="view-arrow" to={`/menu-item/${item._id}`}><ArrowRight size={16}/></Link>
-                                            </td>
-                                            <td>
-                                                <div className="button-row">
-                                                    <Link className="icon-button" to= {`/menu-item/${item._id}/edit`}><Pencil size={18}/></Link>
-                                                    <button className="icon-button danger-icon" onClick={()=>setDel(item._id)}> <Trash2 size={18}/></button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))
-                                }
-                            </tbody>
-                        </table>
-                        {
-                            !filtered.length && (
-                                <div className="table-empty">
-                                    No Menu Items Found
-                                </div>
-                            )
-                        }
-                    </div>
-                ):(
-                    <EmptyState
-                    title={
-                        categoryFilter?
-                        `No menu items for ${selectedCategory.name ||"this category"}` :"No menu tems found"
-                    }
-                    text={
-                        search ? "try differnct search" : "Create your first menu item"
-                    }
-                    action={
-                        <Link className="button primary" to={addMenuItemUrl}><Plus size={19}/> Add menu Item</Link>
-                    }
-                    />
-                )
+        </div>
+        ) : (
+        <EmptyState
+            title={
+            categoryFilter
+                ? `No menu items for ${selectedCategory?.name || "this category"}`
+                : "No menu items found"
             }
+            text={
+            search
+                ? "Try a different search"
+                : "Create your first menu item"
+            }
+            action={
+            <Link className="primary-button" to={addMenuItemUrl}>
+                <Plus size={19} />
+                Add Menu Item
+            </Link>
+            }
+        />
+        )}
+
         <ConfirmDialog
-        open = {del}
-        onCancel={()=>setDel(null)}
+        open={del}
+        onCancel={() => setDel(null)}
         onConfirm={remove}
         />
     </div>

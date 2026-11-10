@@ -9,6 +9,7 @@ import OrderCard from "../../components/Cards/OrderCard";
 import { useNavigate } from "react-router-dom";
 import { socket } from "../../services/socket";
 import { toast } from "sonner";
+import EmptyState from "../../components/Common/EmptyState";
 
 
 const Orders = () => {
@@ -77,41 +78,50 @@ const Orders = () => {
     )
     const filtered = orders.filter( (o)=> `${o.deliveryAddress}`.toLowerCase().includes(search.toLowerCase()))
   return (
-    <div className="page">
-      <div className="page-heading">
-        <div>
-          <p className="eyebrow">Orders</p>
-          <h1>Orders</h1>
-          <p>Receive and manager every order</p>
-        </div>
-        <div className="toolbar">
-          <SearchBar
+  <div className="page-container">
+    <div className="content-header">
+      <div>
+        <p className="content-eyebrow">Management</p>
+        <h1 className="content-title">Orders</h1>
+        <p className="content-description">
+          Receive and manage every order
+        </p>
+      </div>
+
+      <div className="orders-toolbar">
+        <SearchBar
           value={search}
           onChange={setSearch}
           placeholder="Search Orders"
-          />
-        </div>
-        <h2>{orders.length}</h2>
+        />
+
+        <span className="outlet-count">
+          {orders.length} Orders
+        </span>
       </div>
-      {
-        busy?(
-          <Loader/>
-        ): filtered.length?(
-          <div className="order-grid">
-            {
-              filtered.map(
-                (o)=>(
-                  <OrderCard key={o._id} 
-                  order = {o}
-                  onClick={()=>navigate(`/manager/orders/${o._id}`)}
-                  />
-                )
-              )
-            }
-          </div>
-        ):(<h1>No orders Found</h1>)
-      }
     </div>
+
+    <div className="content-body">
+      {busy ? (
+        <Loader />
+      ) : filtered.length ? (
+        <div className="order-grid">
+          {filtered.map((o) => (
+            <OrderCard
+              key={o._id}
+              order={o}
+              onClick={() => navigate(`/manager/orders/${o._id}`)}
+            />
+          ))}
+        </div>
+      ) : (
+        <EmptyState
+          title="No orders found"
+          text={search ? "Try a different search" : "There are no orders yet."}
+        />
+      )}
+    </div>
+  </div>
   )
 }
 

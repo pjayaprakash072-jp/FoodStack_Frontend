@@ -17,7 +17,7 @@ const intial = {
     cuisine:"",
     foodType:"both",
     openingTime:"09:00",
-    closingTime:"06:00",
+    closingTime:"18:00",
     isOpen:true,
     status:"active",
     image:null
@@ -99,18 +99,30 @@ const CreateOutlet = () => {
 
     useEffect(
         ()=>{
-            (async ()=>{
-                try{
-                    if(id){
-                        const o = await outletService.getOne(id);
-                        setForm({...form,...o.outlet,cuisine:o.outlet.cuisine.join(","),image: null,outletName:o.outlet.name})
-                    }
-                }catch(error){
-                    setError(getErrorMessage(error))
-                }finally{
-                    setLoading(false)
+            const fetchOutlet = async()=>{
+            try {
+                if(id){
+                    const response = await outletService.getOne(id);
+                    const outlet = response.outlet;
+                    setForm(
+                        (prev)=>(
+                            {
+                                ...prev,
+                                ...outlet,
+                                cuisine:(outlet.cuisine || []).join(", "),
+                                image:null,
+                                outletName: outlet.name
+                            }
+                        )
+                    )
                 }
-            })();
+            } catch (error) {
+                setError(getErrorMessage(error));
+            }finally{
+                setLoading(false);
+            }
+        }
+        fetchOutlet();
         },[id]
     )
 
@@ -187,6 +199,11 @@ const CreateOutlet = () => {
         setShowLocationForm(false);
         setShowManagerForm(false);
     }
+    const managerBack = () => {
+    setShowForm(false);
+    setShowLocationForm(true);
+    setShowManagerForm(false);
+    };
     const sendData = async (e)=>{
         e.preventDefault();
         setBusy(true);
@@ -197,7 +214,7 @@ const CreateOutlet = () => {
             //         cuisine:form.cuisine.split(",").map((x)=>x.trim()).filter(Boolean)
             //     } // this is way of sending json data.
             // for images we have to send in formData.
-            const city = [locationForm.city, locationForm.state].filter(Boolean).join("");
+            const city = [locationForm.city, locationForm.state].filter(Boolean).join(", ");
             const payload = new FormData();
             if(!id){
                 payload.append("latitude",locationForm.latitude)
@@ -255,58 +272,64 @@ const CreateOutlet = () => {
     
     if(loading) return <Loader/>
   return (
-    <>
-        <div className="page">
-            <div className="page-heading">
-                <div>
-                    <p className="eyebrow">Outlet</p>
-                    <h1>Create Outlet</h1>
-                    <p>Enter the details used by your outlet and menu.</p>
-                </div>
-            </div>
-        { error && <div className="alert error">{error}</div>}
-        { showForm &&
-            (
-                <FormPage
-                id = {id}
-                form = {form}
-                busy = {busy}
-                error = {error}
-                outletNext={outletNext}
-                change={change}
-                sendData={sendData}
-                isManagerAuthenticated={isManagerAuthenticated}
-                />
-            )
-        }
-        {
-            showLocationForm && (
-                <LocationPage 
-                id = {id}
-                locationForm = {locationForm}
-                locationChange={locationChange}
-                showMap={showMap}
-                setShowMap={setShowMap}
-                handleMapLocation={handleMapLocation}
-                handleUseCurrentLocation={handleUseCurrentLocation}
-                locationLoading={locationLoading}
-                locationNext={locationNext}
-                locationBack={locationBack}
-                />
-            )
-        }
-        {
-            showManagerForm && (
-                <ManagerPage
-                managerForm = {managerForm}
-                sendData = {sendData}
-                managerchange={managerchange}
-                outletNext={outletNext}
-                />
-            )
-        }
+    <div className="page-container">
+        <div className="content-header">
+        <div>
+            <p className="content-eyebrow">Outlet Management</p>
+
+            <h1 className="content-title">
+            {id ? "Update Outlet" : "Create Outlet"}
+            </h1>
+
+            <p className="content-description">
+            {id
+                ? "Update your outlet information and location."
+                : "Configure your business, location and manager details."}
+            </p>
+        </div>
+        </div>
+
+        {error && <div className="message-error">{error}</div>}
+
+        <div className="content-body">
+        {showForm && (
+            <FormPage
+            id={id}
+            form={form}
+            busy={busy}
+            outletNext={outletNext}
+            change={change}
+            sendData={sendData}
+            isManagerAuthenticated={isManagerAuthenticated}
+            />
+        )}
+
+        {showLocationForm && (
+            <LocationPage
+            id={id}
+            locationForm={locationForm}
+            locationChange={locationChange}
+            showMap={showMap}
+            setShowMap={setShowMap}
+            handleMapLocation={handleMapLocation}
+            handleUseCurrentLocation={handleUseCurrentLocation}
+            locationLoading={locationLoading}
+            locationNext={locationNext}
+            locationBack={locationBack}
+            />
+        )}
+
+        {showManagerForm && (
+            <ManagerPage
+            managerForm={managerForm}
+            sendData={sendData}
+            managerchange={managerchange}
+            managerBack={managerBack}
+            busy={busy}
+            />
+        )}
+        </div>
     </div>
-    </>
   )
 }
 
@@ -314,56 +337,97 @@ export default CreateOutlet
 
 
 
-export function ManagerPage({managerForm,managerchange,sendData,outletNext}){
+export function ManagerPage({managerForm,managerchange,sendData,busy,managerBack}){
     return (
-        <>
-            <h1>Manager</h1>
-            <form className="panel form grid-2" onSubmit={sendData}>
-                    <label>
-                        name
-                        <input type="text" 
-                        name="name"
-                        required
-                        value={managerForm.name}
-                        onChange={managerchange}
-                        placeholder="Manager Name"
-                        />
-                    </label>
-                    <label>
-                        Email
-                        <input type="email" 
-                        name="email"
-                        required
-                        value={managerForm.email}
-                        onChange={managerchange}
-                        placeholder="Manager Email"
-                        />
-                    </label>
-                    <label>
-                        Phone
-                        <input type="tel" 
-                        name="phone"
-                        required
-                        value={managerForm.phone}
-                        onChange={managerchange}
-                        placeholder="contact Numver"
-                        />
-                    </label>
-                    <label>
-                        Password
-                        <input type="password" 
-                        name="password"
-                        required
-                        value={managerForm.password}
-                        onChange={managerchange}
-                        placeholder="password"
-                        />
-                    </label>
-                    <div className="grid-span-2 form-actions">
-                        <button className="button secondary" type="button" onClick={outletNext} >Back</button>
-                        <button className="button secondary" type="submit">Create Outlet</button>
-                    </div>
-            </form>
-        </>
+        <div className="wizard-section">
+        <div className="wizard-heading">
+            <h2 className="section-title">Manager Details</h2>
+
+            <p className="content-description">
+            Create the account that will manage this outlet.
+            </p>
+        </div>
+
+        <form
+            className="form-container"
+            onSubmit={sendData}
+        >
+            <div className="form-grid">
+            <label className="form-field">
+                Name
+
+                <input
+                className="form-input"
+                type="text"
+                name="name"
+                required
+                value={managerForm.name}
+                onChange={managerchange}
+                placeholder="Manager Name"
+                />
+            </label>
+
+            <label className="form-field">
+                Email
+
+                <input
+                className="form-input"
+                type="email"
+                name="email"
+                required
+                value={managerForm.email}
+                onChange={managerchange}
+                placeholder="Manager Email"
+                />
+            </label>
+
+            <label className="form-field">
+                Phone
+
+                <input
+                className="form-input"
+                type="tel"
+                name="phone"
+                required
+                value={managerForm.phone}
+                onChange={managerchange}
+                placeholder="Contact Number"
+                />
+            </label>
+
+            <label className="form-field">
+                Password
+
+                <input
+                className="form-input"
+                type="password"
+                name="password"
+                required
+                value={managerForm.password}
+                onChange={managerchange}
+                placeholder="Password"
+                />
+            </label>
+            </div>
+
+            <div className="form-actions wizard-actions">
+            <button
+                className="secondary-button"
+                type="button"
+                onClick={managerBack}
+            >
+                Back
+            </button>
+
+            <button
+                className="primary-button"
+                type="submit"
+                disabled={busy}
+            >
+                {busy ? "Creating..." : "Create Outlet"}
+            </button>
+            </div>
+        </form>
+        </div>
     )
 }

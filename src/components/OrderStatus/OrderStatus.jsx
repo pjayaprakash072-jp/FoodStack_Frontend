@@ -14,38 +14,34 @@ const OrderStatus = ({status="placed",updateStatus,statusUpdating}) => {
     )
     
   return (
-    <div className="status-steps">
-        {
-            steps.map(
-                (step,index)=>{
-                    const completed = index <current;
-                    const currentStep = index === current;
-                    const nextStep = index === current +1;
-                    const clickable = nextStep && !statusUpdating;
-                    return(
-                        <div
-                        type="button"
-                        disabled={!clickable}
-                        onClick={()=>{
-                                if(clickable){
-                                    updateStatus(step)
-                                }
-                            }
-                        }
-                        className={`
-                            status-step ${completed || currentStep ? "active":""}
-                                        ${clickable ?"cursor-pointer":"cursor-not-allowed"}
-                            `}
-                        key={step}
-                        >
-                            <span>{index+1}</span>
-                            <small>{step.replaceAll("_"," ")}</small>
-                        </div>
-                    )
+        <div className="status-container">
+        {steps.map((step, index) => {
+            const completed = index < current;
+            const currentStep = index === current;
+            const nextStep = index === current + 1;
+
+            const clickable = nextStep && !statusUpdating;
+
+            return (
+            <button
+                type="button"
+                disabled={!clickable}
+                onClick={() => {
+                if (clickable) {
+                    updateStatus(step);
                 }
-            )
-        }
-    </div>
+                }}
+                className={`status-step ${
+                completed || currentStep ? "status-step-active" : ""
+                } ${clickable ? "status-step-clickable" : ""}`}
+                key={step}
+            >
+                <span>{index + 1}</span>
+                <small>{step.replaceAll("_", " ")}</small>
+            </button>
+            );
+        })}
+        </div>
   )
 }
 

@@ -38,40 +38,45 @@ const OutletList = () => {
     )
     
   return (
-    <div className="page">
-        <div className="page-heading">
+    <div className="page-container">
+        <header className="content-header">
             <div>
-                <p className="eyebrow">Locations</p>
-                <h1>Outlets</h1>
-                <p>Create and manage every business location.</p>
+                <p className="content-eyebrow">Locations</p>
+                <h1 className="content-title">Outlets</h1>
+                <p className="content-description">Create and manage every business location.</p>
             </div>
-            <Link className="button primary" to="/outlets/new"><Plus size={18}/>Add Outlet</Link>
-        </div>    
-        <div className="toolbar">
-            <SearchBar 
-            value = {q}
-            onChange={setQ}
-            placeholder="Search Outlets by name,city or area..."
-            />
-        </div>
-        {
-            busy?(
-                <Loader/>
-            ):filtered.length?(
-                <div className="card-grid">
-                    {
-                    filtered.map((o)=>(
-                        <OutletCard key={o._id} outlet={o}/>
-                    ))
-                    }
-                </div>
-            ):(
-                <EmptyState
-                title = "No outlets found"
-                text = {q ?"Try a different search" : "Create your first outlet"} 
-                action = {<Link className="button primary" to = "/outlets/new" > Add Outlet</Link>}/>
-            )
-        }
+            <Link className="page-action" to="/outlets/new"><Plus size={18}/>Add Outlet</Link>
+        </header>   
+        <div className="content-body">
+            <div className="outlet-toolbar">
+                <SearchBar 
+                value = {q}
+                onChange={setQ}
+                placeholder="Search Outlets by name,city or area..."
+                />
+                <p className="outlet-count">
+                    {filtered.length} {filtered.length === 1? "Outlet":"Outlets"}
+                </p>
+            </div>
+            {
+                busy?(
+                    <Loader/>
+                ):filtered.length?(
+                    <div className="outlet-grid">
+                        {
+                        filtered.map((o)=>(
+                            <OutletCard key={o._id} outlet={o}/>
+                        ))
+                        }
+                    </div>
+                ):(
+                    <EmptyState
+                    title = "No outlets found"
+                    text = {q ?"Try a different search" : "Create your first outlet"} 
+                    action = {<Link className="page-action" to = "/outlets/new" > Add Outlet</Link>}/>
+                )
+            }
+        </div> 
     </div>
   )
 }
