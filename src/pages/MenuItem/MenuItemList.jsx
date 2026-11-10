@@ -1,6 +1,5 @@
 import { useState,useEffect } from "react"
 import { Link ,useSearchParams } from "react-router-dom"
-import Loader from "../../components/Common/Loader"
 import SearchBar from "../../components/Common/SearchBar"
 import ConfirmDialog from "../../components/Common/ConfirmDialog"
 import menuItemService from "../../services/menuItemService"
@@ -11,6 +10,7 @@ import categoryService from "../../services/categoryService"
 import EmptyState from "../../components/Common/EmptyState"
 import useManagerContext from "../../context/useManagerContext"
 import managerService from "../../services/managerService"
+import MenuItemTableSkeleton from "../../components/Skeletons/MenuItemTableSkeleton"
 
 
 const MenuItemList = () => {
@@ -140,7 +140,7 @@ const MenuItemList = () => {
         </div>
 
         {busy ? (
-        <Loader />
+        <MenuItemTableSkeleton />
         ) : filtered.length ? (
         <div className="menu-items-table-container">
             <div className="menu-items-table-scroll">

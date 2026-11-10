@@ -3,10 +3,10 @@ import { useAuth } from "../../context/useAuth"
 import {Link} from 'react-router-dom'
 import {Plus} from 'lucide-react'
 import SearchBar from "../../components/Common/SearchBar"
-import Loader from "../../components/Common/Loader";
 import OutletCard from "../../components/Cards/OutletCard";
 import EmptyState from './../../components/Common/EmptyState';
 import outletService from "../../services/outletService";
+import OutletSkeleton from "../../components/Skeletons/OutletSkeleton";
 
 
 const arr = (x)=> Array.isArray(x)? x:x?.outlets || [];
@@ -60,7 +60,11 @@ const OutletList = () => {
             </div>
             {
                 busy?(
-                    <Loader/>
+                    <div className="outlet-grid">
+                        {Array.from({ length: 4 }).map((_, index) => (
+                            <OutletSkeleton key={index} />
+                        ))}
+                    </div>
                 ):filtered.length?(
                     <div className="outlet-grid">
                         {

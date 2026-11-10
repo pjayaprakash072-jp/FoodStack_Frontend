@@ -8,7 +8,6 @@ import {Plus,ArrowLeft} from "lucide-react"
 
 import SearchBar from './../../components/Common/SearchBar';
 
-import Loader from "../../components/Common/Loader"
 
 import EmptyState from './../../components/Common/EmptyState';
 
@@ -19,6 +18,7 @@ import { useAuth } from "../../context/useAuth";
 import { useState,useEffect  } from "react";
 import useManagerContext from "../../context/useManagerContext";
 import managerService from "../../services/managerService";
+import CategoryCardSkeleton from "../../components/Skeletons/CategoryCardSkeleton";
 
 const arr = (x)=> Array.isArray(x)? x: x?.menuCategories || [];
 
@@ -125,7 +125,11 @@ const CategoryLIst = () => {
         </div>
 
         {busy ? (
-            <Loader />
+            <div className="category-grid">
+                {Array.from({ length: 4 }).map((_, index) => (
+                <CategoryCardSkeleton key={index} />
+                ))}
+            </div>
         ) : filtered.length ? (
             <div className="category-grid">
             {filtered.map((c) => (

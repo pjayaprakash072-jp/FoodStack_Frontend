@@ -1874,3 +1874,70 @@
 .location-map-container {
   @apply h-[500px] w-full overflow-hidden rounded-xl;
 }
+
+/* ================================
+   SKELETON LOADER
+================================ */
+
+.skeleton {
+    @apply animate-pulse rounded-lg
+    bg-slate-200
+    dark:bg-slate-700;
+}
+
+/* Outlet Skeleton */
+
+.outlet-skeleton {
+    @apply flex w-full min-w-0 flex-col
+    overflow-hidden rounded-xl
+    border border-border bg-surface
+    dark:border-slate-700 dark:bg-slate-900;
+}
+
+.outlet-skeleton-image {
+    @apply h-36 w-full
+    bg-slate-200 dark:bg-slate-800;
+}
+
+.outlet-skeleton-content {
+    @apply flex flex-col gap-4 p-4 sm:p-5;
+}
+
+/* Order Skeleton */
+
+.order-skeleton {
+    @apply flex min-w-0 flex-col gap-4
+    rounded-xl border border-border
+    bg-surface p-4 shadow-sm
+    dark:border-slate-700 dark:bg-slate-900;
+}
+
+
+
+.menu-skeleton-name {
+  @apply h-4 w-28 rounded-md;
+}
+
+.menu-skeleton-image {
+  @apply h-12 w-12 rounded-lg;
+}
+
+.menu-skeleton-text {
+  @apply h-4 w-16 rounded-md;
+}
+
+.menu-skeleton-small {
+  @apply h-4 w-10 rounded-md;
+}
+
+.menu-skeleton-status {
+  @apply h-6 w-20 rounded-full;
+}
+
+.menu-skeleton-action {
+  @apply h-8 w-8 rounded-lg;
+}
+
+.menu-skeleton-actions {
+  @apply flex items-center gap-2;
+}

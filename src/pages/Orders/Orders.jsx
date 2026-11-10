@@ -4,12 +4,12 @@ import { useAuth } from "../../context/useAuth";
 import useManagerContext from "../../context/useManagerContext";
 import managerService from "../../services/managerService";
 import SearchBar from "../../components/Common/SearchBar";
-import Loader from "../../components/Common/Loader";
 import OrderCard from "../../components/Cards/OrderCard";
 import { useNavigate } from "react-router-dom";
 import { socket } from "../../services/socket";
 import { toast } from "sonner";
 import EmptyState from "../../components/Common/EmptyState";
+import OrderCardSkeleton from "../../components/Skeletons/OrderCardSkeleton";
 
 
 const Orders = () => {
@@ -103,7 +103,11 @@ const Orders = () => {
 
     <div className="content-body">
       {busy ? (
-        <Loader />
+        <div className="order-grid">
+          {Array.from({ length: 3 }).map((_, index) => (
+            <OrderCardSkeleton key={index} />
+          ))}
+        </div>
       ) : filtered.length ? (
         <div className="order-grid">
           {filtered.map((o) => (

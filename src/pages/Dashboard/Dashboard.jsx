@@ -5,7 +5,6 @@ import {Link} from 'react-router-dom'
 
 import StatCard from "../../components/Cards/StatCard";
 import OutletCard from "../../components/Cards/OutletCard";
-import Loader from "../../components/Common/Loader";
 
 
 
@@ -14,6 +13,7 @@ import categoryService from '../../services/categoryService';
 import menuItemService from '../../services/menuItemService';
 import { useAuth } from "../../context/useAuth";
 import EmptyState from "../../components/Common/EmptyState";
+import DashboardSkeleton from "../../components/Skeletons/DashboardSkeleton";
 
 const arr = (x) =>
   Array.isArray(x)
@@ -59,7 +59,7 @@ const Dashboard = () => {
     )
 
 
-    if(loading) return <Loader/>
+    if(loading) return <DashboardSkeleton/>
     return (
         <div className="page-container">
             <header className="content-header">
