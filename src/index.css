@@ -1733,30 +1733,7 @@
   @apply mt-6 flex-wrap;
 }
 
-/* =================================
-   LOCATION ACTIONS
-================================= */
 
-.location-actions {
-  @apply items-stretch;
-}
-
-.location-map-container {
-  @apply mt-5 w-full overflow-hidden
-  rounded-xl border border-border
-  bg-surface shadow-sm
-  dark:border-slate-700 dark:bg-slate-900;
-}
-
-@media (max-width: 640px) {
-  .location-actions {
-    @apply flex-col;
-  }
-
-  .location-actions button {
-    @apply w-full;
-  }
-}
 /* =================================
    OUTLET DETAILS ACTIONS
 ================================= */
@@ -1859,22 +1836,6 @@
   @apply flex flex-col gap-5;
 }
 
-/* =========================
-   LOCATION PICKER
-========================= */
-
-.location-picker {
-  @apply flex w-full flex-col gap-5;
-}
-
-.location-picker-actions {
-  @apply flex flex-wrap justify-end;
-}
-
-.location-map-container {
-  @apply h-[500px] w-full overflow-hidden rounded-xl;
-}
-
 /* ================================
    SKELETON LOADER
 ================================ */
@@ -1914,30 +1875,34 @@
 
 
 
-.menu-skeleton-name {
-  @apply h-4 w-28 rounded-md;
+/* ================================
+   LOCATION PICKER
+================================ */
+
+.location-picker {
+  @apply flex w-full flex-col gap-4;
 }
 
-.menu-skeleton-image {
-  @apply h-12 w-12 rounded-lg;
+/* ================================
+   MAP CONTAINER
+================================ */
+
+.location-map-container {
+  @apply h-80 w-full overflow-hidden
+  rounded-xl border border-border
+  bg-background
+  sm:h-96
+  dark:border-slate-700;
 }
 
-.menu-skeleton-text {
-  @apply h-4 w-16 rounded-md;
+/* ================================
+   MAP ACTIONS
+================================ */
+
+.location-picker-actions {
+  @apply flex flex-col-reverse
+  justify-end gap-3
+  sm:flex-row;
 }
 
-.menu-skeleton-small {
-  @apply h-4 w-10 rounded-md;
-}
 
-.menu-skeleton-status {
-  @apply h-6 w-20 rounded-full;
-}
-
-.menu-skeleton-action {
-  @apply h-8 w-8 rounded-lg;
-}
-
-.menu-skeleton-actions {
-  @apply flex items-center gap-2;
-}

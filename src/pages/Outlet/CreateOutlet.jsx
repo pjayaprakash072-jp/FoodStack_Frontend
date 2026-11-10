@@ -53,8 +53,6 @@ const CreateOutlet = () => {
 
     const [showManagerForm,setShowManagerForm] = useState(false);
 
-    const [showMap,setShowMap] = useState(false);
-
     const [showForm,setShowForm] = useState(true);
 
     const [showLocationForm, setShowLocationForm] = useState(false);
@@ -309,8 +307,6 @@ const CreateOutlet = () => {
             id={id}
             locationForm={locationForm}
             locationChange={locationChange}
-            showMap={showMap}
-            setShowMap={setShowMap}
             handleMapLocation={handleMapLocation}
             handleUseCurrentLocation={handleUseCurrentLocation}
             locationLoading={locationLoading}
