@@ -18,7 +18,7 @@ const Orders = () => {
     const [search,setSearch]  = useState("");
     const navigate = useNavigate();
     const {isManagerAuthenticated,manager,setOrdersNum} = useManagerContext();
-    const {isAuthenticated} = useAuth();
+    const {isAuthenticated,vendor} = useAuth();
     const outletId  = manager?.outlet?._id;
     const loadOrders = async(showLoader = true)=>{
       try {
@@ -29,7 +29,7 @@ const Orders = () => {
         if(isManagerAuthenticated){
           response = await managerService.getOrders();
         }else if(isAuthenticated){
-          response = await orderService.getAllByVendor();
+          response = await orderService.getAllByVendor(vendor._id);
         }
         setOrders(response?.orders || [])
         setOrdersNum(response?.orders?.length);
