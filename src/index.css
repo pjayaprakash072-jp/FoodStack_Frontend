@@ -10,8 +10,8 @@
 
   --color-text-primary:var(--color-slate-900);
   --color-text-secondary:var(--color-slate-500);
-  --color-border:#e2e8f0;
-  /* --color-border:var(--color-red-600); */
+  /* --color-border:#e2e8f0; */
+  --color-border:var(--color-red-600);
   --color-border-d:var(--color-slate-700);
 
   --color-success:var(--color-green-600);
@@ -694,8 +694,8 @@ button{
 .outlet-grid{
   @apply grid grid-cols-1 gap-4
   sm:grid-cols-2
-  xl:grid-cols-3
-  2xl:grid-cols-4
+  xl:grid-cols-4
+  2xl:grid-cols-5
 }
 
 /* ======================================
@@ -779,6 +779,24 @@ PROFILE
   @apply grid w-full grid-cols-1
   sm:grid-cols-2 gap-5
 }
+.category-details-grid{
+  @apply grid w-full grid-cols-1 gap-5 lg:grid-cols-2
+}
+.category-summary-card{
+  @apply flex flex-col gap-4
+}
+.category-item-count{
+  @apply flex flex-col gap-1 rounded-xl
+  bg-background dark:bg-slate-800 p-5
+}
+.category-item-count p{
+  @apply text-sm text-text-secondary
+  dark:text-slate-400
+}
+.category-item-count h1{
+  @apply text-3xl font-bold text-primary
+  dark:text-indigo-400
+}
 /* =========================================
   OUTLET SYMMARY
 ========================================= */
@@ -803,15 +821,18 @@ PROFILE
   OUTLET CARD
 =========================================== */
 .outlet-container{
-  @apply flex min-w-0 flex-row
+  @apply flex min-w-0 flex-col 
   overflow-hidden rounded-xl
   border border-border bg-surface
-  shadow-sm transition-shadow
-  hover:shadow-md
+  shadow-sm transition-shadow hover:shadow-md
   dark:border-border-d dark:bg-slate-900
 }
+.outlet-image{
+  @apply flex h-full min-h-44 max-h-44 min-w-44 items-center justify-center
+  overflow-hidden bg-background dark:bg-slate-800
+}
 .outlet-image img{
-  @apply h-full sm:h-full w-44 object-fill
+  @apply max-h-44 sm:h-full w-full object-fill sm:py-0
 }
 .outlet-image span{
   @apply flex h-20 w-20 items-center justify-center
@@ -819,7 +840,7 @@ PROFILE
   text-primary dark:bg-indigo-500/15 dark:text-indigo-400
 }
 .outlet-content{
-  @apply flex flex-1 flex-col md:gap-3 p-2 sm:p-3
+  @apply flex flex-1 flex-col  p-3
 }
 .outlet-header{
   @apply flex items-start justify-between gap-2
@@ -844,12 +865,12 @@ PROFILE
 }
 .outlet-description{
   @apply
-  line-clamp-1 text-sm text-text-secondary
+  line-clamp-1 text-sm text-text-secondary 
   dark:text-slate-400
 }
 .outlet-meta{
-  @apply flex flex-col gap-2
-  border-t border-border pt-3
+  @apply flex flex-col gap-3
+  border-t border-border pt-1 md:pt-3
   dark:border-border-d
 }
 .outlet-meta span{
@@ -864,14 +885,100 @@ PROFILE
 .outlet-view-link{
   @apply mt-auto flex items-center
   justify-between gap-2
-  border-t border-border pt-1
+  border-t border-border pt-1 md:pt-1.5 md:pb-1
   text-sm font-semibold text-primary
   transition-colors hover:text-primary-hover
   dark:border-border-d dark:text-indigo-700
   dark:hover:text-indigo-300
 }
+/* ===========================================
+  CATEGORY CARD
+=========================================== */
+.category-grid{
+  @apply grid w-full grid-cols-1 gap-4
+  sm:grid-cols-2
+  2xl:grid-cols-4
+}
+.category-container{
+  @apply 
+  flex min-w-0 flex-row 
+  overflow-hidden rounded-xl 
+  border border-border bg-surface
+  shadow-sm transition-shadow hover:shadow-lg
+  dark:border-border-d dark:bg-slate-900
+
+}
+.category-image{
+  @apply flex h-full min-w-32 items-center justify-center
+  overflow-hidden bg-background dark:bg-slate-800
+}
+.category-image img{
+  @apply h-full sm:h-full w-32 object-cover
+}
+.category-image span{
+  @apply grid place-items-center h-20 w-20 
+  rounded-full bg-primary/10
+  text-3xl font-bold text-primary
+  dark:bg-indigo-500/15 dark:text-indigo-400
+}
+.category-content{
+  @apply flex flex-1 flex-col  p-3
+}
+.category-header{
+  @apply flex items-start justify-between gap-2
+}
+.category-header h3{
+  @apply min-w-0 wrap-break-word text-base
+  font-bold text-text-primary dark:text-white
+}
+.category-status{
+  @apply shrink-0 rounded-full px-2.5 py-1
+  text-xs font-semibold capitalize;
+}
+.category-status-active{
+  @apply bg-success/10 text-success
+}
+.category-status-inactive{
+  @apply bg-slate-100 text-slate-500
+  dark:bg-slate-800 dark:text-slate-400
+}
+.category-description{
+  @apply line-clamp-1 min-h-6 text-sm
+  text-text-secondary dark:text-slate-400
+}
+.category-meta{
+  @apply flex items-center gap-2 border-t
+  border-border pt-3 text-xs
+  text-text-secondary dark:border-border-d
+  dark:text-slate-400
+}
+.category-meta span{
+  @apply flex items-center gap-2
+}
+.category-meta svg{
+  @apply text-primary dark:text-indigo-400
+}
+.category-view-link{
+  @apply mt-auto flex items-center justify-between
+  gap-2 border-t border-border pt-3
+  text-sm font-semibold text-primary
+  transition-colors hover:text-primary-hover
+  dark:border-border-d dark:text-indigo-400
+  dark:hover:text-indigo-300
+}
+.category-actions{ 
+  @apply flex w-full flex-wrap items-center gap-2
+  sm:w-auto
+}
+.category-toolbar{
+  @apply 
+  flex w-full items-center
+}
+.category-toolbar .search-bar{
+  @apply w-full sm:max-w-md
+}
 /* ==============================================
-  SEARCH BAR 
+SEARCH BAR 
 ============================================== */
 .search-bar{
   @apply flex w-full items-center gap-2
@@ -889,5 +996,129 @@ PROFILE
   placeholder:text-text-secondary
   dark:text-slate-100
   dark:placeholder:text-slate-500
+}
+/* ===========================================
+  WIZARD SECTION
+=========================================== */
+.wizard-section{
+  @apply flex w-full flex-col gap-5 
+}
+.wizard-heading{
+  @apply flex flex-col gap-1 
+}
+.wizard-actions{
+  @apply mt-6 flex-wrap
+}
+/* ===============================
+  LOCATION PICKDER
+=============================== */
+.location-picker{
+  @apply flex w-full flex-col gap-4
+}
+.location-map-container{
+  @apply h-80 w-full overflow-hidden
+  rounded-xl border border-border
+  bg-background sm:h-96 dark:border-border-d
+}
+.location-picker-actions{
+  @apply flex flex-col-reverse justify-end gap-3
+  sm:flex-row
+}
+/* =====================================
+  MENU-ITEM ACTIONS
+===================================== */
+.menu-item-actions{
+  @apply flex w-full flex-wrap items-center gap-2 sm:w-auto
+}
+.menu-items-toolbar{
+  @apply flex w-full flex-col items-start
+  justify-between gap-3
+  sm:flex-row sm:items-center
+}
+.menu-items-toolbar .search-bar{
+  @apply w-full sm:max-w-md
+}
+.menu-items-table-container{
+  @apply w-full min-w-0 overflow-hidden
+  rounded-xl border border-border
+  bg-surface shadow-sm
+  dark:border-border-d dark:bg-slate-900
+}
+.menu-items-table-scroll{
+  @apply w-full overflow-x-auto
+}
+.menu-items-table{
+  @apply w-full min-w-212.5 border-collapse
+  text-left text-sm
+}
+.menu-items-table thead{
+  @apply bg-background dark:bg-slate-800
+}
+.menu-items-table th{
+  @apply whitespace-nowrap p-4
+  text-xs font-semibold uppercase
+  tracking-wide text-text-secondary
+  dark:text-slate-400
+}
+.menu-items-table td{
+  @apply whitespace-nowrap border-t
+  border-border px-4 py-3
+  text-sm text-text-primary
+  dark:border-border-d dark:text-slate-200
+}
+.menu-items-table tr{
+  @apply transition-colors
+  hover:bg-background
+  dark:hover:bg-slate-800/60
+}
+.menu-items-table td strong{
+  @apply font-semibold text-text-primary
+  dark:text-white
+}
+.table-image-empty{
+  @apply text-xs text-text-secondary
+  dark:text-slate-400
+}
+.menu-items-table-image{
+  @apply h-12 w-12 rounded-full 
+  border border-border object-cover
+  dark:border-border-d
+}
+.menu-item-status{
+  @apply inline-flex rounded-full px-2.5 py-1 text-xs font-semibold
+}
+.menu-item-status-active{
+  @apply bg-success/10 text-success
+}
+.menu-item-status-inactive{
+  @apply bg-slate-100 text-slate-500
+  dark:bg-slate-800 dark:text-slate-400
+}
+.menu-item-table-actions{
+  @apply flex items-center gap-2 
+}
+.menu-item-icon-button{
+  @apply inline-flex h-9 w-9
+  items-center justify-center
+  rounded-lg border border-border
+  bg-surface text-text-secondary
+  transition-colors hover:bg-background
+  hover:text-primary
+  dark:border-border-d dark:bg-slate-800
+  dark:text-slate-300 dark:hover:bg-slate-700
+}
+.menu-item-delete-button{
+  @apply text-danger hover:bg-danger/10
+  hover:text-danger dark:text-red-400
+  dark:bg-red-500/10
+}
+.menu-item-view-link{
+  @apply inline-flex h-8 w-8
+  items-center justify-center
+  rounded-lg bg-primary/10
+  text-primary transition-colors
+  hover:bg-primary/20
+  dark:bg-indigo-500/15
+  dark:text-indigo-400
 }
 ///pending from outlet grid above...
