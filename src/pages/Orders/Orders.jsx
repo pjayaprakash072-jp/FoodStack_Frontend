@@ -30,6 +30,7 @@ const Orders = () => {
           response = await managerService.getOrders();
         }else if(isAuthenticated){
           response = await orderService.getAllByVendor(vendor._id);
+          console.log(response)
         }
         setOrders(response?.orders || [])
         setOrdersNum(response?.orders?.length);

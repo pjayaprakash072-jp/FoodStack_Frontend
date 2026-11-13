@@ -50,7 +50,7 @@ const OrderCard = ({ order, onClick,single }) => {
     {/* Address */}
     <div className="order-address">
         <span>📍</span>
-        <p>{order.deliveryAddress}</p>
+        <p>{(order.deliveryAddress).split(",").slice(3).join(",")}</p>
     </div>
 
     {!single && (
