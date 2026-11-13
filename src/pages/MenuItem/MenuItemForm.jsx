@@ -152,18 +152,6 @@ const MenuItemForm = () => {
           />
         </label>
 
-        <label className="form-field form-full-width">
-          Description
-          <input
-            className="form-input"
-            type="text"
-            name="description"
-            required
-            value={form.description}
-            onChange={change}
-          />
-        </label>
-
         <label className="form-field">
           Category
           <select
@@ -182,6 +170,7 @@ const MenuItemForm = () => {
             ))}
           </select>
         </label>
+
 
         <label className="form-field">
           Price
@@ -251,15 +240,6 @@ const MenuItemForm = () => {
           />
         </label>
 
-        <label className="form-checkbox">
-          Is Available
-          <input
-            type="checkbox"
-            name="isAvailable"
-            checked={form.isAvailable}
-            onChange={change}
-          />
-        </label>
 
         <label className="form-field">
           Status
@@ -276,13 +256,34 @@ const MenuItemForm = () => {
           </select>
         </label>
 
-        <label className="form-field form-full-width">
+        <label className="form-field">
           Image
           <input
             className="form-input"
             type="file"
             name="image"
             accept="image/*"
+            onChange={change}
+          />
+        </label>
+        <label className="form-checkbox">
+          Is Available
+          <input
+            type="checkbox"
+            name="isAvailable"
+            checked={form.isAvailable}
+            onChange={change}
+          />
+        </label>
+        <label className="form-field form-full-width">
+          Description
+          <textarea
+            className="form-input"
+            placeholder="Describe your item . . ."
+            type="text"
+            name="description"
+            required
+            value={form.description}
             onChange={change}
           />
         </label>

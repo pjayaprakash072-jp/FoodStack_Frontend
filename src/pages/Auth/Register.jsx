@@ -72,6 +72,7 @@ export default function Register(){
             className="form-input"
             type="text"
             name="name"
+            placeholder='Full Name'
             required
             value={form.name}
             onChange={change}
@@ -84,6 +85,7 @@ export default function Register(){
             className="form-input"
             type="text"
             name="businessName"
+            placeholder="Business Name"
             value={form.businessName}
             onChange={change}
           />
@@ -94,6 +96,7 @@ export default function Register(){
           <input
             className="form-input"
             type="email"
+            placeholder='Enter Email'
             name="email"
             required
             value={form.email}
@@ -107,6 +110,7 @@ export default function Register(){
             className="form-input"
             type="tel"
             name="phone"
+            placeholder='Enter Phone'
             required
             value={form.phone}
             onChange={change}
@@ -119,6 +123,7 @@ export default function Register(){
             className="form-input"
             type="password"
             name="password"
+            placeholder='Enter Password'
             required
             minLength="6"
             value={form.password}

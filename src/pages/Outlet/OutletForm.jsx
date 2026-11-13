@@ -40,18 +40,6 @@ const  FormPage = ({form,change,outletNext,busy,id,sendData,isManagerAuthenticat
                 placeholder="Indian, Chinese, Italian"
             />
             </label>
-            <label className="form-field form-full-width">
-            Description
-
-            <textarea
-                className="form-input"
-                name="description"
-                rows={3}
-                value={form.description || ""}
-                onChange={change}
-                placeholder="Describe your outlet"
-            />
-            </label>
 
 
             <label className="form-field">
@@ -130,6 +118,18 @@ const  FormPage = ({form,change,outletNext,busy,id,sendData,isManagerAuthenticat
                 onChange={change}
             />
             Currently Open
+            </label>
+            <label className="form-field form-full-width">
+            Description
+
+            <textarea
+                className="form-input"
+                name="description"
+                rows={3}
+                value={form.description || ""}
+                onChange={change}
+                placeholder="Describe your outlet . . ."
+            />
             </label>
 
         </div>

@@ -183,6 +183,17 @@ export default function Profile() {
               onChange={change}
             />
           </label>
+          
+          <label className="form-field">
+            Profile Image
+            <input
+              className="form-input"
+              type="file"
+              name="profileImg"
+              accept="image/*"
+              onChange={change}
+            />
+          </label>
 
           <label className="form-field">
             Status
@@ -198,16 +209,6 @@ export default function Profile() {
             </select>
           </label>
 
-          <label className="form-field form-full-width">
-            Profile Image
-            <input
-              className="form-input"
-              type="file"
-              name="profileImg"
-              accept="image/*"
-              onChange={change}
-            />
-          </label>
 
           <div className="form-actions form-full-width">
             <button

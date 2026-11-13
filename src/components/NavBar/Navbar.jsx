@@ -246,7 +246,7 @@ const Navbar = ({ onMenu }) => {
                 <span className="navbar-username">{userName}</span>
               </>
             ) : (
-              <NavLink to="/login" className="navbar-auth-link">
+              <NavLink to="/login" className="navbar-login">
                 Login
               </NavLink>
             )}
