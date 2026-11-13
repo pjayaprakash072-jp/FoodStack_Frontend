@@ -56,6 +56,8 @@ const ResetPassword = () => {
         {msg && <div className="message-success">{msg}</div>}
 
         <form className="form-container" onSubmit={handleSubmit}>
+            <div className="form-fields">
+
             <label className="form-field">
             New Password
             <input
@@ -85,6 +87,7 @@ const ResetPassword = () => {
             >
             {loading ? "Updating..." : "Update Password"}
             </button>
+                </div>
         </form>
         </div>
     </div>

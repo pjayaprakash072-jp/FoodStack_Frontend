@@ -45,6 +45,9 @@ html::-webkit-scrollbar-thumb{
 html::-webkit-scrollbar-thumb:hover{
   @apply bg-slate-400
 }
+button{
+  cursor:pointer;
+}
 .navbar{
   @apply w-full sticky top-0 z-40
   border-b border-border dark:border-border-d 
@@ -646,6 +649,23 @@ html::-webkit-scrollbar-thumb:hover{
   dark:text-indigo-400
 }
 /* ===================================
+  LOADER
+=================================== */
+.loader{
+  @apply flex min-h-40 w-full 
+  flex-col items-center justify-center
+  gap-3 text-sm font-medium
+  text-text-secondary
+  dark:text-slate-400
+}
+.spinner{
+  @apply h-9 w-9 
+  border-4 border-slate-200 rounded-full
+  border-t-primary
+  animate-spin dark:border-border-d
+  dark:border-t-indigo-400
+}
+/* ===================================
   CONTENT SECTION
 =================================== */
 .content-section{
@@ -799,7 +819,7 @@ PROFILE
   text-primary dark:bg-indigo-500/15 dark:text-indigo-400
 }
 .outlet-content{
-  @apply flex flex-1 flex-col gap-3 p-4 sm:p-3
+  @apply flex flex-1 flex-col md:gap-3 p-2 sm:p-3
 }
 .outlet-header{
   @apply flex items-start justify-between gap-2

@@ -1,7 +1,7 @@
 
 const Loader = ({text = "Loading..."}) => {
   return (
-    <div className="loader-wrap">
+    <div className="loader">
         <div className="spinner"/>
         <span>{text}</span>
         
