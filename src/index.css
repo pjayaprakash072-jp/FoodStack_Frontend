@@ -403,7 +403,7 @@ button{
   text-text-primary
   dark:text-slate-200
 }
-.form-hint{
+.field-hint{
   @apply text-xs font-normal
   text-text-secondary
   dark:text-slate-400
@@ -461,6 +461,12 @@ button{
   hover:text-primary
   dark:text-indigo-400
   dark:hover:text-indigo-400;
+}
+.login-processing{
+  @apply mb-4 text-center
+  text-sm font-medium
+  text-text-secondary
+  dark:text-slate-400
 }
 .form-checkbox{
   @apply flex items-center gap-3  self-center
@@ -1066,7 +1072,7 @@ SEARCH BAR
   text-sm text-text-primary
   dark:border-border-d dark:text-slate-200
 }
-.menu-items-table tr{
+.menu-items-table tbody tr{
   @apply transition-colors
   hover:bg-background
   dark:hover:bg-slate-800/60
@@ -1120,5 +1126,61 @@ SEARCH BAR
   hover:bg-primary/20
   dark:bg-indigo-500/15
   dark:text-indigo-400
+}
+.menu-item-details-grid{
+  @apply grid w-full grid-cols-1 gap-5
+  lg:grid-cols-2
+}
+.menu-item-image-container{
+  @apply flex flex-col gap-4
+}
+.menu-item-image{
+  @apply flex w-full items-center
+  justify-center overflow-hidden
+  rounded-xl border border-border
+  bg-background p-3
+  dark:border-border-d
+  dark:bg-slate-800
+}
+.menu-item-image img{
+  @apply max-h-96 w-full rounded-lg
+  object-contain
+}
+.menu-item-no-image{
+  @apply flex min-h-64 w-full items-center
+  justify-center
+  rounded-xl border border-dashed
+  border-border bg-background
+  text-sm font-medium
+  text-text-secondary
+  dark:border-border-d
+  dark:bg-slate-800
+  dark:text-slate-400
+}
+/* =====================================
+  MODAL
+===================================== */
+.modal-backdrop{
+  @apply fixed inset-0 z-50 flex items-center justify-center
+  bg-black/50 p-4
+}
+.modal-container{
+  @apply w-full max-w-lg rounded-2xl border border-border
+  bg-surface p-5 shadow-xl
+  dark:border-border-d dark:bg-slate-900
+}
+.modal-header{
+  @apply mb-5 flex items-center justify-between gap-4 
+  border-b border-border pb-4
+  dark:border-border-d
+}
+.modal-close-button{
+  @apply flex h-9 w-9 items-center justify-center
+  rounded-lg text-text-secondary transition 
+  hover:bg-slate-100 hover:text-text-primary
+  dark:hover:bg-slate-800 dark:hover:text-white
+}
+.confirm-dialog{
+  @apply flex flex-col gap-5 
 }
 ///pending from outlet grid above...
