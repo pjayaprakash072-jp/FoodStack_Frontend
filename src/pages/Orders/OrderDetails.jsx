@@ -14,7 +14,7 @@ const OrderDetails = () => {
     const { orderId } = useParams();
     const navigate = useNavigate();
     const {isManagerAuthenticated} = useManagerContext();
-    const {isAuthenticated}  = useAuth();
+    const {isAuthenticated,vendor}  = useAuth();
 
 
     const [order, setOrder] = useState(null);
@@ -30,7 +30,7 @@ const OrderDetails = () => {
 
                 // If you don't have a single-order API yet,
                 // you can temporarily get all orders.
-                const response = isManagerAuthenticated? await managerService.getOrders() : isAuthenticated && await orderService.getAllByVendor();
+                const response = isManagerAuthenticated? await managerService.getOrders() : isAuthenticated && await orderService.getAllByVendor(vendor._id);
 
                 const orders = response.orders;
 
@@ -84,106 +84,106 @@ const OrderDetails = () => {
         {error && <div className="message-error">{error}</div>}
 
         <div className="order-details-grid">
-        {/* Mobile Order Status */}
-        <div className="details-container order-status-mobile">
-            <OrderStatus
-            status={order.orderStatus}
-            updateStatus={handleStatusUpdate}
-            statusUpdating={statusUpdating}
-            />
-        </div>
+            {/* Mobile Order Status */}
+            <div className="details-container order-status-mobile">
+                <OrderStatus
+                status={order.orderStatus}
+                updateStatus={handleStatusUpdate}
+                statusUpdating={statusUpdating}
+                />
+            </div>
 
-        {/* Order Information */}
-        <div className="details-container order-information">
-            <OrderCard order={order} single />
-        </div>
+            {/* Order Information */}
+            <div className="details-container order-information">
+                <OrderCard order={order} single />
+            </div>
 
-        {/* Order Items */}
-        <div className="details-container order-items-container">
-            <h2 className="section-title">Items</h2>
+            {/* Order Items */}
+            <div className="details-container order-items-container">
+                <h2 className="section-title">Items</h2>
 
-            <div className="order-items-list">
-            {order.items.map((item) => (
-                <div key={item._id} className="order-item-row">
-                <div className="order-item-info">
-                    <p>{item.name}</p>
-                    <span>
-                    ₹{item.price} × {item.quantity}
-                    </span>
+                <div className="order-items-list">
+                    {order.items.map((item) => (
+                        <div key={item._id} className="order-item-row">
+                            <div className="order-item-info">
+                                <p>{item.name}</p>
+                                <span>
+                                ₹{item.price} × {item.quantity}
+                                </span>
+                            </div>
+
+                            <p className="order-item-price">
+                                ₹{item.price * item.quantity}
+                            </p>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            {/* Payment Summary */}
+            <div className="details-container">
+                <div className="payment-summary">
+                    <h2 className="section-title">Payment Summary</h2>
+
+                    <div className="payment-summary-list">
+                        <div className="payment-row">
+                            <span>Subtotal</span>
+                            <span>₹{order.subTotal}</span>
+                        </div>
+
+                        <div className="payment-row">
+                            <span>Delivery Fee</span>
+                            <span>₹{order.deliveryFee}</span>
+                        </div>
+
+                        <div className="payment-row">
+                            <span>Discount</span>
+                            <span className="text-success">
+                                - ₹{order.discount}
+                            </span>
+                        </div>
+
+                        <div className="payment-total">
+                            <span>Total</span>
+                            <strong>₹{order.totalAmount}</strong>
+                        </div>
+                    </div>
                 </div>
 
-                <p className="order-item-price">
-                    ₹{item.price * item.quantity}
-                </p>
+                <div className="payment-information">
+                    <h2 className="section-title">Payment</h2>
+
+                    <div className="payment-row">
+                        <span>Method</span>
+                        <strong>{order.paymentMethod}</strong>
+                    </div>
+
+                    <div className="payment-row">
+                        <span>Status</span>
+                        <strong
+                        className={
+                            order.paymentStatus === "paid"
+                            ? "text-success"
+                            : "text-danger"
+                        }
+                        >
+                        {order.paymentStatus}
+                        </strong>
+                    </div>
                 </div>
-            ))}
+            </div>
+            {/* Desktop Order Status */}
+            <div className="details-container order-status-desktop">
+                <h2 className="section-title">Update Order Status</h2>
+
+                <OrderStatus
+                    status={order.orderStatus}
+                    updateStatus={handleStatusUpdate}
+                    statusUpdating={statusUpdating}
+                />
             </div>
         </div>
 
-        {/* Payment Summary */}
-        <div className="details-container">
-            <div className="payment-summary">
-            <h2 className="section-title">Payment Summary</h2>
-
-            <div className="payment-summary-list">
-                <div className="payment-row">
-                <span>Subtotal</span>
-                <span>₹{order.subTotal}</span>
-                </div>
-
-                <div className="payment-row">
-                <span>Delivery Fee</span>
-                <span>₹{order.deliveryFee}</span>
-                </div>
-
-                <div className="payment-row">
-                <span>Discount</span>
-                <span className="text-success">
-                    - ₹{order.discount}
-                </span>
-                </div>
-
-                <div className="payment-total">
-                <span>Total</span>
-                <strong>₹{order.totalAmount}</strong>
-                </div>
-            </div>
-            </div>
-
-            <div className="payment-information">
-            <h2 className="section-title">Payment</h2>
-
-            <div className="payment-row">
-                <span>Method</span>
-                <strong>{order.paymentMethod}</strong>
-            </div>
-
-            <div className="payment-row">
-                <span>Status</span>
-                <strong
-                className={
-                    order.paymentStatus === "paid"
-                    ? "text-success"
-                    : "text-danger"
-                }
-                >
-                {order.paymentStatus}
-                </strong>
-            </div>
-            </div>
-        </div>
-        </div>
-
-        {/* Desktop Order Status */}
-        <div className="details-container order-status-desktop">
-        <h2 className="section-title">Update Order Status</h2>
-
-        <OrderStatus
-            status={order.orderStatus}
-            updateStatus={handleStatusUpdate}
-            statusUpdating={statusUpdating}
-        />
-        </div>
     </div>
     );
 };

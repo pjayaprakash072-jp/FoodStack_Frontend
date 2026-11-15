@@ -20,7 +20,10 @@ const Orders = () => {
     const {isManagerAuthenticated,manager,setOrdersNum} = useManagerContext();
     const {isAuthenticated,vendor} = useAuth();
     const outletId  = manager?.outlet?._id;
+
+
     const loadOrders = async(showLoader = true)=>{
+      
       try {
         if(showLoader){
           setBusy(true);
@@ -40,11 +43,15 @@ const Orders = () => {
         setBusy(false)
       }
     }
+
+
     useEffect(
       ()=>{
         loadOrders(true);
       },[isAuthenticated,isManagerAuthenticated]
     )
+
+
     useEffect(
       ()=>{
         if(!isManagerAuthenticated || !outletId) return;
@@ -77,7 +84,10 @@ const Orders = () => {
         }
       },[isManagerAuthenticated,outletId]
     )
+
+
     const filtered = orders.filter( (o)=> `${o.deliveryAddress}`.toLowerCase().includes(search.toLowerCase()))
+
   return (
   <div className="page-container">
     <div className="content-header">

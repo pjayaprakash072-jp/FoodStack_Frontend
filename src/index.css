@@ -1256,16 +1256,15 @@ SEARCH BAR
 .orders-toolbar .search-bar{
   @apply w-full sm:w-72
 }
-///pending from outlet grid above...
+/* ///pending from outlet grid above... */
 /* ==============================================
   ORDER STATUS STEPS
 ============================================== */
 .status-container{
-  @apply flex w-full flex-wrap items-center
-  justify-center gap-3 bg-red-500
+  @apply grid grid-cols-3 gap-3
 }
 .status-step{
-  @apply flex min-w-20 flex-1 flex-col
+  @apply flex min-w-0 sm:min-w-20 flex-1 flex-col
   items-center gap-2 rounded-lg p-2
   text-center text-text-secondary
   transition-colors dark:text-slate-400
@@ -1362,12 +1361,4 @@ SEARCH BAR
 }
 .order-status-desktop{
   @apply hidden lg:block
-}
-@media(max-width:640px){
-  .status-container{
-    @apply grid grid-cols-3 gap-2
-  }
-  .status-step{
-    @apply min-w-0
-  }
 }
