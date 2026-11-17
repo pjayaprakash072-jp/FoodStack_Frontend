@@ -1,36 +1,36 @@
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/useAuth";
-import { getErrorMessage } from "../../utils/api";
+
 import { Eye, EyeOff, LogIn } from "lucide-react";
 import { GoogleLogin } from "@react-oauth/google";
-import useManagerContext from "../../context/useManagerContext";
+
+import { useAuth } from "../../context/useAuth";
+import { getErrorMessage } from "../../utils/api";
+
 const Login = () => {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
-  const { login: vendorLogin, googleLogin } = useAuth();
-  const {
-    login: loginManager,
-    managerLogin,
-    setManagerLogin,
-  } = useManagerContext();
   const [showPassword, setShowPassword] = useState(false);
-  const navigate = useNavigate();
   const [showPhoneForm, setShowPhoneForm] = useState(false);
+
   const [googleCredential, setGoogleCredential] = useState("");
+
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
-  const [managerForm, setManagerForm] = useState({
-    phone: "",
-    password: "",
-  });
-  const [phoneAndOUtletName, setPhoneAndOutletName] = useState({
+
+  const [phoneAndOutletName, setPhoneAndOutletName] = useState({
     phone: "",
     businessName: "",
   });
 
+  const { login, googleLogin } = useAuth();
+
+  const navigate = useNavigate();
+
+  // Vendor Login
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -38,63 +38,72 @@ const Login = () => {
     setBusy(true);
 
     try {
-      let result;
-      if (managerLogin) {
-        result = await loginManager(managerForm);
-        console.log("manager Login Result:", result);
-        navigate(`/outlets/${result.manager.outlet?._id}`);
-      } else {
-        result = await vendorLogin(form);
-        console.log("Login Result", result);
-        navigate("/dashboard");
-      }
+      const result = await login(form);
+
+      console.log("Login Result:", result);
+
+      navigate("/dashboard");
     } catch (error) {
       setError(getErrorMessage(error));
     } finally {
       setBusy(false);
     }
   };
+
+  // Google Login Success
   const googleSuccess = async (credentialResponse) => {
-    console.log("GOOGLE SUCCESS", credentialResponse);
     const credential = credentialResponse.credential;
+
     setGoogleCredential(credential);
+
     await googleLoginSuccess({ credential });
   };
+
+  // Google Login Error
   const googleLoginError = (error) => {
-    console.log("Google Login faield", error);
+    console.log("Google Login failed:", error);
     setError(getErrorMessage(error));
   };
+
+  // Google Authentication
   const googleLoginSuccess = async (data) => {
     setBusy(true);
     setError("");
+
     try {
-      const respose = await googleLogin(data);
-      if (respose?.no) {
+      const response = await googleLogin(data);
+
+      if (response?.no) {
         setShowPhoneForm(true);
-      } else if (respose?.token) {
+      } else if (response?.token) {
         navigate("/dashboard");
       } else {
         setError("Invalid login response from server!");
       }
     } catch (error) {
-      console.log("Google logn failed :", error);
+      console.log("Google login failed:", error);
       setError(getErrorMessage(error));
     } finally {
       setBusy(false);
     }
   };
+
+  // Complete Google Profile
   const completeProfile = async (e) => {
     e.preventDefault();
+
     const data = {
       credential: googleCredential,
-      ...phoneAndOUtletName,
+      ...phoneAndOutletName,
     };
+
     await googleLoginSuccess(data);
   };
 
   return (
     <div className="auth-container">
       <div className="auth-panel">
+
         {showPhoneForm ? (
           <>
             {/* GOOGLE PROFILE COMPLETION */}
@@ -102,26 +111,35 @@ const Login = () => {
             <header className="auth-heading">
               <div className="auth-logo">VM</div>
 
-              <h1 className="auth-title">Complete Your Profile</h1>
+              <h1 className="auth-title">
+                Complete Your Profile
+              </h1>
 
               <p className="auth-description">
                 Add your phone number and business name to continue.
               </p>
             </header>
 
-            {error && <div className="message-error">{error}</div>}
+            {error && (
+              <div className="message-error">{error}</div>
+            )}
 
-            <form className="form-container" onSubmit={completeProfile}>
+            <form
+              className="form-container"
+              onSubmit={completeProfile}
+            >
               <div className="form-fields">
+
                 <label className="form-field">
                   Business Name
+
                   <input
                     className="form-input"
                     placeholder="Enter Business Name"
-                    value={phoneAndOUtletName.businessName}
+                    value={phoneAndOutletName.businessName}
                     onChange={(e) =>
                       setPhoneAndOutletName({
-                        ...phoneAndOUtletName,
+                        ...phoneAndOutletName,
                         businessName: e.target.value,
                       })
                     }
@@ -132,13 +150,14 @@ const Login = () => {
 
                 <label className="form-field">
                   Phone
+
                   <input
                     className="form-input"
                     placeholder="Enter Phone"
-                    value={phoneAndOUtletName.phone}
+                    value={phoneAndOutletName.phone}
                     onChange={(e) =>
                       setPhoneAndOutletName({
-                        ...phoneAndOUtletName,
+                        ...phoneAndOutletName,
                         phone: e.target.value,
                       })
                     }
@@ -154,8 +173,11 @@ const Login = () => {
                 >
                   <LogIn size={18} />
 
-                  {busy ? "Completing Account..." : "Complete Account Details"}
+                  {busy
+                    ? "Completing Account..."
+                    : "Complete Account Details"}
                 </button>
+
               </div>
             </form>
           </>
@@ -166,188 +188,102 @@ const Login = () => {
             <header className="auth-heading">
               <div className="auth-logo">VM</div>
 
-              <h1 className="auth-title">Welcome Back</h1>
+              <h1 className="auth-title">
+                Welcome Back
+              </h1>
 
               <p className="auth-description">
                 Sign in to manage your food business.
               </p>
             </header>
 
-            {/* ACCOUNT TYPE */}
-
-            <div className="login-account-switch">
-              <button
-                type="button"
-                className={
-                  managerLogin
-                    ? "account-option account-option-active"
-                    : "account-option"
-                }
-                onClick={() => {
-                  setManagerLogin(true);
-                  setError("");
-                }}
-              >
-                Manager
-              </button>
-
-              <button
-                type="button"
-                className={
-                  !managerLogin
-                    ? "account-option account-option-active"
-                    : "account-option"
-                }
-                onClick={() => {
-                  setManagerLogin(false);
-                  setError("");
-                }}
-              >
-                Vendor
-              </button>
-            </div>
-
             {/* GOOGLE LOGIN */}
 
-            {!managerLogin && (
-              <div className="google-login-container">
-                <GoogleLogin
-                  onSuccess={googleSuccess}
-                  onError={googleLoginError}
-                />
-              </div>
-            )}
-
-            {managerLogin && busy && (
-              <p className="login-processing">Processing...</p>
-            )}
+            <div className="google-login-container">
+              <GoogleLogin
+                onSuccess={googleSuccess}
+                onError={googleLoginError}
+              />
+            </div>
 
             {/* LOGIN FORM */}
 
-            <form className="form-container" onSubmit={handleSubmit}>
+            <form
+              className="form-container"
+              onSubmit={handleSubmit}
+            >
               <div className="form-fields">
-                {managerLogin ? (
-                  <>
-                    {/* MANAGER PHONE */}
 
-                    <label className="form-field">
-                      Phone
-                      <input
-                        className="form-input"
-                        type="tel"
-                        placeholder="Enter phone"
-                        value={managerForm.phone}
-                        required
-                        onChange={(e) =>
-                          setManagerForm({
-                            ...managerForm,
-                            phone: e.target.value,
-                          })
-                        }
-                      />
-                    </label>
+                {/* EMAIL */}
 
-                    {/* MANAGER PASSWORD */}
+                <label className="form-field">
+                  Email
 
-                    <label className="form-field">
-                      Password
-                      <div className="password-field">
-                        <input
-                          className="form-input"
-                          type={showPassword ? "text" : "password"}
-                          placeholder="Enter password"
-                          value={managerForm.password}
-                          onChange={(e) =>
-                            setManagerForm({
-                              ...managerForm,
-                              password: e.target.value,
-                            })
-                          }
-                          required
-                        />
+                  <input
+                    className="form-input"
+                    type="email"
+                    placeholder="Enter email"
+                    value={form.email}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        email: e.target.value,
+                      })
+                    }
+                    required
+                  />
+                </label>
 
-                        <button
-                          className="password-toggle"
-                          type="button"
-                          onClick={() => setShowPassword(!showPassword)}
-                          aria-label={
-                            showPassword ? "Hide password" : "Show password"
-                          }
-                        >
-                          {showPassword ? (
-                            <EyeOff size={18} />
-                          ) : (
-                            <Eye size={18} />
-                          )}
-                        </button>
-                      </div>
-                    </label>
-                  </>
-                ) : (
-                  <>
-                    {/* VENDOR EMAIL */}
+                {/* PASSWORD */}
 
-                    <label className="form-field">
-                      Email
-                      <input
-                        className="form-input"
-                        type="email"
-                        placeholder="Enter email"
-                        value={form.email}
-                        onChange={(e) =>
-                          setForm({
-                            ...form,
-                            email: e.target.value,
-                          })
-                        }
-                        required
-                      />
-                    </label>
+                <label className="form-field">
+                  <div className="password-label">
+                    <span>Password</span>
 
-                    {/* VENDOR PASSWORD */}
+                    <Link to="/forgot-password">
+                      Forgot Password?
+                    </Link>
+                  </div>
 
-                    <label className="form-field">
-                      <div className="password-label">
-                        <span>Password</span>
+                  <div className="password-field">
+                    <input
+                      className="form-input"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Enter password"
+                      value={form.password}
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          password: e.target.value,
+                        })
+                      }
+                      required
+                    />
 
-                        <Link to="/forgot-password">Forgot Password?</Link>
-                      </div>
+                    <button
+                      className="password-toggle"
+                      type="button"
+                      onClick={() =>
+                        setShowPassword(!showPassword)
+                      }
+                      aria-label={
+                        showPassword
+                          ? "Hide password"
+                          : "Show password"
+                      }
+                    >
+                      {showPassword ? (
+                        <EyeOff size={18} />
+                      ) : (
+                        <Eye size={18} />
+                      )}
+                    </button>
+                  </div>
+                </label>
 
-                      <div className="password-field">
-                        <input
-                          className="form-input"
-                          type={showPassword ? "text" : "password"}
-                          placeholder="Enter password"
-                          value={form.password}
-                          onChange={(e) =>
-                            setForm({
-                              ...form,
-                              password: e.target.value,
-                            })
-                          }
-                          required
-                        />
-
-                        <button
-                          className="password-toggle"
-                          type="button"
-                          onClick={() => setShowPassword(!showPassword)}
-                          aria-label={
-                            showPassword ? "Hide password" : "Show password"
-                          }
-                        >
-                          {showPassword ? (
-                            <EyeOff size={18} />
-                          ) : (
-                            <Eye size={18} />
-                          )}
-                        </button>
-                      </div>
-                    </label>
-                  </>
+                {error && (
+                  <div className="message-error">{error}</div>
                 )}
-
-                {error && <div className="message-error">{error}</div>}
 
                 <button
                   type="submit"
@@ -358,18 +294,21 @@ const Login = () => {
 
                   {busy ? "Logging in..." : "Login"}
                 </button>
+
               </div>
             </form>
 
             {/* REGISTER LINK */}
 
-            {!managerLogin && (
-              <p className="auth-footer">
-                New Vendor? <Link to="/register">Create an Account</Link>
-              </p>
-            )}
+            <p className="auth-footer">
+              New Vendor?{" "}
+              <Link to="/register">
+                Create an Account
+              </Link>
+            </p>
           </>
         )}
+
       </div>
     </div>
   );

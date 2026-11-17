@@ -1,264 +1,285 @@
-import { useState,useEffect } from "react"
-import { Link ,useSearchParams } from "react-router-dom"
-import SearchBar from "../../components/Common/SearchBar"
-import ConfirmDialog from "../../components/Common/ConfirmDialog"
-import menuItemService from "../../services/menuItemService"
-import { getErrorMessage } from "../../utils/api"
-import { Plus,Pencil ,Trash2 ,ArrowRight,ArrowLeft} from "lucide-react"
-import { useAuth } from "../../context/useAuth"
-import categoryService from "../../services/categoryService"
-import EmptyState from "../../components/Common/EmptyState"
-import useManagerContext from "../../context/useManagerContext"
-import managerService from "../../services/managerService"
-import MenuItemTableSkeleton from "../../components/Skeletons/MenuItemTableSkeleton"
 
+import { useState, useEffect } from "react";
+import { Link, useSearchParams } from "react-router-dom";
+
+import SearchBar from "../../components/Common/SearchBar";
+import ConfirmDialog from "../../components/Common/ConfirmDialog";
+import EmptyState from "../../components/Common/EmptyState";
+import MenuItemTableSkeleton from "../../components/Skeletons/MenuItemTableSkeleton";
+
+import menuItemService from "../../services/menuItemService";
+import categoryService from "../../services/categoryService";
+
+import { getErrorMessage } from "../../utils/api";
+import { useAuth } from "../../context/useAuth";
+
+import {
+  Plus,
+  Pencil,
+  Trash2,
+  ArrowRight,
+  ArrowLeft
+} from "lucide-react";
 
 const MenuItemList = () => {
-    const {vendor,isAuthenticated} = useAuth();
-    const {isManagerAuthenticated,manager} = useManagerContext();
-    const [items,setItems] = useState([]);
-    const [categories,setCategories] = useState([]);
-    const [params] = useSearchParams();
-    const categoryFilter = params.get("category")
-    const outletFilter = params.get("outlet")
-    const [busy,setBusy] = useState(true);
-    const [error,setError] = useState("")
-    const [del,setDel] = useState(null);
-    const [search,setSearch] = useState("");
-    const isManager = isManagerAuthenticated && ! isAuthenticated;
-    const isVendor =isAuthenticated && !isManagerAuthenticated;
-    const selectedCategory = (isManagerAuthenticated && categoryFilter) ? categories : categories.find((c)=>c._id === categoryFilter)
+  const { vendor } = useAuth();
 
-    useEffect(()=>{
-        // if(!vendor?._id) return;
-        (async ()=>{
-            try {
-                if(isVendor){
-                    const [i,c] = await Promise.all(
-                        [
-                        outletFilter ? menuItemService.byOutlet(outletFilter) : categoryFilter? menuItemService.byCategory(categoryFilter):menuItemService.byVendor(vendor?._id)
-                            ,
-                        outletFilter? categoryService.byOutlet(outletFilter) : categoryService.byVendor(vendor?._id)
-                        ]
-                    )
-                    setItems(i?.menuItems)
-                    setCategories(Array.isArray(c?.menuCategories)?c?.menuCategories:[])
-                }
-                if(isManager ){
-                    const [i,c] = await Promise.all(
-                        [
-                            categoryFilter ? managerService.getItemsByCategory(categoryFilter) : managerService.getAllItems(),
-                            categoryFilter ? managerService.getCategoryById(categoryFilter) : managerService.getAllCategories()
-                        ]
-                    )
-                    setItems(i?.menuItems || []);
-                    setCategories(Array.isArray(c?.menuCategories)? c?.menuCategories :c?.menuCategory ? [c?.menuCategory]: [])
-                }
-            } catch (error) {
-                setError(getErrorMessage(error))
-            }finally{
-                setBusy(false);
-            }
-        })();
+  const [items, setItems] = useState([]);
+  const [categories, setCategories] = useState([]);
+
+  const [params] = useSearchParams();
+  const categoryFilter = params.get("category");
+  const outletFilter = params.get("outlet");
+
+  const [busy, setBusy] = useState(true);
+  const [error, setError] = useState("");
+  const [del, setDel] = useState(null);
+  const [search, setSearch] = useState("");
+
+  const selectedCategory = categories.find(
+    (c) => c._id === categoryFilter
+  );
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [i, c] = await Promise.all([
+          outletFilter
+            ? menuItemService.byOutlet(outletFilter)
+            : categoryFilter
+              ? menuItemService.byCategory(categoryFilter)
+              : menuItemService.byVendor(vendor?.id || vendor?._id),
+
+          outletFilter
+            ? categoryService.byOutlet(outletFilter)
+            : categoryService.byVendor(vendor?.id || vendor?._id)
+        ]);
+
+        setItems(i?.menuItems || []);
+
+        setCategories(
+          Array.isArray(c?.menuCategories)
+            ? c.menuCategories
+            : []
+        );
+      } catch (error) {
+        setError(getErrorMessage(error));
+      } finally {
+        setBusy(false);
+      }
+    };
+
+    fetchData();
+  }, [vendor?.id, vendor?._id, categoryFilter, outletFilter]);
+
+  const remove = async () => {
+    setBusy(true);
+    setError("");
+
+    try {
+      await menuItemService.remove(del);
+
+      setItems((prev) =>
+        prev.filter((item) => item._id !== del)
+      );
+    } catch (error) {
+      setError(getErrorMessage(error));
+    } finally {
+      setBusy(false);
+      setDel(null);
     }
-    ,[vendor,categoryFilter,outletFilter,isAuthenticated,isManagerAuthenticated])
+  };
 
-    const remove = async()=>{
-        setBusy(true);
-        try{
-            if(isVendor){
-                await menuItemService.remove(del);
-            }
-            if(isManager){
-                await managerService.deleteItem(del);
-            }
-            setItems(items.filter((item)=> item._id !== del));   
-        }catch(error){
-            setError(getErrorMessage(error));
-        }finally{
-            setBusy(false);
-            setDel(null);
-        }
-    }
+  const filtered = items.filter((item) =>
+    item.name.toLowerCase().includes(search.toLowerCase())
+  );
 
-    const filtered = items.filter((item)=>item.name.toLowerCase().includes(search.toLowerCase()))
+  const addMenuItemUrl = categoryFilter
+    ? `/menu-item/new?category=${categoryFilter}`
+    : "/menu-item/new";
 
-    const addMenuItemUrl = categoryFilter? `/menu-item/new?category=${categoryFilter}` : "/menu-item/new"
   return (
     <div className="page-container">
-        <div className="content-header">
+      <div className="content-header">
         <div>
-            <p className="content-eyebrow">Products</p>
+          <p className="content-eyebrow">Products</p>
 
-            <h1 className="content-title">
+          <h1 className="content-title">
             {categoryFilter
-                ? `${selectedCategory?.name || "Category"} Menu Items`
-                : "Menu Items"}
-            </h1>
+              ? `${selectedCategory?.name || "Category"} Menu Items`
+              : "Menu Items"}
+          </h1>
 
-            <p className="content-description">
+          <p className="content-description">
             {categoryFilter
-                ? `Manage menu items for ${selectedCategory?.name || "This Category"}`
-                : "Manage pricing, stock, availability and preparation time"}
-            </p>
+              ? `Manage menu items for ${selectedCategory?.name || "This Category"}`
+              : "Manage pricing, stock, availability and preparation time"}
+          </p>
         </div>
 
         <div className="menu-item-actions">
-            {categoryFilter && (
+          {categoryFilter && (
             <Link
-                className="secondary-button"
-                to={
-                isManagerAuthenticated
-                    ? `/menu-items?outlet=${manager?.outlet?._id}`
-                    : "/menu-items"
-                }
+              className="secondary-button"
+              to="/menu-items"
             >
-                <ArrowLeft size={19} />
-                All Menu Items
+              <ArrowLeft size={19} />
+              All Menu Items
             </Link>
-            )}
+          )}
 
-            <Link className="primary-button" to={addMenuItemUrl}>
+          <Link
+            className="primary-button"
+            to={addMenuItemUrl}
+          >
             <Plus size={18} />
             Add Menu Item
-            </Link>
+          </Link>
         </div>
-        </div>
+      </div>
 
-        {error && <div className="message-error">{error}</div>}
+      {error && <div className="message-error">{error}</div>}
 
-        <div className="menu-items-toolbar">
+      <div className="menu-items-toolbar">
         <SearchBar
-            value={search}
-            onChange={setSearch}
-            placeholder="Search Menu Items by name..."
+          value={search}
+          onChange={setSearch}
+          placeholder="Search Menu Items by name..."
         />
 
         <span className="outlet-count">
-            {filtered.length} Menu Items
+          {filtered.length} Menu Items
         </span>
-        </div>
+      </div>
 
-        {busy ? (
+      {busy ? (
         <MenuItemTableSkeleton />
-        ) : filtered.length ? (
+      ) : filtered.length ? (
         <div className="menu-items-table-container">
-            <div className="menu-items-table-scroll">
+          <div className="menu-items-table-scroll">
             <table className="menu-items-table">
-                <thead>
+              <thead>
                 <tr>
-                    <th>Item</th>
-                    <th>Image</th>
-                    <th>Price</th>
-                    <th>Stock</th>
-                    <th>Food</th>
-                    <th>Status</th>
-                    <th>Details</th>
-                    <th>Actions</th>
+                  <th>Item</th>
+                  <th>Image</th>
+                  <th>Price</th>
+                  <th>Stock</th>
+                  <th>Food</th>
+                  <th>Status</th>
+                  <th>Details</th>
+                  <th>Actions</th>
                 </tr>
-                </thead>
+              </thead>
 
-                <tbody>
+              <tbody>
                 {filtered.map((item) => (
-                    <tr key={item._id}>
+                  <tr key={item._id}>
                     <td>
-                        <strong>{item.name}</strong>
+                      <strong>{item.name}</strong>
                     </td>
 
                     <td>
-                        {item.image?.url ? (
+                      {item.image?.url ? (
                         <img
-                            className="menu-items-table-image"
-                            src={item.image.url}
-                            alt={item.name}
+                          className="menu-items-table-image"
+                          src={item.image.url}
+                          alt={item.name}
                         />
-                        ) : (
-                        <span className="table-image-empty">No Image</span>
-                        )}
+                      ) : (
+                        <span className="table-image-empty">
+                          No Image
+                        </span>
+                      )}
                     </td>
 
                     <td>
-                        ₹{Number(item.price || 0).toFixed(2)}
+                      ₹{Number(item.price || 0).toFixed(2)}
                     </td>
 
                     <td>{item.stock}</td>
 
-                    <td className="capitalize">{item.foodType}</td>
+                    <td className="capitalize">
+                      {item.foodType}
+                    </td>
 
                     <td>
-                        <span
+                      <span
                         className={`menu-item-status ${
-                            item.status === "Inactive"
+                          item.status === "Inactive"
                             ? "menu-item-status-inactive"
                             : "menu-item-status-active"
                         }`}
-                        >
+                      >
                         {item.status}
-                        </span>
+                      </span>
                     </td>
 
                     <td>
-                        <Link
+                      <Link
                         className="menu-item-view-link"
                         to={`/menu-item/${item._id}`}
-                        >
+                      >
                         <ArrowRight size={16} />
-                        </Link>
+                      </Link>
                     </td>
 
                     <td>
-                        <div className="menu-item-table-actions">
+                      <div className="menu-item-table-actions">
                         <Link
-                            className="menu-item-icon-button"
-                            to={`/menu-item/${item._id}/edit`}
-                            aria-label={`Edit ${item.name}`}
+                          className="menu-item-icon-button"
+                          to={`/menu-item/${item._id}/edit`}
+                          aria-label={`Edit ${item.name}`}
+                          
                         >
-                            <Pencil size={18} />
+                          <Pencil size={18} />
                         </Link>
 
                         <button
-                            className="menu-item-icon-button menu-item-delete-button"
-                            onClick={() => setDel(item._id)}
-                            aria-label={`Delete ${item.name}`}
+                          className="menu-item-icon-button menu-item-delete-button"
+                          onClick={() => setDel(item._id)}
+                          aria-label={`Delete ${item.name}`}
                         >
-                            <Trash2 size={18} />
+                          <Trash2 size={18} />
                         </button>
-                        </div>
+                      </div>
                     </td>
-                    </tr>
+                  </tr>
                 ))}
-                </tbody>
+              </tbody>
             </table>
-            </div>
+          </div>
         </div>
-        ) : (
+      ) : (
         <EmptyState
-            title={
+          title={
             categoryFilter
-                ? `No menu items for ${selectedCategory?.name || "this category"}`
-                : "No menu items found"
-            }
-            text={
+              ? `No menu items for ${selectedCategory?.name || "this category"}`
+              : "No menu items found"
+          }
+          text={
             search
-                ? "Try a different search"
-                : "Create your first menu item"
-            }
-            action={
-            <Link className="primary-button" to={addMenuItemUrl}>
-                <Plus size={19} />
-                Add Menu Item
+              ? "Try a different search"
+              : "Create your first menu item"
+          }
+          action={
+            <Link
+              className="primary-button"
+              to={addMenuItemUrl}
+            >
+              <Plus size={19} />
+              Add Menu Item
             </Link>
-            }
+          }
         />
-        )}
+      )}
 
-        <ConfirmDialog
+      <ConfirmDialog
         open={del}
         onCancel={() => setDel(null)}
         onConfirm={remove}
-        />
+      />
     </div>
-  )
-}
+  );
+};
 
-export default MenuItemList
+export default MenuItemList;

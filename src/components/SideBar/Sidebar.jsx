@@ -1,3 +1,4 @@
+
 import { NavLink } from "react-router-dom";
 
 import {
@@ -12,7 +13,6 @@ import {
 } from "lucide-react";
 
 import { useAuth } from "../../context/useAuth";
-import useManagerContext from "../../context/useManagerContext";
 
 const vendorLinks = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -24,61 +24,33 @@ const vendorLinks = [
 ];
 
 const Sidebar = ({ open, onClose }) => {
-  const { isAuthenticated, logout } = useAuth();
-
-  const { manager, Managerlogout } = useManagerContext();
-
-  const managerLinks = [
-    {
-      to: `/outlets/${manager?.outlet?._id}`,
-      label: "Dashboard",
-      icon: LayoutDashboard,
-    },
-    {
-      to: `/categories?outlet=${manager?.outlet?._id}`,
-      label: "Categories",
-      icon: Tags,
-    },
-    {
-      to: `/menu-items?outlet=${manager?.outlet?._id}`,
-      label: "Menu Items",
-      icon: Utensils,
-    },
-    {
-      to: "/orders",
-      label: "Orders",
-      icon: ListOrdered,
-    },
-  ];
-
-  const links = isAuthenticated ? vendorLinks : managerLinks;
-
-  const handleLogout = () => {
-    isAuthenticated ? logout() : Managerlogout();
-  };
+  const { logout } = useAuth();
 
   return (
     <>
       {/* Overlay */}
       <div
-        className={`sidebar-overlay ${open ? "sidebar-overlay-visible" : ""}`}
+        className={`sidebar-overlay ${
+          open ? "sidebar-overlay-visible" : ""
+        }`}
         onClick={onClose}
       />
 
       {/* Sidebar */}
       <aside className={`sidebar ${open ? "sidebar-open" : ""}`}>
+
         {/* Brand */}
         <div className="sidebar-header">
           <NavLink
-            to={
-              isAuthenticated
-                ? "/dashboard"
-                : `/outlets/${manager?.outlet?._id}`
-            }
+            to="/dashboard"
             className="sidebar-brand"
             onClick={onClose}
           >
-            <img src="/FS1.png" alt="FoodStack" className="sidebar-logo" />
+            <img
+              src="/FS1.png"
+              alt="FoodStack"
+              className="sidebar-logo"
+            />
 
             <div className="sidebar-brand-text">
               <strong>Vendor</strong>
@@ -98,17 +70,18 @@ const Sidebar = ({ open, onClose }) => {
 
         {/* Navigation */}
         <nav className="sidebar-links">
-          {links.map(({ to, label, icon: Icon }) => (
+          {vendorLinks.map(({ to, label, icon: Icon }) => (
             <NavLink
               key={to}
               to={to}
               onClick={onClose}
               className={({ isActive }) =>
-                `sidebar-link ${isActive ? "sidebar-link-active" : ""}`
+                `sidebar-link ${
+                  isActive ? "sidebar-link-active" : ""
+                }`
               }
             >
               <Icon size={19} />
-
               <span>{label}</span>
             </NavLink>
           ))}
@@ -119,12 +92,13 @@ const Sidebar = ({ open, onClose }) => {
           <button
             type="button"
             className="sidebar-logout"
-            onClick={handleLogout}
+            onClick={logout}
           >
             <LogOut size={18} />
             <span>Logout</span>
           </button>
         </div>
+
       </aside>
     </>
   );

@@ -33,38 +33,38 @@ export const  clearAuth = ()=>{
     removeToken();
     removeVendor();
 }
-// MANAGER
-// =================================================================================
+// // MANAGER
+// // =================================================================================
 
-const MANAGER_TOKEN ="manager_token"
+// const MANAGER_TOKEN ="manager_token"
 
-const MANAGER_KEY="manager_user"
+// const MANAGER_KEY="manager_user"
 
-export const getManagerToken = ()=> sessionStorage.getItem(MANAGER_TOKEN) 
+// export const getManagerToken = ()=> sessionStorage.getItem(MANAGER_TOKEN) 
 
-export const setManagerToken = (token) => sessionStorage.setItem(MANAGER_TOKEN,token) 
+// export const setManagerToken = (token) => sessionStorage.setItem(MANAGER_TOKEN,token) 
 
-export const removeManagerToken = ()=> sessionStorage.removeItem(MANAGER_TOKEN);
+// export const removeManagerToken = ()=> sessionStorage.removeItem(MANAGER_TOKEN);
 
 
-export const getManager = ()=>{ 
+// export const getManager = ()=>{ 
 
-    try {
+//     try {
         
-        return JSON.parse(sessionStorage.getItem(MANAGER_KEY) || "null")
-    } catch {
-        console.log("No data is getting from the local storage.");
-        return null;
-    }
-}
+//         return JSON.parse(sessionStorage.getItem(MANAGER_KEY) || "null")
+//     } catch {
+//         console.log("No data is getting from the local storage.");
+//         return null;
+//     }
+// }
 
-export const setManager = (manager)=>{
-    sessionStorage.setItem(MANAGER_KEY,JSON.stringify(manager)) 
-}
+// export const setManager = (manager)=>{
+//     sessionStorage.setItem(MANAGER_KEY,JSON.stringify(manager)) 
+// }
 
-export const removeManager = ()=> sessionStorage.removeItem(MANAGER_KEY) 
+// export const removeManager = ()=> sessionStorage.removeItem(MANAGER_KEY) 
 
-export const  clearManagerAuth = ()=>{
-    removeManagerToken();
-    removeManager();
-}
+// export const  clearManagerAuth = ()=>{
+//     removeManagerToken();
+//     removeManager();
+// }

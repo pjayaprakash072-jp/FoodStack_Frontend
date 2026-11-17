@@ -92,8 +92,8 @@ const  FormPage = ({form,change,outletNext,busy,id,sendData,isManagerAuthenticat
                 value={form.status}
                 onChange={change}
             >
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
             </select>
             </label>
 
